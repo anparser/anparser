@@ -37,7 +37,18 @@ def scan_for_files(input_dir):
 
 
 if __name__ == "__main__":
-    files_to_process = scan_for_files(sys.argv[1])
+    import argparse
+
+    parser  = argparse.ArgumentParser(description="Open Source Android Artifact Parser")
+    parser.add_argument('evidence', help='Directory of Android Acquisition')
+    parser.add_argument('destination', help='Destination cirectory to write output files to')
+
+    arga = parser.parse_args()
+
+    if not os.path.exists(arga.destination):
+        os.makedirs(arga.destination)
+
+    files_to_process = scan_for_files(arga.evidence)
 
     # plugins to process the file listing
     import plugins.android_contacts
@@ -46,4 +57,4 @@ if __name__ == "__main__":
 
     import writers.csv_writer
 
-    writers.csv_writer.csv_writer(data, '../LG_Phone/report0.00.csv')
+    writers.csv_writer.csv_writer(data, os.path.join(arga.destination, 'android_contacts.csv'))
