@@ -8,6 +8,12 @@ import time
 
 
 def android_contacts(file_list):
+    """
+    Parse data specifically from the Android Contacts Database file
+
+    :param file_list: List of all files
+    :return: Dictionary of parsed data from database
+    """
 
     # Initialize Variable
     raw_contacts_data = None
@@ -27,7 +33,6 @@ def android_contacts(file_list):
                 phone_lookup_data = sqlite_plugins.read_sqlite_table(file_path, 'phone_lookup',
                                                                      columns='raw_contact_id, normalized_number')
 
-
     contact_data_list = []
     contact_data = dict()
 
@@ -43,31 +48,3 @@ def android_contacts(file_list):
             contact_data = dict()
 
     return contact_data_list
-
-"""
-contacts2.db
-
-raw_contacts:
-    Contact information on Local Device
-    contact_id, display_name, modified_time
-
-accounts:
-    Account for local device
-    _id, account_name, account_type
-
-phone_lookup:
-    Information about phone number
-    raw_contact_id, normalized_number
-
-calls:
-    Calls Made
-    _id, number, date, duration, name, geocoded_location, normalized_number, modified_time, contacts_id, lookup_uri
-
-contacts:
-    Contacts
-    lookup, _id, photo_id
-
-data:
-    contact_id
-
-"""
