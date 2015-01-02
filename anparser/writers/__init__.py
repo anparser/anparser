@@ -1,4 +1,6 @@
 __author__ = 'cbryce'
-__license__ = ''
-__date__ = ''
-__version__ = ''
+__license__ = 'GPLv3'
+__date__ = '20150102'
+__version__ = '0.00'
+
+__all__ = ['csv_writer']
