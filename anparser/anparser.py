@@ -120,19 +120,18 @@ if __name__ == "__main__":
     import writers.csv_writer
 
     # Write Contact Data
-    writers.csv_writer.csv_writer(browser_data, os.path.join(args.destination,
-                                                             'android_browser.csv'))
-    writers.csv_writer.csv_writer(contacts_data, os.path.join(args.destination,
-                                                              'android_contacts.csv'))
-    writers.csv_writer.csv_writer(downloads_data, os.path.join(args.destination,
-                                                               'android_downloads.csv'))
-    writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(args.destination,
-                                                                   'android_telephony_sms.csv'))
-    writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(args.destination,
-                                                                       'android_telephony_threads.csv'))
-    writers.csv_writer.csv_writer(orca_contact_data, os.path.join(args.destination,
-                                                                  'facebook_orca_contacts.csv'))
-    writers.csv_writer.csv_writer(orca_threads_data, os.path.join(args.destination,
-                                                                  'facebook_orca_threads.csv'))
-    writers.csv_writer.csv_writer(orca_msg_data, os.path.join(args.destination,
-                                                              'facebook_orca_messages.csv'))
+    path = args.destination + '//Android'
+    if not os.path.exists(path):
+        os.mkdir((args.destination + '//Android'), 0777)
+    writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
+    writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
+    writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
+    writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
+    writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
+
+    path = args.destination + '//Facebook'
+    if not os.path.exists(path):
+        os.mkdir((args.destination + '//Facebook'), 0777)
+    writers.csv_writer.csv_writer(orca_contact_data, os.path.join(path, 'facebook_orca_contacts.csv'))
+    writers.csv_writer.csv_writer(orca_threads_data, os.path.join(path, 'facebook_orca_threads.csv'))
+    writers.csv_writer.csv_writer(orca_msg_data, os.path.join(path, 'facebook_orca_messages.csv'))
