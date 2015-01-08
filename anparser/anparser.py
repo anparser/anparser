@@ -90,6 +90,7 @@ if __name__ == "__main__":
     import plugins.android_contacts
     import plugins.android_downloads
     import plugins.android_telephony
+    import plugins.facebook_orca
 
     # run plugins
 
@@ -107,6 +108,8 @@ if __name__ == "__main__":
     print "Threads"
     print telephony_data_threads
 
+    # Facebook Orca (Messenger) Parser
+    orca_contact_data, orca_threads_data, orca_msg_data = plugins.facebook_orca.facebook_orca(files_to_process)
     #
     # End of Plugin Processing
     #
@@ -127,3 +130,9 @@ if __name__ == "__main__":
                                                                    'android_telephony_sms.csv'))
     writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(args.destination,
                                                                        'android_telephony_threads.csv'))
+    writers.csv_writer.csv_writer(orca_contact_data, os.path.join(args.destination,
+                                                                  'facebook_orca_contacts.csv'))
+    writers.csv_writer.csv_writer(orca_threads_data, os.path.join(args.destination,
+                                                                  'facebook_orca_threads.csv'))
+    writers.csv_writer.csv_writer(orca_msg_data, os.path.join(args.destination,
+                                                              'facebook_orca_messages.csv'))

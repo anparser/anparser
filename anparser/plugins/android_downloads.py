@@ -58,7 +58,7 @@ def android_downloads(file_list):
     if download_data:
         for entry in download_data:
             downloads_data['Table'] = 'downloads'
-            downloads_data['_id'] = entry[0]
+            downloads_data['id'] = entry[0]
             downloads_data['title'] = entry[1]
             downloads_data['description'] = entry[2]
             downloads_data['mimetype'] = entry[3]

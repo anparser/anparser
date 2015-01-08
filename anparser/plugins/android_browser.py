@@ -26,6 +26,7 @@ import logging
 import sqlite_plugins
 import time
 
+
 def android_browser(file_list):
     """
     Parses browser database from com.android.browser
@@ -33,11 +34,11 @@ def android_browser(file_list):
     :param file_list: List of all files
     :return: Dictionary of parsed data from database
     """
-    #TODO: Add in support for other tables.
-    #Initialize table variables: bookmarks, history, images
+    # TODO: Add in support for other tables (images, thumbnails).
+    # Initialize table variables: bookmarks, history, v_accounts
     bookmarks_data = None
     history_data = None
-    images_data = None
+    accounts_data = None
 
     for file_path in file_list:
         if file_path.endswith('browser2.db'):
@@ -58,7 +59,15 @@ def android_browser(file_list):
                 except sqlite_plugins.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
-            #TODO: Complete the images_data section
+            # TODO: Modify sqlite_plugins.__init__.py to read views.
+            if 'v_accounts' in tables:
+                try:
+                    accounts_data = sqlite_plugins.read_sqlite_table(
+                        file_path, 'v_accounts',
+                        columns='account_name, account_type, root_id')
+                except sqlite_plugins.sqlite3.OperationalError as exception:
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    pass
 
     browser_data_list = []
     browser_data = OrderedDict()
@@ -67,7 +76,7 @@ def android_browser(file_list):
     if bookmarks_data:
         for entry in bookmarks_data:
             browser_data['Table'] = 'bookmarks'
-            browser_data['_id'] = entry[0]
+            browser_data['id'] = entry[0]
             browser_data['title'] = entry[1]
             browser_data['url'] = entry[2]
             browser_data['deleted'] = entry[3]
@@ -81,6 +90,8 @@ def android_browser(file_list):
                 browser_data['modified'] = ''
             browser_data['date'] = ''
             browser_data['visits'] = ''
+            browser_data['account_name'] = ''
+            browser_data['account_type'] = ''
 
             browser_data_list.append(browser_data)
             browser_data = OrderedDict()
@@ -89,7 +100,7 @@ def android_browser(file_list):
     if history_data:
         for entry in history_data:
             browser_data['Table'] = 'history'
-            browser_data['_id'] = entry[0]
+            browser_data['id'] = entry[0]
             browser_data['title'] = entry[1]
             browser_data['url'] = entry[2]
             browser_data['deleted'] = ''
@@ -100,9 +111,28 @@ def android_browser(file_list):
             except TypeError:
                 browser_data['date'] = ''
             browser_data['visits'] = entry[4]
+            browser_data['account_name'] = ''
+            browser_data['account_type'] = ''
 
             browser_data_list.append(browser_data)
             browser_data = OrderedDict()
 
+    # Add data from v_accounts table to browser_data
+    if accounts_data:
+        for entry in accounts_data:
+            browser_data['Table'] = 'v_accounts'
+            browser_data['id'] = entry[2]
+            browser_data['title'] = ''
+            browser_data['url'] = ''
+            browser_data['deleted'] = ''
+            browser_data['created'] = ''
+            browser_data['modified'] = ''
+            browser_data['date'] = ''
+            browser_data['visits'] = ''
+            browser_data['account_name'] = entry[0]
+            browser_data['account_type'] = entry[1]
+
+            browser_data_list.append(browser_data)
+            browser_data = OrderedDict()
 
     return browser_data_list
