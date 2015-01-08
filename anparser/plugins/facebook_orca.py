@@ -69,7 +69,7 @@ def facebook_orca(file_list):
                 try:
                     folders_data = sqlite_plugins.read_sqlite_table(
                         file_path, 'folders',
-                        columns='folder, thread, timestamp_ms')
+                        columns='folder, thread_key, timestamp_ms')
                 except sqlite_plugins.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
