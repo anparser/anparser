@@ -21,6 +21,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+from collections import OrderedDict
 import logging
 import sqlite_plugins
 import time
@@ -64,7 +65,7 @@ def android_contacts(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
 
     contact_data_list = []
-    contact_data = dict()
+    contact_data = OrderedDict()
 
     if raw_contacts_data:
         for entry in raw_contacts_data:
@@ -78,6 +79,6 @@ def android_contacts(file_list):
                 if item[0] == entry[0]:
                     contact_data['normalized_number'] = item[1]
             contact_data_list.append(contact_data)
-            contact_data = dict()
+            contact_data = OrderedDict()
 
     return contact_data_list

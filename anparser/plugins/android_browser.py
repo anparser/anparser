@@ -21,6 +21,7 @@ __license__ = 'GPLv3'
 __date__ = '20150107'
 __version__ = '0.00'
 
+from collections import OrderedDict
 import logging
 import sqlite_plugins
 import time
@@ -60,7 +61,7 @@ def android_browser(file_list):
             #TODO: Complete the images_data section
 
     browser_data_list = []
-    browser_data = dict()
+    browser_data = OrderedDict()
 
     # Add data from bookmarks table to browser_data
     if bookmarks_data:
@@ -82,7 +83,7 @@ def android_browser(file_list):
             browser_data['visits'] = ''
 
             browser_data_list.append(browser_data)
-            browser_data = dict()
+            browser_data = OrderedDict()
 
     # Add data from history table to browser_data
     if history_data:
@@ -91,17 +92,17 @@ def android_browser(file_list):
             browser_data['_id'] = entry[0]
             browser_data['title'] = entry[1]
             browser_data['url'] = entry[2]
+            browser_data['deleted'] = ''
+            browser_data['created'] = ''
+            browser_data['modified'] = ''
             try:
                 browser_data['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
             except TypeError:
                 browser_data['date'] = ''
             browser_data['visits'] = entry[4]
-            browser_data['deleted'] = ''
-            browser_data['created'] = ''
-            browser_data['modified'] = ''
 
             browser_data_list.append(browser_data)
-            browser_data = dict()
+            browser_data = OrderedDict()
 
 
     return browser_data_list
