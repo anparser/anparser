@@ -21,6 +21,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+import logging
 import sqlite_plugins
 import time
 
@@ -42,14 +43,25 @@ def android_contacts(file_list):
         if file_path.endswith('contacts2.db'):
             tables = sqlite_plugins.get_sqlite_table_names(file_path)
             if 'raw_contacts' in tables:
-                raw_contacts_data = sqlite_plugins.read_sqlite_table(file_path, 'raw_contacts',
-                                                                     columns='contact_id, display_name, modified_time')
+                try:
+                    raw_contacts_data = sqlite_plugins.read_sqlite_table(
+                        file_path, 'raw_contacts', columns='contact_id, display_name, modified_time')
+                except sqlite_plugins.sqlite3.OperationalError as exception:
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    pass
             if 'accounts' in tables:
-                accounts_data = sqlite_plugins.read_sqlite_table(file_path, 'accounts',
-                                                                 columns='_id, account_name, account_type')
+                try:
+                    accounts_data = sqlite_plugins.read_sqlite_table(file_path, 'accounts',
+                                                                     columns='_id, account_name, account_type')
+                except sqlite_plugins.sqlite3.OperationalError as exception:
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    pass
             if 'phone_lookup' in tables:
-                phone_lookup_data = sqlite_plugins.read_sqlite_table(file_path, 'phone_lookup',
-                                                                     columns='raw_contact_id, normalized_number')
+                try:
+                    phone_lookup_data = sqlite_plugins.read_sqlite_table(file_path, 'phone_lookup',
+                                                                         columns='raw_contact_id, normalized_number')
+                except sqlite_plugins.sqlite3.OperationalError as exception:
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
 
     contact_data_list = []
     contact_data = dict()
@@ -58,7 +70,10 @@ def android_contacts(file_list):
         for entry in raw_contacts_data:
             contact_data['contact_id'] = entry[0]
             contact_data['display_name'] = entry[1]
-            contact_data['modified_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.0))
+            try:
+                contact_data['modified_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.0))
+            except TypeError:
+                contact_data['modified_time'] = ''
             for item in phone_lookup_data:
                 if item[0] == entry[0]:
                     contact_data['normalized_number'] = item[1]

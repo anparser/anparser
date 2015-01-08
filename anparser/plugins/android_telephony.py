@@ -21,6 +21,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+import logging
 import sqlite_plugins
 import time
 
@@ -35,8 +36,14 @@ def read_sms(db_data):
         data_dict['thread_id'] = entry[1]
         data_dict['address'] = entry[2]
         data_dict['person'] = entry[3]
-        data_dict['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.0))
-        data_dict['date_sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.0))
+        try:
+            data_dict['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.0))
+        except TypeError:
+            data_dict['date'] = ''
+        try:
+            data_dict['date_sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.0))
+        except TypeError:
+            data_dict['date_sent'] = ''
         data_dict['body'] = entry[6]
         data_dict['read'] = entry[7]
         data_dict['seen'] = entry[8]
@@ -53,7 +60,10 @@ def read_sms_threads(db_data):
 
     for entry in db_data:
         data_dict['id'] = entry[0]
-        data_dict['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[1] / 1000.0))
+        try:
+            data_dict['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[1] / 1000.0))
+        except TypeError:
+            data_dict['date'] = ''
         data_dict['message_count'] = entry[2]
         data_dict['snippet'] = entry[3]
         data_dict['read'] = entry[4]
@@ -75,19 +85,26 @@ def android_telephony(file_listing):
         if file_path.endswith('mmssms.db'):
             tables = sqlite_plugins.get_sqlite_table_names(file_path)
             if 'sms' in tables:
-                sms_data = sqlite_plugins.read_sqlite_table(file_path, 'sms',
-                                                                     columns='_id, thread_id, address, person, date, '
-                                                                             'date_sent, body, read, seen')
-                parsed_sms_data = read_sms(sms_data)
+                try:
+                    sms_data = sqlite_plugins.read_sqlite_table(file_path, 'sms',
+                                                                columns='_id, thread_id, address, person, date, '
+                                                                        'date_sent, body, read, seen')
+                except sqlite_plugins.sqlite3.OperationalError as exception:
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    pass
+                if sms_data:
+                    parsed_sms_data = read_sms(sms_data)
 
             if 'threads' in tables:
-                threads_data = sqlite_plugins.read_sqlite_table(file_path, 'threads',
-                                                                 columns='_id, date, message_count, snippet, read, '
-                                                                         'has_attachment')
-                parsed_threads_data = read_sms_threads(threads_data)
+                try:
+                    threads_data = sqlite_plugins.read_sqlite_table(file_path, 'threads',
+                                                                    columns='_id, date, message_count, snippet, read, '
+                                                                            'has_attachment')
+                except sqlite_plugins.sqlite3.OperationalError as exception:
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    pass
+                if threads_data:
+                    parsed_threads_data = read_sms_threads(threads_data)
 
-    import pprint
-
-    pprint.pprint(threads_data)
 
     return parsed_sms_data, parsed_threads_data

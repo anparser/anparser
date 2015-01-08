@@ -21,4 +21,4 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.01'
 
-__all__ = ['android_contacts', 'android_telephony']
+__all__ = ['android_browser', 'android_contacts', 'android_telephony']

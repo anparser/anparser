@@ -22,6 +22,7 @@ __date__ = '20150102'
 __version__ = '0.00'
 
 # Imports
+import logging
 import os
 import sys
 import plugins
@@ -64,6 +65,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    # Sets up Logging
+    logging.basicConfig(filename='anparser.log', level=logging.DEBUG,
+                        format='%(asctime)s %(message)s')
+    logging.info('Starting Anparser v' + __version__)
+    logging.info('System ' + sys.platform)
+    logging.info('Version ' + sys.version)
+
     if not os.path.exists(args.evidence) or not os.path.isdir(args.evidence):
         print "Evidence not found...exiting"
         sys.exit(1)
@@ -78,11 +86,14 @@ if __name__ == "__main__":
     # Start of Plugin Processing
     #
     # plugins to process the file listing
+    import plugins.android_browser
     import plugins.android_contacts
     import plugins.android_telephony
 
     # run plugins
 
+    # Android Browser Parser
+    browser_data = plugins.android_browser.android_browser(files_to_process)
     # Android Contact Parser
     contacts_data = plugins.android_contacts.android_contacts(files_to_process)
 
@@ -103,6 +114,8 @@ if __name__ == "__main__":
     import writers.csv_writer
 
     # Write Contact Data
+    writers.csv_writer.csv_writer(browser_data, os.path.join(args.destination,
+                                                             'android_browser.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(args.destination,
                                                      'android_contacts.csv'))
     writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(args.destination,

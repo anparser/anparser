@@ -22,6 +22,7 @@ __date__ = '20150102'
 __version__ = '0.00'
 
 import csv
+import logging
 
 
 def csv_writer(data, file_name):
@@ -34,9 +35,13 @@ def csv_writer(data, file_name):
     """
 
     fout = open(file_name, mode='wb')
-    writer = csv.DictWriter(fout, data[0].keys(), delimiter='|')
-    writer.writeheader()
-    writer.writerows(data)
+    try:
+        writer = csv.DictWriter(fout, data[0].keys(), delimiter='|')
+        writer.writeheader()
+        writer.writerows(data)
+    except IndexError as exception:
+        logging.error('CSV Writer Error: {0:s}'.format(exception))
+        pass
 
     fout.flush()
     fout.close()
