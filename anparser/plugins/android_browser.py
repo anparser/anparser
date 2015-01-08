@@ -28,7 +28,7 @@ import time
 
 def android_browser(file_list):
     """
-    Parses browser database from the Android Browser Database file
+    Parses browser database from com.android.browser
 
     :param file_list: List of all files
     :return: Dictionary of parsed data from database
