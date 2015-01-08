@@ -39,7 +39,7 @@ def csv_writer(data, file_name):
         writer = csv.DictWriter(fout, data[0].keys(), delimiter='|')
         writer.writeheader()
         writer.writerows(data)
-    except IndexError as exception:
+    except (IndexError, TypeError) as exception:
         logging.error('CSV Writer Error: {0:s}'.format(exception))
         pass
 

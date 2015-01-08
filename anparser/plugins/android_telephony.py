@@ -21,6 +21,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+from collections import OrderedDict
 import logging
 import sqlite_plugins
 import time
@@ -29,7 +30,7 @@ import time
 def read_sms(db_data):
 
     data_dict_list = []
-    data_dict = dict()
+    data_dict = OrderedDict()
 
     for entry in db_data:
         data_dict['id'] = entry[0]
@@ -48,7 +49,7 @@ def read_sms(db_data):
         data_dict['read'] = entry[7]
         data_dict['seen'] = entry[8]
         data_dict_list.append(data_dict)
-        data_dict = dict()
+        data_dict = OrderedDict()
 
     return data_dict_list
 
@@ -56,7 +57,7 @@ def read_sms(db_data):
 def read_sms_threads(db_data):
 
     data_dict_list = []
-    data_dict = dict()
+    data_dict = OrderedDict()
 
     for entry in db_data:
         data_dict['id'] = entry[0]
@@ -69,7 +70,7 @@ def read_sms_threads(db_data):
         data_dict['read'] = entry[4]
         data_dict['has_attachment'] = entry[5]
         data_dict_list.append(data_dict)
-        data_dict = dict()
+        data_dict = OrderedDict()
 
     return data_dict_list
 
