@@ -41,7 +41,7 @@ def get_sqlite_table_names(db_path):
 
     # convert tuples to lists
 
-    tmp =  cur.fetchall()
+    tmp = cur.fetchall()
     tmp2 = []
     for i in tmp:
         for x in i:

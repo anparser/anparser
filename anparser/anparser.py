@@ -90,6 +90,7 @@ if __name__ == "__main__":
     import plugins.android_contacts
     import plugins.android_downloads
     import plugins.android_telephony
+    import plugins.google_docs
     import plugins.facebook_orca
 
     # run plugins
@@ -108,6 +109,9 @@ if __name__ == "__main__":
     print "Threads"
     print telephony_data_threads
 
+    # Google Docs Parser
+    google_docs_account_data, google_docs_collection_data = plugins.google_docs.google_docs(files_to_process)
+
     # Facebook Orca (Messenger) Parser
     orca_contact_data, orca_threads_data, orca_msg_data = plugins.facebook_orca.facebook_orca(files_to_process)
     #
@@ -122,16 +126,22 @@ if __name__ == "__main__":
     # Write Contact Data
     path = args.destination + '//Android'
     if not os.path.exists(path):
-        os.mkdir((args.destination + '//Android'), 0777)
+        os.mkdir(path, 0777)
     writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
     writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
     writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
 
+    path = args.destination + '//Google'
+    if not os.path.exists(path):
+        os.mkdir(path, 0777)
+    writers.csv_writer.csv_writer(google_docs_account_data, os.path.join(path, 'google_docs_accounts.csv'))
+    writers.csv_writer.csv_writer(google_docs_collection_data, os.path.join(path, 'google_docs_collection.csv'))
+
     path = args.destination + '//Facebook'
     if not os.path.exists(path):
-        os.mkdir((args.destination + '//Facebook'), 0777)
+        os.mkdir(path, 0777)
     writers.csv_writer.csv_writer(orca_contact_data, os.path.join(path, 'facebook_orca_contacts.csv'))
     writers.csv_writer.csv_writer(orca_threads_data, os.path.join(path, 'facebook_orca_threads.csv'))
     writers.csv_writer.csv_writer(orca_msg_data, os.path.join(path, 'facebook_orca_messages.csv'))

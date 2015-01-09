@@ -22,4 +22,4 @@ __date__ = '20150102'
 __version__ = '0.01'
 
 __all__ = ['android_browser', 'android_contacts', 'android_downloads', 'android_telephony',
-           'facebook_orca']
+           'google_docs', 'facebook_orca']
