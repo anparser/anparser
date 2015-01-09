@@ -89,6 +89,7 @@ if __name__ == "__main__":
     import plugins.android_browser
     import plugins.android_contacts
     import plugins.android_downloads
+    import plugins.android_media
     import plugins.android_telephony
     import plugins.google_docs
     import plugins.facebook_orca
@@ -101,7 +102,8 @@ if __name__ == "__main__":
     contacts_data = plugins.android_contacts.android_contacts(files_to_process)
     # Android Downloads Parser
     downloads_data = plugins.android_downloads.android_downloads(files_to_process)
-
+    # Android Media Parser
+    media_data = plugins.android_media.android_media(files_to_process)
     # Android Telephony Parser
     telephony_data_sms, telephony_data_threads = plugins.android_telephony.android_telephony(files_to_process)
 
@@ -130,6 +132,7 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
+    writers.csv_writer.csv_writer(media_data, os.path.join(path, 'android_media.csv'))
     writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
     writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
 
