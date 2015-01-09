@@ -43,6 +43,7 @@ def android_browser(file_list):
     for file_path in file_list:
         if file_path.endswith('browser2.db'):
             tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            views = sqlite_plugins.get_sqlite_veiw_info(file_path)
             if 'bookmarks' in tables:
                 try:
                     bookmarks_data = sqlite_plugins.read_sqlite_table(
@@ -59,8 +60,7 @@ def android_browser(file_list):
                 except sqlite_plugins.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
-            # TODO: Modify sqlite_plugins.__init__.py to read views.
-            if 'v_accounts' in tables:
+            if 'v_accounts' in views:
                 try:
                     accounts_data = sqlite_plugins.read_sqlite_table(
                         file_path, 'v_accounts',

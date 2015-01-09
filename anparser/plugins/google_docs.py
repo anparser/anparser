@@ -43,6 +43,7 @@ def google_docs(file_list):
     for file_path in file_list:
         if file_path.endswith('DocList.db'):
             tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            views = sqlite_plugins.get_sqlite_veiw_info(file_path)
             if 'Account101' in tables:
                 try:
                     account_data = sqlite_plugins.read_sqlite_table(
@@ -51,7 +52,7 @@ def google_docs(file_list):
                 except sqlite_plugins.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
-            if 'CollectionView' in tables:
+            if 'CollectionView' in views:
                 try:
                     collection_data = sqlite_plugins.read_sqlite_table(
                         file_path, 'CollectionView',
@@ -72,7 +73,7 @@ def google_docs(file_list):
                 except sqlite_plugins.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
-            if 'EntryView' in tables:
+            if 'EntryView' in views:
                 try:
                     entry_data = sqlite_plugins.read_sqlite_table(
                         file_path, 'EntryView',
@@ -110,8 +111,8 @@ def google_docs(file_list):
     if contains_data:
         for entry in contains_data:
             google_docs_data['Table'] = 'ContainsId101'
-            google_docs_data['collection id'] = entry[0]
-            google_docs_data['entry id'] = entry[1]
+            google_docs_data['collection id'] = entry[1]
+            google_docs_data['entry id'] = entry[0]
             google_docs_data['title'] = ''
             google_docs_data['creator'] = ''
             google_docs_data['owner'] = ''
@@ -139,7 +140,6 @@ def google_docs(file_list):
             google_docs_data = OrderedDict()
 
     # Add data from CollectionView table to google_docs_data
-    # TODO: Need sqlite view functionality to see this data.
     if collection_data:
         for entry in collection_data:
             google_docs_data['Table'] = 'CollectionView'
@@ -192,7 +192,6 @@ def google_docs(file_list):
             google_docs_data = OrderedDict()
 
     # Add data from EntryView table to google_docs_data
-    # TODO: Need sqlite view functionality to see this data.
     if entry_data:
         for entry in entry_data:
             google_docs_data['Table'] = 'EntryView'

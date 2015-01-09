@@ -47,6 +47,38 @@ def get_sqlite_table_names(db_path):
         for x in i:
             tmp2.append(x)
 
+    #print 'THIS IS TMP2 OUTPUT FOR TABLES'
+    #print tmp2
+    return tmp2
+
+
+def get_sqlite_veiw_info(db_path):
+    """
+    Read all SQLite table names
+    :param db_path: String path to database
+    :return: List of table names
+    """
+
+    # TODO: Add ability to filter responsive table names
+
+    con = sqlite3.connect(db_path)
+    cur = con.cursor()
+
+    cur.execute('Select name, sql from sqlite_master where type = \'view\';')
+
+    # convert tuples to lists
+
+    tmp = cur.fetchall()
+    tmp2 = []
+    c = 0
+    for i in tmp:
+        for x in i:
+            if c%2 == 0:
+                tmp2.append(x)
+                c += 1
+            else:
+                c += 1
+
     return tmp2
 
 

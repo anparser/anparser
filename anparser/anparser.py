@@ -105,9 +105,9 @@ if __name__ == "__main__":
     # Android Telephony Parser
     telephony_data_sms, telephony_data_threads = plugins.android_telephony.android_telephony(files_to_process)
 
-    print telephony_data_sms
-    print "Threads"
-    print telephony_data_threads
+    #print telephony_data_sms
+    #print "Threads"
+    #print telephony_data_threads
 
     # Google Docs Parser
     google_docs_account_data, google_docs_collection_data = plugins.google_docs.google_docs(files_to_process)
