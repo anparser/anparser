@@ -8,6 +8,7 @@ from plugins import android_browser
 from plugins import android_contacts
 from plugins import android_downloads
 from plugins import android_media
+from plugins import android_vending
 from plugins import google_docs
 from plugins import facebook_orca
 from plugins import sqlite_plugins

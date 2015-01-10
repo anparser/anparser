@@ -91,6 +91,7 @@ if __name__ == "__main__":
     import plugins.android_downloads
     import plugins.android_media
     import plugins.android_telephony
+    import plugins.android_vending
     import plugins.google_docs
     import plugins.facebook_orca
 
@@ -106,6 +107,8 @@ if __name__ == "__main__":
     media_data = plugins.android_media.android_media(files_to_process)
     # Android Telephony Parser
     telephony_data_sms, telephony_data_threads = plugins.android_telephony.android_telephony(files_to_process)
+    # Android Vending Parser
+    vending_app_data, vending_app_state_data, vending_suggestions_data = plugins.android_vending.android_vending(files_to_process)
 
     #print telephony_data_sms
     #print "Threads"
@@ -135,6 +138,10 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(media_data, os.path.join(path, 'android_media.csv'))
     writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
     writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
+    writers.csv_writer.csv_writer(vending_app_data, os.path.join(path, 'android_vending_app_library.csv'))
+    writers.csv_writer.csv_writer(vending_app_state_data, os.path.join(path, 'android_vending_app_state.csv'))
+    writers.csv_writer.csv_writer(vending_suggestions_data, os.path.join(path, 'android_vending_app_suggestions.csv'))
+
 
     path = args.destination + '//Google'
     if not os.path.exists(path):
