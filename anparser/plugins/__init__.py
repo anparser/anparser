@@ -21,5 +21,5 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.01'
 
-__all__ = ['android_browser', 'android_contacts', 'android_downloads', 'android_telephony',
-           'google_docs', 'facebook_orca']
+__all__ = ['android_browser', 'android_contacts', 'android_downloads', 'android_media',
+           'android_telephony', 'android_vending', 'google_docs', 'facebook_orca']

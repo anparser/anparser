@@ -75,14 +75,8 @@ def get_sqlite_veiw_info(db_path):
 
     tmp = cur.fetchall()
     tmp2 = []
-    c = 0
     for i in tmp:
-        for x in i:
-            if c%2 == 0:
-                tmp2.append(x)
-                c += 1
-            else:
-                c += 1
+        tmp2.append(i[0])
 
     return tmp2
 
