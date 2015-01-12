@@ -87,14 +87,14 @@ if __name__ == "__main__":
     #
 
     # import plugins to process the file listing
-    import plugins.android_browser
-    import plugins.android_contacts
-    import plugins.android_downloads
-    import plugins.android_telephony
-    import plugins.android_media
-    import plugins.android_vending
-    import plugins.google_docs
-    import plugins.facebook_orca
+    import plugins.sqlite_plugins.android_browser
+    import plugins.sqlite_plugins.android_contacts
+    import plugins.sqlite_plugins.android_downloads
+    import plugins.sqlite_plugins.android_telephony
+    import plugins.sqlite_plugins.android_media
+    import plugins.sqlite_plugins.android_vending
+    import plugins.sqlite_plugins.google_docs
+    import plugins.sqlite_plugins.facebook_orca
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
@@ -105,26 +105,27 @@ if __name__ == "__main__":
     msg = ("Processing Android Browser")
     logging.info(msg)
     print(msg)
-    browser_data = plugins.android_browser.android_browser(files_to_process)
+    browser_data = plugins.sqlite_plugins.android_browser.android_browser(files_to_process)
     browser_user_defaults, browser_preferences = plugins.xml_plugins.android_browser.android_browser(files_to_process)
 
     # Android Contact Parser
     msg = ("Processing Android Contacts")
     logging.info(msg)
     print(msg)
-    contacts_data = plugins.android_contacts.android_contacts(files_to_process)
+    contacts_data = plugins.sqlite_plugins.android_contacts.android_contacts(files_to_process)
 
     # Android Downloads Parser
     msg = ("Processing Android Downloads")
     logging.info(msg)
     print(msg)
-    downloads_data = plugins.android_downloads.android_downloads(files_to_process)
+    downloads_data = plugins.sqlite_plugins.android_downloads.android_downloads(files_to_process)
 
     # Android Telephony Parser
     msg = ("Processing Android SMS")
     logging.info(msg)
     print(msg)
-    telephony_data_sms, telephony_data_threads = plugins.android_telephony.android_telephony(files_to_process)
+    telephony_data_sms, telephony_data_threads = \
+        plugins.sqlite_plugins.android_telephony.android_telephony(files_to_process)
 
     # Android Gmail Parser
     msg = ("Processing Android GMail")
@@ -138,14 +139,14 @@ if __name__ == "__main__":
     msg = 'Processing Android Media'
     logging.info(msg)
     print(msg)
-    android_media_data = plugins.android_media.android_media(files_to_process)
+    android_media_data = plugins.sqlite_plugins.android_media.android_media(files_to_process)
 
     # Android Vending Parser
     msg = 'Processing Android Vending'
     logging.info(msg)
     print(msg)
     vending_library_list, vending_localapp_list, vending_suggestions_list = \
-        plugins.android_vending.android_vending(files_to_process)
+        plugins.sqlite_plugins.android_vending.android_vending(files_to_process)
 
     vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
@@ -153,13 +154,15 @@ if __name__ == "__main__":
     msg = ("Processing Google Docs")
     logging.info(msg)
     print(msg)
-    google_docs_account_data, google_docs_collection_data = plugins.google_docs.google_docs(files_to_process)
+    google_docs_account_data, google_docs_collection_data = \
+        plugins.sqlite_plugins.google_docs.google_docs(files_to_process)
 
     # Facebook Orca (Messenger) Parser
     msg = ("Processing Facebook Messenger")
     logging.info(msg)
     print(msg)
-    orca_contact_data, orca_threads_data, orca_msg_data = plugins.facebook_orca.facebook_orca(files_to_process)
+    orca_contact_data, orca_threads_data, orca_msg_data = \
+        plugins.sqlite_plugins.facebook_orca.facebook_orca(files_to_process)
 
     msg = ("Processors Complete")
     logging.info(msg)

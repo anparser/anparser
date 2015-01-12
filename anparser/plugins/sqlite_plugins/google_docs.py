@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -42,19 +42,19 @@ def google_docs(file_list):
 
     for file_path in file_list:
         if file_path.endswith('DocList.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
-            views = sqlite_plugins.get_sqlite_veiw_info(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
+            views = __init__.get_sqlite_veiw_info(file_path)
             if 'Account101' in tables:
                 try:
-                    account_data = sqlite_plugins.read_sqlite_table(
+                    account_data = __init__.read_sqlite_table(
                         file_path, 'Account101',
                         columns='Account_id, accountHolderName, lastSyncTime')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'CollectionView' in views:
                 try:
-                    collection_data = sqlite_plugins.read_sqlite_table(
+                    collection_data = __init__.read_sqlite_table(
                         file_path, 'CollectionView',
                         columns='_id, Entry_id, title, creator, owner, creationTime, '
                                 'lastModifiedTime, lastModifierAccountAlias, '
@@ -62,20 +62,20 @@ def google_docs(file_list):
                                 'shareableByOwner, shared, modifiedByMeTime, mimetype, kind, '
                                 'canEdit, starred, archived, trashed, pinned, accountId, '
                                 'Collection_id, entry_Id')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'ContainsId101' in tables:
                 try:
-                    contains_data = sqlite_plugins.read_sqlite_table(
+                    contains_data = __init__.read_sqlite_table(
                         file_path, 'ContainsId101',
                         columns='entryId, collectionId')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'EntryView' in views:
                 try:
-                    entry_data = sqlite_plugins.read_sqlite_table(
+                    entry_data = __init__.read_sqlite_table(
                         file_path, 'EntryView',
                         columns='Entry_id, title, creator, owner, creationTime, '
                                 'lastModifiedTime, lastModifierAccountAlias, '
@@ -83,7 +83,7 @@ def google_docs(file_list):
                                 'shareableByOwner, shared, modifiedByMeTime, mimeType, '
                                 'kind, canEdit, starred, archived, trashed, pinned, accountId, '
                                 'md5Checksum, size')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 

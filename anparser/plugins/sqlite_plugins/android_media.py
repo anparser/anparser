@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -40,10 +40,10 @@ def android_media(file_list):
 
     for file_path in file_list:
         if file_path.endswith('external.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'files' in tables:
                 try:
-                    external_data = sqlite_plugins.read_sqlite_table(
+                    external_data = __init__.read_sqlite_table(
                         file_path, 'files',
                         columns='_id, _data, _size, date_added, date_modified, '
                                 'mime_type, title, description, _display_name, '
@@ -51,14 +51,14 @@ def android_media(file_list):
                                 'is_music, is_alarm, is_notification, is_podcast, '
                                 'date_played, count_played, width, height, '
                                 'video_filetype, video_iswatched')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('internal.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'files' in tables:
                 try:
-                    internal_data = sqlite_plugins.read_sqlite_table(
+                    internal_data = __init__.read_sqlite_table(
                         file_path, 'files',
                         columns='_id, _data, _size, date_added, date_modified, '
                                 'mime_type, title, description, _display_name, '
@@ -66,7 +66,7 @@ def android_media(file_list):
                                 'is_music, is_alarm, is_notification, is_podcast, '
                                 'date_played, count_played, width, height, '
                                 'video_filetype, video_iswatched')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 

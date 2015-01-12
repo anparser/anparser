@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -41,36 +41,36 @@ def android_vending(file_list):
 
     for file_path in file_list:
         if file_path.endswith('library.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'ownership' in tables:
                 try:
-                    library_data = sqlite_plugins.read_sqlite_table(
+                    library_data = __init__.read_sqlite_table(
                         file_path, 'ownership',
                         columns='account, library_id, doc_id, document_hash, '
                                 'app_certificate_hash')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('localappstate.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'appstate' in tables:
                 try:
-                    localapp_data = sqlite_plugins.read_sqlite_table(
+                    localapp_data = __init__.read_sqlite_table(
                         file_path, 'appstate',
                         columns='package_name, auto_update, desired_version, download_uri, '
                                 'first_download_ms, account, title, last_notified_version, '
                                 'last_update_timestamp_ms')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('suggestions.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'suggestions' in tables:
                 try:
-                    suggestions_data = sqlite_plugins.read_sqlite_table(
+                    suggestions_data = __init__.read_sqlite_table(
                         file_path, 'suggestions',
                         columns='_id, display1, query, date')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 

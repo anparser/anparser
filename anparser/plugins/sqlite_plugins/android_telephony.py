@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -84,13 +84,13 @@ def android_telephony(file_listing):
 
     for file_path in file_listing:
         if file_path.endswith('mmssms.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'sms' in tables:
                 try:
-                    sms_data = sqlite_plugins.read_sqlite_table(file_path, 'sms',
+                    sms_data = __init__.read_sqlite_table(file_path, 'sms',
                                                                 columns='_id, thread_id, address, person, date, '
                                                                         'date_sent, body, read, seen')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
                 if sms_data:
@@ -98,10 +98,10 @@ def android_telephony(file_listing):
 
             if 'threads' in tables:
                 try:
-                    threads_data = sqlite_plugins.read_sqlite_table(file_path, 'threads',
+                    threads_data = __init__.read_sqlite_table(file_path, 'threads',
                                                                     columns='_id, date, message_count, snippet, read, '
                                                                             'has_attachment')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
                 if threads_data:

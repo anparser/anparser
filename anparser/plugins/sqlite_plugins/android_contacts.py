@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -42,26 +42,26 @@ def android_contacts(file_list):
 
     for file_path in file_list:
         if file_path.endswith('contacts2.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'raw_contacts' in tables:
                 try:
-                    raw_contacts_data = sqlite_plugins.read_sqlite_table(
+                    raw_contacts_data = __init__.read_sqlite_table(
                         file_path, 'raw_contacts', columns='contact_id, display_name, modified_time')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'accounts' in tables:
                 try:
-                    accounts_data = sqlite_plugins.read_sqlite_table(file_path, 'accounts',
+                    accounts_data = __init__.read_sqlite_table(file_path, 'accounts',
                                                                      columns='_id, account_name, account_type')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'phone_lookup' in tables:
                 try:
-                    phone_lookup_data = sqlite_plugins.read_sqlite_table(file_path, 'phone_lookup',
+                    phone_lookup_data = __init__.read_sqlite_table(file_path, 'phone_lookup',
                                                                          columns='raw_contact_id, normalized_number')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
 
     contact_data_list = []

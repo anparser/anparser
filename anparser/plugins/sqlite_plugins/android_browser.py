@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -43,39 +43,39 @@ def android_browser(file_list):
     for file_path in file_list:
         if file_path.endswith('browser2.db'):
             try:
-                tables = sqlite_plugins.get_sqlite_table_names(file_path)
+                tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
                 logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
                 tables = []
 
             try:
-                views = sqlite_plugins.get_sqlite_veiw_info(file_path)
+                views = __init__.get_sqlite_veiw_info(file_path)
             except (IndexError, TypeError) as exception:
                 logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
                 views = []
 
             if 'bookmarks' in tables:
                 try:
-                    bookmarks_data = sqlite_plugins.read_sqlite_table(
+                    bookmarks_data = __init__.read_sqlite_table(
                         file_path, 'bookmarks',
                         columns='_id, title, url, deleted, created, modified')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'history' in tables:
                 try:
-                    history_data = sqlite_plugins.read_sqlite_table(
+                    history_data = __init__.read_sqlite_table(
                         file_path, 'history',
                         columns='_id, title, url, date, visits')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'v_accounts' in views:
                 try:
-                    accounts_data = sqlite_plugins.read_sqlite_table(
+                    accounts_data = __init__.read_sqlite_table(
                         file_path, 'v_accounts',
                         columns='account_name, account_type, root_id')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 

@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -40,14 +40,14 @@ def android_downloads(file_list):
 
     for file_path in file_list:
         if file_path.endswith('downloads.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'downloads' in tables:
                 try:
-                    download_data = sqlite_plugins.read_sqlite_table(
+                    download_data = __init__.read_sqlite_table(
                         file_path, 'downloads',
                         columns='_id, title, description, mimetype, lastmod, uid, '
                                 'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 

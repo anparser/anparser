@@ -23,7 +23,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import sqlite_plugins
+import __init__
 import time
 
 
@@ -45,57 +45,57 @@ def facebook_orca(file_list):
 
     for file_path in file_list:
         if file_path.endswith('contacts_db2') and file_path.count('com.facebook.orca') > 0:
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'contacts' in tables:
                 try:
-                    contacts_data = sqlite_plugins.read_sqlite_table(
+                    contacts_data = __init__.read_sqlite_table(
                         file_path, 'contacts',
                         columns='internal_id, contact_id, fbid, first_name, last_name, '
                                 'display_name')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('threads_db2') and file_path.count('com.facebook.orca') > 0:
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            tables = __init__.get_sqlite_table_names(file_path)
             if 'folder_counts' in tables:
                 try:
-                    folder_counts_data = sqlite_plugins.read_sqlite_table(
+                    folder_counts_data = __init__.read_sqlite_table(
                         file_path, 'folder_counts',
                         columns='folder, unread_count, unseen_count, last_seen_time, last_action_id')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'folders' in tables:
                 try:
-                    folders_data = sqlite_plugins.read_sqlite_table(
+                    folders_data = __init__.read_sqlite_table(
                         file_path, 'folders',
                         columns='folder, thread_key, timestamp_ms')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'messages' in tables:
                 try:
-                    messages_data = sqlite_plugins.read_sqlite_table(
+                    messages_data = __init__.read_sqlite_table(
                         file_path, 'messages',
                         columns='msg_id, thread_key, action_id, text, sender, timestamp_ms, '
                                 'timestamp_sent_ms, attachments, coordinates, offline_threading_id, '
                                 'source, send_error, send_error_message')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
             if 'thread_users' in tables:
-                thread_users_data = sqlite_plugins.read_sqlite_table(
+                thread_users_data = __init__.read_sqlite_table(
                     file_path, 'thread_users',
                     columns='user_key, first_name, last_name, name')
             if 'threads' in tables:
                 try:
-                    threads_data = sqlite_plugins.read_sqlite_table(
+                    threads_data = __init__.read_sqlite_table(
                         file_path, 'threads',
                         columns='thread_key, thread_fbid, action_id, name, '
                                 'participants, former_participants, senders, '
                                 'timestamp_ms, last_fetch_time_ms, unread, '
                                 'folder')
-                except sqlite_plugins.sqlite3.OperationalError as exception:
+                except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 

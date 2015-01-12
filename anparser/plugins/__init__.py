@@ -19,7 +19,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = 'cbryce'
 __license__ = 'GPLv3'
 __date__ = '20150102'
-__version__ = '0.01'
-
-__all__ = ['android_browser', 'android_contacts', 'android_downloads', 'android_media',
-           'android_telephony', 'android_vending', 'google_docs', 'facebook_orca']
+__version__ = '0.00'
