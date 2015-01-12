@@ -22,7 +22,7 @@ __date__ = '20150102'
 __version__ = '0.00'
 
 import sqlite3
-
+import logging
 
 def get_sqlite_table_names(db_path):
     """
@@ -37,7 +37,11 @@ def get_sqlite_table_names(db_path):
     con = sqlite3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute('Select name from sqlite_master where type = \'table\';')
+    try:
+        cur.execute('Select name from sqlite_master where type = \'table\';')
+    except (sqlite3.DatabaseError, sqlite3.OperationalError) as message:
+        logging.error("SQLite DatabaseError: " + db_path + " > " + str(message))
+        return []
 
     # convert tuples to lists
 
@@ -47,8 +51,6 @@ def get_sqlite_table_names(db_path):
         for x in i:
             tmp2.append(x)
 
-    #print 'THIS IS TMP2 OUTPUT FOR TABLES'
-    #print tmp2
     return tmp2
 
 
@@ -64,8 +66,11 @@ def get_sqlite_veiw_info(db_path):
     con = sqlite3.connect(db_path)
     cur = con.cursor()
 
-    cur.execute('Select name, sql from sqlite_master where type = \'view\';')
-
+    try:
+        cur.execute('Select name from sqlite_master where type = \'view\';')
+    except (sqlite3.DatabaseError, sqlite3.OperationalError) as message:
+        logging.error("SQLite DatabaseError: " + db_path + " > " + str(message))
+        return []
     # convert tuples to lists
 
     tmp = cur.fetchall()

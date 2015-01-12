@@ -42,8 +42,18 @@ def android_browser(file_list):
 
     for file_path in file_list:
         if file_path.endswith('browser2.db'):
-            tables = sqlite_plugins.get_sqlite_table_names(file_path)
-            views = sqlite_plugins.get_sqlite_veiw_info(file_path)
+            try:
+                tables = sqlite_plugins.get_sqlite_table_names(file_path)
+            except (IndexError, TypeError) as exception:
+                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
+                tables = []
+
+            try:
+                views = sqlite_plugins.get_sqlite_veiw_info(file_path)
+            except (IndexError, TypeError) as exception:
+                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
+                views = []
+
             if 'bookmarks' in tables:
                 try:
                     bookmarks_data = sqlite_plugins.read_sqlite_table(

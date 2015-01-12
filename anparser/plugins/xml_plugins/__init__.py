@@ -1,3 +1,8 @@
+__author__ = 'cbryce'
+__license__ = 'GPLv3'
+__date__ = '20140109'
+__version__ = '0.00'
+
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -16,34 +21,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-__author__ = 'cbryce'
-__license__ = 'GPLv3'
-__date__ = '20150102'
-__version__ = '0.00'
-
-import csv
-import logging
+import xml.etree.ElementTree as ET
+import collections
 
 
-def csv_writer(data, file_name):
+def parse_xml_file_notree(FILE):
     """
-    Write list of dictionaries of data to a file
-
-    :param data: list of dictionaries
-    :param file_name: file name to write to
-    :return: Completion State
+    :param FILE: string path to file
+    :return: List of dictionaries
     """
 
-    fout = open(file_name, mode='wb')
-    try:
-        writer = csv.DictWriter(fout, data[0].keys(), delimiter='|')
-        writer.writeheader()
-        writer.writerows(data)
-    except (IndexError, TypeError) as exception:
-        logging.error('CSV Writer Error: {0:s}'.format(file_name + " > " + str(exception)))
-        pass
+    context = ET.iterparse(FILE, events=['start'])
+    context = iter(context)
+    event, root = context.next()
 
-    fout.flush()
-    fout.close()
+    # Setup Variables
+    elem_array = []
+    ordered_array = collections.OrderedDict()
 
-    return True
+    for event, elem in context:
+        ordered_array = elem.attrib
+        ordered_array['text_entry'] = str(elem.text).strip()
+
+        elem_array.append(ordered_array)
+        ordered_array = collections.OrderedDict()
+
+    return elem_array
