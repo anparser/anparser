@@ -1,7 +1,7 @@
 __author__ = 'cbryce'
-__license__ = 'GPLv3'
-__date__ = '20150112'
-__version__ = '0.00'
+__license__ = ''
+__date__ = ''
+__version__ = ''
 
 """
 anparser - an Open Source Android Artifact Parser
@@ -22,22 +22,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import __init__
+import collections
 
+FILE = "C:\\Users\\cbryce\\PycharmProjects\\LG_Phone\\LG_Phone\\data\\com.android.vending\\shared_prefs\\finsky.xml"
 
-def android_browser(file_listing):
+def android_vending(file_listing):
     """
-    reads user default and preferences from XMl files
-    :param file_listing: list of file paths
-    :return: list of dictionaries for user_defaults and preferences
+    Reads and processes xml data from android_vending
+
+    :param file_listing: list of files
+    :return: list of dictionaries containing XML values
     """
+    for file_entry in file_listing:
+        if file_entry.endswith('finsky.xml'):
+            vending_data = __init__.parse_xml_file_notree(FILE)
 
-    user_defaults = []
-    browser_prefs = []
+    # add all columns to first entry for CSV Writing
+    vending_data[0]['value'] = ''
+    vending_data[0] = vending_data[0]
 
-    for file_path in file_listing:
-        if file_path.endswith('omadm_node.xml'):
-            user_defaults = __init__.parse_xml_file_notree(file_path)
-        elif file_path.endswith('com.android.browser_preferences.xml'):
-            browser_prefs = __init__.parse_xml_file_notree(file_path)
-
-    return user_defaults, browser_prefs
+    return vending_data

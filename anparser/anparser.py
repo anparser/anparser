@@ -97,6 +97,7 @@ if __name__ == "__main__":
     import plugins.facebook_orca
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
+    import plugins.xml_plugins.android_vending
 
     # run plugins
 
@@ -137,12 +138,14 @@ if __name__ == "__main__":
     print(msg)
     android_media_data = plugins.android_media.android_media(files_to_process)
 
-    # Android Media Parser
+    # Android Vending Parser
     msg = 'Processing Android Vending'
     logging.info(msg)
     print(msg)
     vending_library_list, vending_localapp_list, vending_suggestions_list = \
         plugins.android_vending.android_vending(files_to_process)
+
+    vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
     # Google Docs Parser
     msg = ("Processing Google Docs")
@@ -184,6 +187,7 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(vending_library_list, os.path.join(path, 'android_vending_library.csv'))
     writers.csv_writer.csv_writer(vending_localapp_list, os.path.join(path, 'android_vending_local_apps.csv'))
     writers.csv_writer.csv_writer(vending_suggestions_list, os.path.join(path, 'android_vending_suggestions.csv'))
+    writers.csv_writer.csv_writer(vending_data, os.path.join(path, 'android_vending_account_data.csv'))
     writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
     writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
     writers.csv_writer.csv_writer(gmail_accounts_data, os.path.join(path, 'android_gmail_accounts.csv'))
