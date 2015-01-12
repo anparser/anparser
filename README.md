@@ -26,6 +26,8 @@ From the command line execute:
 
 ## Support
 
+Checkout the [Wiki](https://github.com/chapinb/anparser/wiki) for additional information
+
 Currently supported artifacts as of 2015-01-12:
 
 * Android Browser bookmarks
