@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     # Sets up Logging
     logging.basicConfig(filename=os.path.join(args.destination, 'anparser.log'), level=logging.DEBUG,
-                        format='%(asctime)s | %(levelname)s | %(message)s')
+                        format='%(asctime)s | %(levelname)s | %(message)s', filemode='w')
     logging.info('Starting Anparser v' + __version__)
     logging.info('System ' + sys.platform)
     logging.info('Version ' + sys.version)
