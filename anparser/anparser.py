@@ -96,6 +96,7 @@ if __name__ == "__main__":
     import plugins.google_docs
     import plugins.facebook_orca
     import plugins.xml_plugins.android_gmail
+    import plugins.xml_plugins.android_browser
 
     # run plugins
 
@@ -104,6 +105,7 @@ if __name__ == "__main__":
     logging.info(msg)
     print(msg)
     browser_data = plugins.android_browser.android_browser(files_to_process)
+    browser_user_defaults, browser_preferences = plugins.xml_plugins.android_browser.android_browser(files_to_process)
 
     # Android Contact Parser
     msg = ("Processing Android Contacts")
@@ -174,6 +176,8 @@ if __name__ == "__main__":
     if not os.path.exists(path):
         os.mkdir(path, 0777)
     writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
+    writers.csv_writer.csv_writer(browser_preferences, os.path.join(path, 'android_browser_preferences.csv'))
+    writers.csv_writer.csv_writer(browser_user_defaults, os.path.join(path, 'android_browser_user_defaults.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
     writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
