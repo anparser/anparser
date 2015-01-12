@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import __init__
 import collections
 
-FILE = "C:\\Users\\cbryce\\PycharmProjects\\LG_Phone\\LG_Phone\\data\\com.android.vending\\shared_prefs\\finsky.xml"
 
 def android_vending(file_listing):
     """
@@ -34,8 +33,8 @@ def android_vending(file_listing):
     :return: list of dictionaries containing XML values
     """
     for file_entry in file_listing:
-        if file_entry.endswith('finsky.xml'):
-            vending_data = __init__.parse_xml_file_notree(FILE)
+        if file_entry.endswith('finsky.xml') and file_entry.count('com.android.vending') > 0:
+            vending_data = __init__.parse_xml_file_notree(file_entry)
 
     # add all columns to first entry for CSV Writing
     vending_data[0]['value'] = ''
