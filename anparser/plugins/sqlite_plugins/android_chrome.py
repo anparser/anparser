@@ -93,12 +93,10 @@ def android_chrome(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
 
-
     chrome_cookies_list = []
     chrome_downloads_list = []
     chrome_history_list = []
     chrome_data = OrderedDict()
-    dt = None
 
     # Add data from Cookies database to chrome_cookies_list
     # Add data from cookies table to chrome_data
@@ -170,7 +168,7 @@ def android_chrome(file_list):
             chrome_data['lower search term'] = ''
             chrome_data['search term'] = ''
             chrome_data['url'] = entry[1]
-            chrome_data['title'] = entry[2]
+            chrome_data['title'] = entry[2].encode('utf-8')
             chrome_data['visit count'] = entry[3]
             chrome_data['typed count'] = entry[4]
             chrome_data['visit time'] = ''
@@ -205,8 +203,8 @@ def android_chrome(file_list):
             chrome_history_list.append(chrome_data)
             chrome_data = OrderedDict()
 
-
     return chrome_cookies_list, chrome_downloads_list, chrome_history_list
+
 
 def chrome_time(timestamp):
     """
