@@ -1,7 +1,7 @@
 __author__ = 'cbryce'
-__license__ = ''
-__date__ = ''
-__version__ = ''
+__license__ = 'GPLv3'
+__date__ = '20150112'
+__version__ = '0.00'
 
 """
 anparser - an Open Source Android Artifact Parser
@@ -20,3 +20,5 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+
+__all__ = ['android_gmail_message_parser']

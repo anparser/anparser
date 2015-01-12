@@ -1,7 +1,7 @@
 __author__ = 'cbryce'
-__license__ = ''
-__date__ = ''
-__version__ = ''
+__license__ = 'GPLv3'
+__date__ = '20150112'
+__version__ = '0.00'
 
 """
 anparser - an Open Source Android Artifact Parser
@@ -26,6 +26,13 @@ import android_gmail_message_extractor
 
 
 def android_gmail_message_parser(file_listing, output_dir):
+    """
+    Extract HTML versions of Gmail Messages
+
+    :param file_listing: List of files to process
+    :param output_dir: path to base output
+    :return: None - No need for writers since the script handles output internally
+    """
 
     filesToProcess = []
     account_info = dict()
