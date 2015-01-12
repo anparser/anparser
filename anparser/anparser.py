@@ -98,7 +98,7 @@ if __name__ == "__main__":
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
-
+    import plugins.other_plugins.android_gmail_message_parser
     # run plugins
 
     # Android Browser Parser
@@ -131,6 +131,8 @@ if __name__ == "__main__":
     logging.info(msg)
     print(msg)
     gmail_accounts_data = plugins.xml_plugins.android_gmail.android_gmail(files_to_process)
+    plugins.other_plugins.android_gmail_message_parser.android_gmail_message_parser(files_to_process, os.path.join(
+        args.destination, "Android/Gmail_Messages/"))
 
     # Android Media Parser
     msg = 'Processing Android Media'
