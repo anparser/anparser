@@ -83,11 +83,11 @@ def android_media(file_list):
             media_data['size'] = entry[2]
             try:
                 media_data['created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['created'] = ''
             try:
                 media_data['modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['modified'] = ''
             media_data['mime type'] = entry[5]
             media_data['title'] = entry[6]
@@ -97,7 +97,7 @@ def android_media(file_list):
             media_data['longitude'] = entry[10]
             try:
                 media_data['date taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[11]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['date taken'] = ''
             media_data['is ringtone'] = entry[12]
             media_data['is music'] = entry[13]
@@ -106,7 +106,7 @@ def android_media(file_list):
             media_data['is podcast'] = entry[16]
             try:
                 media_data['date played'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[17]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['date played'] = ''
             media_data['count played'] = entry[18]
             media_data['width'] = entry[19]
@@ -127,11 +127,11 @@ def android_media(file_list):
             media_data['size'] = entry[2]
             try:
                 media_data['created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['created'] = ''
             try:
                 media_data['modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['modified'] = ''
             media_data['mime type'] = entry[5]
             media_data['title'] = entry[6]
@@ -141,7 +141,7 @@ def android_media(file_list):
             media_data['longitude'] = entry[10]
             try:
                 media_data['date taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[11]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['date taken'] = ''
             media_data['is ringtone'] = entry[12]
             media_data['is music'] = entry[13]
@@ -150,7 +150,7 @@ def android_media(file_list):
             media_data['is podcast'] = entry[16]
             try:
                 media_data['date played'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[17]))
-            except TypeError:
+            except (TypeError, ValueError):
                 media_data['date played'] = ''
             media_data['count played'] = entry[18]
             media_data['width'] = entry[19]

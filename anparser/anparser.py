@@ -91,6 +91,8 @@ if __name__ == "__main__":
     import plugins.android_contacts
     import plugins.android_downloads
     import plugins.android_telephony
+    import plugins.android_media
+    import plugins.android_vending
     import plugins.google_docs
     import plugins.facebook_orca
     import plugins.xml_plugins.android_gmail
@@ -127,6 +129,19 @@ if __name__ == "__main__":
     print(msg)
     gmail_accounts_data = plugins.xml_plugins.android_gmail.android_gmail(files_to_process)
 
+    # Android Media Parser
+    msg = 'Processing Android Media'
+    logging.info(msg)
+    print(msg)
+    android_media_data = plugins.android_media.android_media(files_to_process)
+
+    # Android Media Parser
+    msg = 'Processing Android Vending'
+    logging.info(msg)
+    print(msg)
+    vending_library_list, vending_localapp_list, vending_suggestions_list = \
+        plugins.android_vending.android_vending(files_to_process)
+
     # Google Docs Parser
     msg = ("Processing Google Docs")
     logging.info(msg)
@@ -161,6 +176,10 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
+    writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
+    writers.csv_writer.csv_writer(vending_library_list, os.path.join(path, 'android_vending_library.csv'))
+    writers.csv_writer.csv_writer(vending_localapp_list, os.path.join(path, 'android_vending_local_apps.csv'))
+    writers.csv_writer.csv_writer(vending_suggestions_list, os.path.join(path, 'android_vending_suggestions.csv'))
     writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
     writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
     writers.csv_writer.csv_writer(gmail_accounts_data, os.path.join(path, 'android_gmail_accounts.csv'))
