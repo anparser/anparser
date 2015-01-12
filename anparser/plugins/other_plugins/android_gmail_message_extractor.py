@@ -94,7 +94,7 @@ def main(path, outputPath):
                          '<strong>BCC:</strong>' + bad_chars(em_baddress).encode('utf-8') + '<br>' +
                          '<strong>Reply-To Address:</strong>' + bad_chars(em_raddress).encode('utf-8') +
                          '<br><br>' + '</div><div class="body">' +
-                         '<strong>Subject:</strong>' + em_subject + '<br><br>' +
+                         '<strong>Subject:</strong>' + em_subject.encode('utf-8') + '<br><br>' +
                          '<strong>Body:</strong><br>')
 
         if em_body:
