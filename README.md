@@ -38,7 +38,7 @@ Currently supported artifacts as of 2015-01-12:
 * Android Contacts
 * Android Downloads
 * Android Gmail accounts
-* Android media
+* Android Media file listing
 * Android SMS data
 * Android Message threads
 * Android Play Store account data
