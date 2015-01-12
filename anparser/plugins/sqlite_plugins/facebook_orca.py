@@ -238,12 +238,26 @@ def facebook_orca(file_list):
 
     # Add data from threads_db2 database to orca_msg_list
     # Add data from messages table to orca_data
+    import simplejson
     if messages_data:
         for entry in messages_data:
             orca_data['Table'] = 'messages'
             orca_data['thread'] = entry[1]
-            orca_data['text'] = entry[3]
-            orca_data['sender'] = entry[4]
+            try:
+                orca_data['text'] = entry[3].strip('\n')
+            except AttributeError:
+                orca_data['text'] = entry[3]
+
+            try:
+                tmp_dict = simplejson.loads(entry[4].encode('utf-8'))
+                orca_data['email'] = tmp_dict['email']
+                orca_data['FaceBook id'] = tmp_dict['user_key']
+                orca_data['name'] = tmp_dict['name']
+            except AttributeError:
+                orca_data['email'] = ''
+                orca_data['FaceBook id'] = ''
+                orca_data['name'] = ''
+
             try:
                 orca_data['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
             except TypeError:
@@ -254,8 +268,22 @@ def facebook_orca(file_list):
                 orca_data['timestamp sent'] = ''
             orca_data['msg id'] = entry[0]
             orca_data['source'] = entry[10]
-            orca_data['attachments'] = entry[7]
-            orca_data['coordinates'] = entry[8]
+            if len(entry[7]) < 0:
+                orca_data['attachment'] = simplejson.loads(entry[7].encode('utf-8'))[0]['filename']
+                orca_data['attachment_url'] = simplejson.loads(entry[7].encode('utf-8'))[0]['urls']['FULL_SCREEN'][
+                    'src']
+            else:
+                orca_data['attachment'] = ''
+                orca_data['attachment_url'] = ''
+            try:
+                tmp_dict = simplejson.loads(entry[8].encode('utf-8'))
+                orca_data['latitude'] = tmp_dict['latitude']
+                orca_data['logitude'] = tmp_dict['longitude']
+                orca_data['accuracy'] = tmp_dict['accuracy']
+            except AttributeError:
+                orca_data['latitude'] = ''
+                orca_data['logitude'] = ''
+                orca_data['accuracy'] = ''
             orca_data['offline thread id'] = entry[9]
             orca_data['action id'] = entry[2]
             orca_data['send error'] = entry[11]

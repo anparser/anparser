@@ -217,7 +217,14 @@ def chrome_time(timestamp):
     """
     offset = 11644473600000
     temp = int(((timestamp / 1000) - offset) * (1*10**-3))
-    dt = datetime.datetime.utcfromtimestamp(temp)
+    try:
+        dt = datetime.datetime.utcfromtimestamp(temp)
+    except (ValueError, TypeError):
+        try:
+            dt = datetime.datetime.utcfromtimestamp(temp*-1)
+        except (ValueError, TypeError):
+            dt = None
+
     try:
         timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
     except (ValueError, TypeError):
