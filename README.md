@@ -28,18 +28,30 @@ From the command line execute:
 
 Currently supported artifacts as of 2015-01-12:
 
-* Android Contacts Database
-* Android SMS Contact Database
-* Android Media Database
-* Android Browser Database
-* Android Browsing XML Preferences
-* Android Vending Database (Play Store)
-* Android Vending XML Preferences (Play Store)
-* Android Downloads Database
-* Android Gmail Database
-* Android Gmail Message Extraction
-* Google Docs Database
-* Facebook Messenger (Orca)
+* Android Browser bookmarks
+* Android Browser accounts
+* Android Browser preferences
+* Android Browser user defaults
+* Android Chrome cookies
+* Android Chrome downloads
+* Android Chrome history
+* Android Contacts
+* Android Downloads
+* Android Gmail accounts
+* Android media
+* Android SMS data
+* Android Message threads
+* Android Play Store account data
+* Android Play Store library
+* Android Play Store local apps
+* Android Play Store suggestions
+
+* Google Docs accounts
+* Google Docs collection
+
+* Facebook Messenger contacts
+* Facebook Messenger messages
+* Facebook Messenger threads
 
 Currently supported output formats:
 
