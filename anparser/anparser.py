@@ -88,6 +88,7 @@ if __name__ == "__main__":
 
     # import plugins to process the file listing
     import plugins.sqlite_plugins.android_browser
+    import plugins.sqlite_plugins.android_chrome
     import plugins.sqlite_plugins.android_contacts
     import plugins.sqlite_plugins.android_downloads
     import plugins.sqlite_plugins.android_telephony
@@ -107,6 +108,12 @@ if __name__ == "__main__":
     print(msg)
     browser_data = plugins.sqlite_plugins.android_browser.android_browser(files_to_process)
     browser_user_defaults, browser_preferences = plugins.xml_plugins.android_browser.android_browser(files_to_process)
+
+    # Android Chrome Parser
+    msg = ("Processing Android Chrome")
+    logging.info(msg)
+    print(msg)
+    chrome_cookies_data, chrome_downloads_data, chrome_history_data = plugins.sqlite_plugins.android_chrome.android_chrome(files_to_process)
 
     # Android Contact Parser
     msg = ("Processing Android Contacts")
@@ -186,6 +193,9 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
     writers.csv_writer.csv_writer(browser_preferences, os.path.join(path, 'android_browser_preferences.csv'))
     writers.csv_writer.csv_writer(browser_user_defaults, os.path.join(path, 'android_browser_user_defaults.csv'))
+    writers.csv_writer.csv_writer(chrome_cookies_data, os.path.join(path, 'android_chrome_cookies.csv'))
+    writers.csv_writer.csv_writer(chrome_downloads_data, os.path.join(path, 'android_chrome_downloads.csv'))
+    writers.csv_writer.csv_writer(chrome_history_data, os.path.join(path, 'android_chrome_history.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
     writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
