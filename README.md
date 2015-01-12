@@ -47,10 +47,8 @@ Currently supported artifacts as of 2015-01-12:
 * Android Play Store library
 * Android Play Store local apps
 * Android Play Store suggestions
-
 * Google Docs accounts
 * Google Docs collection
-
 * Facebook Messenger contacts
 * Facebook Messenger messages
 * Facebook Messenger threads
