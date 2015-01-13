@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <string name="ds__downloads_json__">
+        [{"minVersion":0,"filename":"libAppDataSearchExt_armeabi_v7a.so","sizeBytes":3810616}]
+    </string>
+    <string name="libAppDataSearchExt_armeabi_v7a.so__dest__"/>
+    <long name="ds__next_alarm__" value="178309873"/>
+</map>

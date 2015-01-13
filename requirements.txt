@@ -1,0 +1,1 @@
+-e git://github.com/chapinb/anparser.git@0.01a#egg=anparser
