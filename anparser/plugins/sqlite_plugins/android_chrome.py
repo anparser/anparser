@@ -88,7 +88,6 @@ def android_chrome(file_list):
                     visits_data = __init__.read_sqlite_table(
                         file_path, 'visits',
                         columns='id, url, visit_time, visit_duration')
-                    print visits_data
                 except __init__.sqlite3.OperationalError as exception:
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass

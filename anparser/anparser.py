@@ -93,8 +93,10 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.android_downloads
     import plugins.sqlite_plugins.android_telephony
     import plugins.sqlite_plugins.android_media
+    import plugins.sqlite_plugins.android_mms
     import plugins.sqlite_plugins.android_vending
     import plugins.sqlite_plugins.google_docs
+    import plugins.sqlite_plugins.facebook_katana
     import plugins.sqlite_plugins.facebook_orca
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
@@ -104,39 +106,39 @@ if __name__ == "__main__":
     # run plugins
 
     # Android Browser Parser
-    msg = ("Processing Android Browser")
+    msg = 'Processing Android Browser'
     logging.info(msg)
     print(msg)
     browser_data = plugins.sqlite_plugins.android_browser.android_browser(files_to_process)
     browser_user_defaults, browser_preferences = plugins.xml_plugins.android_browser.android_browser(files_to_process)
 
     # Android Chrome Parser
-    msg = ("Processing Android Chrome")
+    msg = 'Processing Android Chrome'
     logging.info(msg)
     print(msg)
     chrome_cookies_data, chrome_downloads_data, chrome_history_data = plugins.sqlite_plugins.android_chrome.android_chrome(files_to_process)
 
     # Android Contact Parser
-    msg = ("Processing Android Contacts")
+    msg = 'Processing Android Contacts'
     logging.info(msg)
     print(msg)
     contacts_data = plugins.sqlite_plugins.android_contacts.android_contacts(files_to_process)
 
     # Android Downloads Parser
-    msg = ("Processing Android Downloads")
+    msg = 'Processing Android Downloads'
     logging.info(msg)
     print(msg)
     downloads_data = plugins.sqlite_plugins.android_downloads.android_downloads(files_to_process)
 
     # Android Telephony Parser
-    msg = ("Processing Android SMS")
+    msg = 'Processing Android SMS'
     logging.info(msg)
     print(msg)
     telephony_data_sms, telephony_data_threads = \
         plugins.sqlite_plugins.android_telephony.android_telephony(files_to_process)
 
     # Android Gmail Parser
-    msg = ("Processing Android GMail")
+    msg = 'Processing Android GMail'
     logging.info(msg)
     print(msg)
     gmail_accounts_data = plugins.xml_plugins.android_gmail.android_gmail(files_to_process)
@@ -150,6 +152,12 @@ if __name__ == "__main__":
     print(msg)
     android_media_data = plugins.sqlite_plugins.android_media.android_media(files_to_process)
 
+    # Android MMS Parser
+    msg = 'Processing Android MMS'
+    logging.info(msg)
+    print(msg)
+    android_mms_data = plugins.sqlite_plugins.android_mms.android_mms(files_to_process)
+
     # Android Vending Parser
     msg = 'Processing Android Vending'
     logging.info(msg)
@@ -159,26 +167,33 @@ if __name__ == "__main__":
     vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
     # Google Docs Parser
-    msg = ("Processing Google Docs")
+    msg = 'Processing Google Docs'
     logging.info(msg)
     print(msg)
     google_docs_account_data, google_docs_collection_data = \
         plugins.sqlite_plugins.google_docs.google_docs(files_to_process)
 
     # Google Talk Parser
-    msg = 'Process Google Talk'
+    msg = 'Processing Google Talk'
     logging.info(msg)
     print(msg)
     google_talk_data = plugins.xml_plugins.google_talk.google_talk(files_to_process)
 
+    # Facebook Parser
+    msg = 'Processing Facebook'
+    logging.info(msg)
+    print(msg)
+    katana_contact_data, katana_threads_data, katana_msg_data, katana_notifications_data = \
+        plugins.sqlite_plugins.facebook_katana.facebook_katana(files_to_process)
+
     # Facebook Orca (Messenger) Parser
-    msg = ("Processing Facebook Messenger")
+    msg = 'Processing Facebook Messenger'
     logging.info(msg)
     print(msg)
     orca_contact_data, orca_threads_data, orca_msg_data = \
         plugins.sqlite_plugins.facebook_orca.facebook_orca(files_to_process)
 
-    msg = ("Processors Complete")
+    msg = 'Processors Complete'
     logging.info(msg)
     print(msg)
     #
@@ -191,7 +206,7 @@ if __name__ == "__main__":
     import writers.csv_writer
 
     # Write Contact Data
-    msg = ("Writing data to output...")
+    msg = 'Writing data to output...'
     logging.info(msg)
     print(msg)
     path = args.destination + '//Android'
@@ -206,6 +221,7 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
     writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
+    writers.csv_writer.csv_writer(android_mms_data, os.path.join(path, 'android_mms_glance.csv'))
     writers.csv_writer.csv_writer(vending_library_list, os.path.join(path, 'android_vending_library.csv'))
     writers.csv_writer.csv_writer(vending_localapp_list, os.path.join(path, 'android_vending_local_apps.csv'))
     writers.csv_writer.csv_writer(vending_suggestions_list, os.path.join(path, 'android_vending_suggestions.csv'))
@@ -224,9 +240,13 @@ if __name__ == "__main__":
     path = args.destination + '//Facebook'
     if not os.path.exists(path):
         os.mkdir(path, 0777)
+    writers.csv_writer.csv_writer(katana_contact_data, os.path.join(path, 'facebook_katana_contacts.csv'))
+    writers.csv_writer.csv_writer(katana_threads_data, os.path.join(path, 'facebook_katana_threads.csv'))
+    writers.csv_writer.csv_writer(katana_msg_data, os.path.join(path, 'facebook_katana_messages.csv'))
+    writers.csv_writer.csv_writer(katana_notifications_data, os.path.join(path, 'facebook_katana_notifications.csv'))
     writers.csv_writer.csv_writer(orca_contact_data, os.path.join(path, 'facebook_orca_contacts.csv'))
     writers.csv_writer.csv_writer(orca_threads_data, os.path.join(path, 'facebook_orca_threads.csv'))
     writers.csv_writer.csv_writer(orca_msg_data, os.path.join(path, 'facebook_orca_messages.csv'))
-    msg = ("Completed")
+    msg = 'Completed'
     logging.info(msg)
     print(msg)
