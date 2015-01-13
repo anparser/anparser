@@ -98,8 +98,14 @@ def android_vending(file_list):
     if localapp_data:
         for entry in localapp_data:
             vending_data['Table'] = 'appstate'
-            vending_data['title'] = entry[6]
-            vending_data['package name'] = entry[0]
+            try:
+                vending_data['title'] = entry[6].encode('utf-8')
+            except AttributeError:
+                vending_data['title'] = entry[6]
+            try:
+                vending_data['package name'] = entry[0].encode('utf-8')
+            except AttributeError:
+                vending_data['package name'] = entry[0]
             vending_data['account'] = entry[5]
             try:
                 vending_data['first download'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
@@ -112,7 +118,10 @@ def android_vending(file_list):
                 vending_data['last update'] = ''
             vending_data['last_notified_version'] = entry[7]
             vending_data['desired version'] = entry[2]
-            vending_data['download uri'] = entry[3]
+            try:
+                vending_data['download uri'] = entry[3].encode('utf-8')
+            except AttributeError:
+                vending_data['download uri'] = entry[3]
 
             vending_localapp_list.append(vending_data)
             vending_data = OrderedDict()

@@ -49,6 +49,7 @@ Currently supported artifacts as of 2015-01-12:
 * Android Play Store suggestions
 * Google Docs accounts
 * Google Docs collection
+* Google Talk Accounts (Hangouts)
 * Facebook Messenger contacts
 * Facebook Messenger messages
 * Facebook Messenger threads

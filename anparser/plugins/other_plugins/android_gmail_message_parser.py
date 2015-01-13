@@ -55,3 +55,4 @@ def android_gmail_message_parser(file_listing, output_dir):
         if not os.path.exists(accountOutputPath):
             os.makedirs(accountOutputPath)
         android_gmail_message_extractor.main(fileEntry['path'], accountOutputPath)
+        return None

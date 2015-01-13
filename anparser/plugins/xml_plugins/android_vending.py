@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import __init__
 import collections
+import logging
 
 
 def android_vending(file_listing):
@@ -32,12 +33,16 @@ def android_vending(file_listing):
     :param file_listing: list of files
     :return: list of dictionaries containing XML values
     """
+    vending_data = []
     for file_entry in file_listing:
         if file_entry.endswith('finsky.xml') and file_entry.count('com.android.vending') > 0:
             vending_data = __init__.parse_xml_file_notree(file_entry)
 
     # add all columns to first entry for CSV Writing
-    vending_data[0]['value'] = ''
-    vending_data[0] = vending_data[0]
+    try:
+        vending_data[0]['value'] = ''
+        vending_data[0] = vending_data[0]
+    except IndexError:
+        pass
 
     return vending_data

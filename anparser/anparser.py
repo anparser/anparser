@@ -99,6 +99,7 @@ if __name__ == "__main__":
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
+    import plugins.xml_plugins.google_talk
     import plugins.other_plugins.android_gmail_message_parser
     # run plugins
 
@@ -139,6 +140,7 @@ if __name__ == "__main__":
     logging.info(msg)
     print(msg)
     gmail_accounts_data = plugins.xml_plugins.android_gmail.android_gmail(files_to_process)
+
     plugins.other_plugins.android_gmail_message_parser.android_gmail_message_parser(files_to_process, os.path.join(
         args.destination, "Android/Gmail_Messages/"))
 
@@ -154,7 +156,6 @@ if __name__ == "__main__":
     print(msg)
     vending_library_list, vending_localapp_list, vending_suggestions_list = \
         plugins.sqlite_plugins.android_vending.android_vending(files_to_process)
-
     vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
     # Google Docs Parser
@@ -163,6 +164,12 @@ if __name__ == "__main__":
     print(msg)
     google_docs_account_data, google_docs_collection_data = \
         plugins.sqlite_plugins.google_docs.google_docs(files_to_process)
+
+    # Google Talk Parser
+    msg = 'Process Google Talk'
+    logging.info(msg)
+    print(msg)
+    google_talk_data = plugins.xml_plugins.google_talk.google_talk(files_to_process)
 
     # Facebook Orca (Messenger) Parser
     msg = ("Processing Facebook Messenger")
@@ -212,6 +219,7 @@ if __name__ == "__main__":
         os.mkdir(path, 0777)
     writers.csv_writer.csv_writer(google_docs_account_data, os.path.join(path, 'google_docs_accounts.csv'))
     writers.csv_writer.csv_writer(google_docs_collection_data, os.path.join(path, 'google_docs_collection.csv'))
+    writers.csv_writer.csv_writer(google_talk_data, os.path.join(path, 'google_talk_accounts.csv'))
 
     path = args.destination + '//Facebook'
     if not os.path.exists(path):
