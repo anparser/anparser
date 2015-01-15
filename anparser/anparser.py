@@ -88,6 +88,7 @@ if __name__ == "__main__":
 
     # import plugins to process the file listing
     import plugins.sqlite_plugins.android_browser
+    import plugins.sqlite_plugins.android_calendar
     import plugins.sqlite_plugins.android_chrome
     import plugins.sqlite_plugins.android_contacts
     import plugins.sqlite_plugins.android_downloads
@@ -112,6 +113,12 @@ if __name__ == "__main__":
     print(msg)
     browser_data = plugins.sqlite_plugins.android_browser.android_browser(files_to_process)
     browser_user_defaults, browser_preferences = plugins.xml_plugins.android_browser.android_browser(files_to_process)
+
+    # Android Calendar Parser
+    msg = 'Processing Android Calendar'
+    logging.info(msg)
+    print(msg)
+    calendar_data = plugins.sqlite_plugins.android_calendar.android_calendar(files_to_process)
 
     # Android Chrome Parser
     msg = 'Processing Android Chrome'
@@ -222,6 +229,7 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
     writers.csv_writer.csv_writer(browser_preferences, os.path.join(path, 'android_browser_preferences.csv'))
     writers.csv_writer.csv_writer(browser_user_defaults, os.path.join(path, 'android_browser_user_defaults.csv'))
+    writers.csv_writer.csv_writer(calendar_data, os.path.join(path, 'android_calendar.csv'))
     writers.csv_writer.csv_writer(chrome_cookies_data, os.path.join(path, 'android_chrome_cookies.csv'))
     writers.csv_writer.csv_writer(chrome_downloads_data, os.path.join(path, 'android_chrome_downloads.csv'))
     writers.csv_writer.csv_writer(chrome_history_data, os.path.join(path, 'android_chrome_history.csv'))
