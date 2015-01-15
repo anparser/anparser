@@ -92,6 +92,7 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.android_contacts
     import plugins.sqlite_plugins.android_downloads
     import plugins.sqlite_plugins.android_telephony
+    import plugins.sqlite_plugins.android_gallery3d
     import plugins.sqlite_plugins.android_media
     import plugins.sqlite_plugins.android_mms
     import plugins.sqlite_plugins.android_vending
@@ -129,6 +130,12 @@ if __name__ == "__main__":
     logging.info(msg)
     print(msg)
     downloads_data = plugins.sqlite_plugins.android_downloads.android_downloads(files_to_process)
+
+    # Android Gallery3d Parser
+    msg = 'Processing Android Gallery3d'
+    logging.info(msg)
+    print(msg)
+    photo_file_data, picasa_data = plugins.sqlite_plugins.android_gallery3d.android_gallery3d(files_to_process)
 
     # Android Telephony Parser
     msg = 'Processing Android SMS'
@@ -220,6 +227,8 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(chrome_history_data, os.path.join(path, 'android_chrome_history.csv'))
     writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
     writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
+    writers.csv_writer.csv_writer(photo_file_data, os.path.join(path, 'android_gallery3d_files.csv'))
+    writers.csv_writer.csv_writer(picasa_data, os.path.join(path, 'android_gallery3d_picasa.csv'))
     writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
     writers.csv_writer.csv_writer(android_mms_data, os.path.join(path, 'android_mms_glance.csv'))
     writers.csv_writer.csv_writer(vending_library_list, os.path.join(path, 'android_vending_library.csv'))
