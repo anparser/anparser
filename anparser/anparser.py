@@ -104,6 +104,7 @@ if __name__ == "__main__":
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
     import plugins.xml_plugins.google_talk
+    import plugins.xml_plugins.snapchat_android
     import plugins.other_plugins.android_gmail_message_parser
     # run plugins
 
@@ -207,6 +208,12 @@ if __name__ == "__main__":
     orca_contact_data, orca_threads_data, orca_msg_data = \
         plugins.sqlite_plugins.facebook_orca.facebook_orca(files_to_process)
 
+    # Snapchat Parser
+    msg = 'Processing Snapchat'
+    logging.info(msg)
+    print(msg)
+    snapchat_data = plugins.xml_plugins.snapchat_android.snapchat_android(files_to_process)
+
     msg = 'Processors Complete'
     logging.info(msg)
     print(msg)
@@ -264,6 +271,11 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(orca_contact_data, os.path.join(path, 'facebook_orca_contacts.csv'))
     writers.csv_writer.csv_writer(orca_threads_data, os.path.join(path, 'facebook_orca_threads.csv'))
     writers.csv_writer.csv_writer(orca_msg_data, os.path.join(path, 'facebook_orca_messages.csv'))
+
+    path = args.destination + '//Snapchat'
+    if not os.path.exists(path):
+        os.mkdir(path, 0777)
+    writers.csv_writer.csv_writer(snapchat_data, os.path.join(path, 'snapchat_preferences.csv'))
     msg = 'Completed'
     logging.info(msg)
     print(msg)
