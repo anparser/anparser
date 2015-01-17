@@ -1,6 +1,6 @@
 """
 anparser - an Open Source Android Artifact Parser
-Copyright (C) 2015  Chapin Bryce
+Copyright (C) 2015  Preston Miller
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,9 +16,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-__author__ = 'cbryce'
+__author__ = 'prmiller91'
 __license__ = 'GPLv3'
-__date__ = '20150102'
+__date__ = '20150117'
 __version__ = '0.00'
 
-__all__ = ['csv_writer', 'xlsx_writer']
+import pandas as pd
+import logging
+
+#TODO: Add try & except
+
+def xlsx_writer(data, file_name):
+    """
+    Write list of dictionaries of data to a file
+
+    :param data: list of dictionaries
+    :param file_name: file name to write to
+    :return: Completion State
+    """
+
+    writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
+    for key in data.keys():
+        data[key].to_excel(writer, '{0}'.format(key), index=False)
+    writer.save()

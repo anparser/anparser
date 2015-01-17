@@ -25,6 +25,7 @@ __version__ = '0.00'
 import logging
 import os
 import sys
+import pandas as pd
 import plugins
 import plugins.sqlite_plugins
 
@@ -181,6 +182,14 @@ if __name__ == "__main__":
         plugins.sqlite_plugins.android_vending.android_vending(files_to_process)
     vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
+    # For XLSX test
+    vending_dict = {'android_vending_library':pd.DataFrame(vending_library_list,
+                                                           columns=vending_library_list[0].keys()),
+                    'android_vending_local_apps':pd.DataFrame(vending_localapp_list,
+                                                              columns=vending_localapp_list[0].keys()),
+                    'android_vending_suggestions':pd.DataFrame(vending_suggestions_list,
+                                                               columns=vending_suggestions_list[0].keys())}
+
     # Google Docs Parser
     msg = 'Processing Google Docs'
     logging.info(msg)
@@ -225,6 +234,7 @@ if __name__ == "__main__":
     # Start of Writers
     #
     import writers.csv_writer
+    import writers.xlsx_writer
 
     # Write Contact Data
     msg = 'Writing data to output...'
@@ -246,6 +256,10 @@ if __name__ == "__main__":
     writers.csv_writer.csv_writer(picasa_data, os.path.join(path, 'android_gallery3d_picasa.csv'))
     writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
     writers.csv_writer.csv_writer(android_mms_data, os.path.join(path, 'android_mms_glance.csv'))
+
+    # For XLSX Test
+    writers.xlsx_writer.xlsx_writer(vending_dict, os.path.join(path, 'android_vending.xlsx'))
+
     writers.csv_writer.csv_writer(vending_library_list, os.path.join(path, 'android_vending_library.csv'))
     writers.csv_writer.csv_writer(vending_localapp_list, os.path.join(path, 'android_vending_local_apps.csv'))
     writers.csv_writer.csv_writer(vending_suggestions_list, os.path.join(path, 'android_vending_suggestions.csv'))
