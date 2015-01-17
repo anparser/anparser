@@ -167,7 +167,7 @@ def android_chrome(file_list):
             chrome_data['lower search term'] = ''
             chrome_data['search term'] = ''
             chrome_data['url'] = entry[1]
-            chrome_data['title'] = entry[2].encode('utf-8')
+            chrome_data['title'] = entry[2]
             chrome_data['visit count'] = entry[3]
             chrome_data['typed count'] = entry[4]
             chrome_data['visit time'] = ''

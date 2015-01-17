@@ -170,7 +170,7 @@ def android_calendar(file_list):
             calendar_data['reminder (minutes)'] = ''
             calendar_data['organizer'] = entry[8]
             calendar_data['title'] = entry[1]
-            calendar_data['description'] = entry[3].encode('utf-8')
+            calendar_data['description'] = entry[3]
             calendar_data['deleted'] = entry[9]
             try:
                 calendar_data['event start'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
