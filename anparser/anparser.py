@@ -102,6 +102,7 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.google_docs
     import plugins.sqlite_plugins.facebook_katana
     import plugins.sqlite_plugins.facebook_orca
+    import plugins.sqlite_plugins.snapchat_android
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
@@ -397,13 +398,35 @@ if __name__ == "__main__":
     msg = 'Processing Snapchat'
     logging.info(msg)
     print(msg)
-    snapchat_data = plugins.xml_plugins.snapchat_android.snapchat_android(files_to_process)
+    snapchat_friends_data, snapchat_chat_data, snapchat_viewing_data, snapchat_files_data = \
+        plugins.sqlite_plugins.snapchat_android.snapchat_android(files_to_process)
+    snapchat_preferences_data = plugins.xml_plugins.snapchat_android.snapchat_android(files_to_process)
 
     if args.o.lower() == 'xlsx':
         snapchat_dict = OrderedDict()
         try:
-            snapchat_dict['snapchat_preferences'] = pd.DataFrame(snapchat_data,
-                                                                 columns=snapchat_data[0].keys())
+            snapchat_dict['snapchat_friends'] = pd.DataFrame(snapchat_friends_data,
+                                                             columns=snapchat_friends_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            snapchat_dict['snapchat_chat'] = pd.DataFrame(snapchat_chat_data,
+                                                          columns=snapchat_chat_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            snapchat_dict['snapchat_viewing'] = pd.DataFrame(snapchat_viewing_data,
+                                                             columns=snapchat_viewing_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            snapchat_dict['snapchat_files'] = pd.DataFrame(snapchat_files_data,
+                                                           columns=snapchat_files_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            snapchat_dict['snapchat_preferences'] = pd.DataFrame(snapchat_preferences_data,
+                                                                 columns=snapchat_preferences_data[0].keys())
         except IndexError:
             pass
 
@@ -470,7 +493,11 @@ if __name__ == "__main__":
         path = args.destination + '//Snapchat'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(snapchat_data, os.path.join(path, 'snapchat_preferences.csv'))
+        writers.csv_writer.csv_writer(snapchat_friends_data, os.path.join(path, 'snapchat_friends.csv'))
+        writers.csv_writer.csv_writer(snapchat_chat_data, os.path.join(path, 'snapchat_chat.csv'))
+        writers.csv_writer.csv_writer(snapchat_viewing_data, os.path.join(path, 'snapchat_viewingsessions.csv'))
+        writers.csv_writer.csv_writer(snapchat_files_data, os.path.join(path, 'snapchat_files.csv'))
+        writers.csv_writer.csv_writer(snapchat_preferences_data, os.path.join(path, 'snapchat_preferences.csv'))
 
     if args.o.lower() == 'xlsx':
         path = args.destination + '//Android'

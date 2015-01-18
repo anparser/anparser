@@ -37,5 +37,5 @@ def xlsx_writer(data, file_name):
 
     writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
     for key in data.keys():
-        data[key].to_excel(writer, '{0}'.format(key), index=False)
-    writer.save()
+        data[key].to_excel(writer, '{0:s}'.format(key), index=False)
+    writer.close()
