@@ -80,4 +80,3 @@ def snapchat_android(file_listing):
     snapchat_dict_data = OrderedDict()
 
     return snapchat_data_list
-

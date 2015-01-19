@@ -30,17 +30,20 @@ From the command line execute:
 
 Checkout the [Wiki](https://github.com/chapinb/anparser/wiki) for additional information
 
-Currently supported artifacts as of 2015-01-12:
+Currently supported artifacts as of 2015-01-19:
 
 * Android Browser bookmarks
 * Android Browser accounts
 * Android Browser preferences
 * Android Browser user defaults
+* Android Calendar
 * Android Chrome cookies
 * Android Chrome downloads
 * Android Chrome history
 * Android Contacts
 * Android Downloads
+* Android Gallery3d files
+* Android Gallery3d picasa
 * Android Gmail accounts
 * Android Media file listing
 * Android SMS data
@@ -55,22 +58,28 @@ Currently supported artifacts as of 2015-01-12:
 * Facebook Messenger contacts
 * Facebook Messenger messages
 * Facebook Messenger threads
+* Kik contacts
+* Kik chat
+* Snapchat friends
+* Snapchat chat
+* Snapchat files
 
 Currently supported output formats:
 
 * CSV using `|` as delimiter for stability
+* XLSX
 
 ## Roadmap
 
 Please add requests in the issues pane of Github. As of 2015-01-12 the features to be built include:
 
 ### Output formats
-* [ ] XLSX
+* [x] XLSX
 * [ ] HTML
 * [ ] XML
 
 ### Plugins
-* [ ] Android Calendar
+* [x] Android Calendar
 * [x] Android Downloads
 * [ ] Android Locations
 * [x] Android Gmail

@@ -102,6 +102,7 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.google_docs
     import plugins.sqlite_plugins.facebook_katana
     import plugins.sqlite_plugins.facebook_orca
+    import plugins.sqlite_plugins.kik_android
     import plugins.sqlite_plugins.snapchat_android
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
@@ -394,6 +395,25 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Kik Messenger Parser
+    msg = 'Processing Kik Messenger'
+    logging.info(msg)
+    print(msg)
+    kik_contact_data, kik_chat_data = plugins.sqlite_plugins.kik_android.kik_android(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        kik_dict = OrderedDict()
+        try:
+            kik_dict['kik_contacts'] = pd.DataFrame(kik_contact_data,
+                                                    columns=kik_contact_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            kik_dict['kik_chat'] = pd.DataFrame(kik_chat_data,
+                                                columns=kik_chat_data[0].keys())
+        except IndexError:
+            pass
+
     # Snapchat Parser
     msg = 'Processing Snapchat'
     logging.info(msg)
@@ -490,6 +510,12 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(orca_threads_data, os.path.join(path, 'facebook_orca_threads.csv'))
         writers.csv_writer.csv_writer(orca_msg_data, os.path.join(path, 'facebook_orca_messages.csv'))
 
+        path = args.destination + '//Kik'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.csv_writer.csv_writer(kik_contact_data, os.path.join(path, 'kik_contacts.csv'))
+        writers.csv_writer.csv_writer(kik_chat_data, os.path.join(path, 'kik_chat.csv'))
+
         path = args.destination + '//Snapchat'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
@@ -514,6 +540,11 @@ if __name__ == "__main__":
         if not os.path.exists(path):
             os.mkdir(path, 0777)
         writers.xlsx_writer.xlsx_writer(facebook_dict, os.path.join(path, 'facebook.xlsx'))
+
+        path = args.destination + '//Kik'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.xlsx_writer.xlsx_writer(kik_dict, os.path.join(path, 'kik.xlsx'))
 
         path = args.destination + '//Snapchat'
         if not os.path.exists(path):
