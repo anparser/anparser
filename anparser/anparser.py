@@ -108,6 +108,7 @@ if __name__ == "__main__":
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
     import plugins.xml_plugins.google_talk
+    import plugins.xml_plugins.kik_android
     import plugins.xml_plugins.snapchat_android
     import plugins.other_plugins.android_gmail_message_parser
     # run plugins
@@ -400,6 +401,7 @@ if __name__ == "__main__":
     logging.info(msg)
     print(msg)
     kik_contact_data, kik_chat_data = plugins.sqlite_plugins.kik_android.kik_android(files_to_process)
+    kik_preferences_data = plugins.xml_plugins.kik_android.kik_android(files_to_process)
 
     if args.o.lower() == 'xlsx':
         kik_dict = OrderedDict()
@@ -411,6 +413,11 @@ if __name__ == "__main__":
         try:
             kik_dict['kik_chat'] = pd.DataFrame(kik_chat_data,
                                                 columns=kik_chat_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            kik_dict['kik_preferences'] = pd.DataFrame(kik_preferences_data,
+                                                       columns=kik_preferences_data[0].keys())
         except IndexError:
             pass
 
@@ -515,6 +522,7 @@ if __name__ == "__main__":
             os.mkdir(path, 0777)
         writers.csv_writer.csv_writer(kik_contact_data, os.path.join(path, 'kik_contacts.csv'))
         writers.csv_writer.csv_writer(kik_chat_data, os.path.join(path, 'kik_chat.csv'))
+        writers.csv_writer.csv_writer(kik_preferences_data, os.path.join(path, 'kik_preferences.csv'))
 
         path = args.destination + '//Snapchat'
         if not os.path.exists(path):

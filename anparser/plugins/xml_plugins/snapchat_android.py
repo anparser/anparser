@@ -42,41 +42,42 @@ def snapchat_android(file_listing):
     snapchat_dict_data = OrderedDict()
 
     # Add data from XML file to snapchat_data
-    for entry in snapchat_data:
-        if entry['name'] == 'device_id':
-            snapchat_dict_data['Device ID'] = entry['text_entry']
-        elif entry['name'] == 'phone_number':
-            snapchat_dict_data['Phone Number'] = entry['text_entry']
-        elif entry['name'] == 'lastSuccessfulLoginUsername':
-            snapchat_dict_data['Last Successful Login Username'] = entry['text_entry']
-        elif entry['name'] == 'username':
-            snapchat_dict_data['Username'] = entry['text_entry']
-        elif entry['name'] == 'email':
-            snapchat_dict_data['Email'] = entry['text_entry']
-        elif entry['name'] == 'num_snaps_sent':
-            snapchat_dict_data['Snaps Sent'] = entry['value']
-        elif entry['name'] == 'num_snaps_received':
-            snapchat_dict_data['Snaps Received'] = entry['value']
-        elif entry['name'] == 'has_pending_notifications':
-            snapchat_dict_data['Pending Notifications'] = entry['value']
-        elif entry['name'] == 'num_best_friends':
-            snapchat_dict_data['Number Best Friends'] = entry['value']
-        elif entry['name'] == 'last_external_image_taken_timestamp':
-            try:
-                snapchat_dict_data['Last External Image Taken'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                                                time.gmtime(
-                                                                                    int(entry['value']) / 1000.))
-            except TypeError:
-                snapchat_dict_data['Last External Image Taken'] = ''
-        elif entry['name'] == 'last_seen_added_me_timestamp':
-            try:
-                snapchat_dict_data['Last Seen Added Me Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S',
-                                                                                   time.gmtime(
-                                                                                       int(entry['value']) / 1000.))
-            except TypeError:
-                snapchat_dict_data['Last External Image Taken'] = ''
+    if snapchat_data:
+        for entry in snapchat_data:
+            if entry['name'] == 'device_id':
+                snapchat_dict_data['Device ID'] = entry['text_entry']
+            elif entry['name'] == 'phone_number':
+                snapchat_dict_data['Phone Number'] = entry['text_entry']
+            elif entry['name'] == 'lastSuccessfulLoginUsername':
+                snapchat_dict_data['Last Successful Login Username'] = entry['text_entry']
+            elif entry['name'] == 'username':
+                snapchat_dict_data['Username'] = entry['text_entry']
+            elif entry['name'] == 'email':
+                snapchat_dict_data['Email'] = entry['text_entry']
+            elif entry['name'] == 'num_snaps_sent':
+                snapchat_dict_data['Snaps Sent'] = entry['value']
+            elif entry['name'] == 'num_snaps_received':
+                snapchat_dict_data['Snaps Received'] = entry['value']
+            elif entry['name'] == 'has_pending_notifications':
+                snapchat_dict_data['Pending Notifications'] = entry['value']
+            elif entry['name'] == 'num_best_friends':
+                snapchat_dict_data['Number Best Friends'] = entry['value']
+            elif entry['name'] == 'last_external_image_taken_timestamp':
+                try:
+                    snapchat_dict_data['Last External Image Taken'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                                                                                    time.gmtime(
+                                                                                        int(entry['value']) / 1000.))
+                except TypeError:
+                    snapchat_dict_data['Last External Image Taken'] = ''
+            elif entry['name'] == 'last_seen_added_me_timestamp':
+                try:
+                    snapchat_dict_data['Last Seen Added Me Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                                                                                       time.gmtime(
+                                                                                           int(entry['value']) / 1000.))
+                except TypeError:
+                    snapchat_dict_data['Last External Image Taken'] = ''
 
-    snapchat_data_list.append(snapchat_dict_data)
-    snapchat_dict_data = OrderedDict()
+        snapchat_data_list.append(snapchat_dict_data)
+        snapchat_dict_data = OrderedDict()
 
     return snapchat_data_list
