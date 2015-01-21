@@ -17,7 +17,9 @@ Preston Miller @pmiller91
 ### Dependencies
 
 * Python 2.7
+* Pandas 0.15.2
 
+**On Windows, Anaconda-2.1.0 was used to install the Pandas Library**
 **You may need to update the SQLite DLL as seen in https://github.com/chapinb/anparser/issues/5 **
 
 ## Running the framework

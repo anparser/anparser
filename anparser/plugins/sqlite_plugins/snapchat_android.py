@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Preston Miller

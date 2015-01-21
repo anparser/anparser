@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -68,7 +70,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if not os.path.exists(args.evidence) or not os.path.isdir(args.evidence):
-        print "Evidence not found...exiting"
+        print("Evidence not found...exiting")
         sys.exit(1)
 
     if not os.path.exists(args.destination):

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 __author__ = 'cbryce'
 __license__ = 'GPLv3'
 __date__ = '20140109'

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -15,7 +16,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
 __author__ = 'cbryce'
 __license__ = 'GPLv3'
 __date__ = '20150102'

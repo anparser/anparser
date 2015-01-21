@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''android-gm-extractor.py; April, 2013
 contact@nsa.sh
 
