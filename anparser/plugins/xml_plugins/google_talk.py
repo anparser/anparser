@@ -35,45 +35,48 @@ def google_talk(file_listing):
     :param file_listing: List of files to process
     :return: List of dictionaries containing XMl entries
     """
+    g_talk_xml = None
     g_talk_data_list = []
 
     for file_entry in file_listing:
         if os.path.basename(file_entry).startswith('account-') and file_entry.endswith('.xml'):
+            g_talk_xml = file_entry
             data = __init__.parse_xml_file_notree(file_entry)
 
             account_name = os.path.basename(file_entry).strip('account-').split('.xml', 1)[0]
 
             g_talk_data = collections.OrderedDict()
-            g_talk_data['name'] = 'Account'
-            g_talk_data['text_entry'] = account_name
-            g_talk_data['value'] = ''
-            g_talk_data['circle'] = ''
+            g_talk_data['XML File'] = g_talk_xml
+            g_talk_data['Name'] = 'Account'
+            g_talk_data['Text Entry'] = account_name
+            g_talk_data['Value'] = ''
+            g_talk_data['Circle'] = ''
             g_talk_data_list.append(g_talk_data)
             g_talk_data = collections.OrderedDict()
 
             for entry in data:
                 circle_name = ''
-                if entry['name'].startswith('chat_acl_settings_circle'):
+                if entry['Name'].startswith('chat_acl_settings_circle'):
                     try:
                         circle_name = entry['name'].split('==', 1)[1]
                     except:
                         circle_name = ''
                 try:
-                    g_talk_data['name'] = entry['name']
+                    g_talk_data['Name'] = entry['name']
                 except:
-                    g_talk_data['name'] = ''
+                    g_talk_data['Name'] = ''
 
                 try:
-                    g_talk_data['text_entry'] = entry['text_entry']
+                    g_talk_data['Text Entry'] = entry['text_entry']
                 except:
-                    g_talk_data['text_entry'] = ''
+                    g_talk_data['Text Entry'] = ''
 
                 try:
-                    g_talk_data['value'] = entry['value']
+                    g_talk_data['Value'] = entry['value']
                 except:
-                    g_talk_data['value'] = ''
+                    g_talk_data['Value'] = ''
 
-                g_talk_data['circle'] = base64.b64decode(circle_name)
+                g_talk_data['Circle'] = base64.b64decode(circle_name)
 
                 g_talk_data_list.append(g_talk_data)
                 g_talk_data = collections.OrderedDict()

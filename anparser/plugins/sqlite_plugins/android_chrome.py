@@ -36,6 +36,8 @@ def android_chrome(file_list):
     :return: Dictionary of parsed data from database
     """
     # Initialize table variables: Cookies, Downloads, Keywords, Urls, Visits
+    cookies_database = None
+    history_database = None
     cookies_data = None
     downloads_data = None
     keywords_data = None
@@ -44,6 +46,7 @@ def android_chrome(file_list):
 
     for file_path in file_list:
         if file_path.endswith('Cookies'):
+            cookies_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'cookies' in tables:
                 try:
@@ -55,6 +58,7 @@ def android_chrome(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('History') and file_path.count('app_chrome/Default/History') > 0:
+            history_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'downloads' in tables:
                 try:
@@ -102,14 +106,15 @@ def android_chrome(file_list):
     # Add data from cookies table to chrome_data
     if cookies_data:
         for entry in cookies_data:
+            chrome_data['Database'] = cookies_database
             chrome_data['Table'] = 'cookies'
-            chrome_data['host key'] = entry[1]
-            chrome_data['name'] = entry[2]
-            chrome_data['value'] = entry[3]
-            chrome_data['path'] = entry[4]
-            chrome_data['created utc'] = chrome_time(entry[0])
-            chrome_data['last accessed utc'] = chrome_time(entry[6])
-            chrome_data['expires utc'] = chrome_time(entry[5])
+            chrome_data['Host Key'] = entry[1]
+            chrome_data['Name'] = entry[2]
+            chrome_data['Value'] = entry[3]
+            chrome_data['Path'] = entry[4]
+            chrome_data['Created UTC'] = chrome_time(entry[0])
+            chrome_data['Last Accessed UTC'] = chrome_time(entry[6])
+            chrome_data['Expires UTC'] = chrome_time(entry[5])
 
             chrome_cookies_list.append(chrome_data)
             chrome_data = OrderedDict()
@@ -118,20 +123,21 @@ def android_chrome(file_list):
     # Add data from downloads table to chrome_data
     if downloads_data:
         for entry in downloads_data:
+            chrome_data['Database'] = history_database
             chrome_data['Table'] = 'downloads'
-            chrome_data['download id'] = entry[0]
-            chrome_data['current path'] = entry[1]
-            chrome_data['target path'] = entry[2]
-            chrome_data['start time'] = chrome_time(entry[3])
-            chrome_data['received bytes'] = entry[4]
-            chrome_data['total bytes'] = entry[5]
-            chrome_data['interrupt reason'] = entry[6]
-            chrome_data['end time'] = chrome_time(entry[7])
-            chrome_data['opened'] = entry[8]
-            chrome_data['referrer'] = entry[9]
-            chrome_data['last modified'] = entry[10]
-            chrome_data['mime type'] = entry[11]
-            chrome_data['original mime type'] = entry[12]
+            chrome_data['Download Id'] = entry[0]
+            chrome_data['Current Path'] = entry[1]
+            chrome_data['Target Path'] = entry[2]
+            chrome_data['Start Time'] = chrome_time(entry[3])
+            chrome_data['Received Bytes'] = entry[4]
+            chrome_data['Total Bytes'] = entry[5]
+            chrome_data['Interrupt Reason'] = entry[6]
+            chrome_data['End Time'] = chrome_time(entry[7])
+            chrome_data['Opened'] = entry[8]
+            chrome_data['Referrer'] = entry[9]
+            chrome_data['Last Modified'] = entry[10]
+            chrome_data['Mime Type'] = entry[11]
+            chrome_data['Original Mime Type'] = entry[12]
 
             chrome_downloads_list.append(chrome_data)
             chrome_data = OrderedDict()
@@ -140,20 +146,21 @@ def android_chrome(file_list):
     # Add data from keyword_search_terms table to chrome_data
     if keywords_data:
         for entry in keywords_data:
+            chrome_data['Database'] = history_database
             chrome_data['Table'] = 'keyword_search_terms'
-            chrome_data['keyword id'] = entry[0]
-            chrome_data['url id'] = entry[1]
-            chrome_data['visit id'] = ''
-            chrome_data['lower search term'] = entry[2]
-            chrome_data['search term'] = entry[3]
-            chrome_data['url'] = ''
-            chrome_data['title'] = ''
-            chrome_data['visit count'] = ''
-            chrome_data['typed count'] = ''
-            chrome_data['visit time'] = ''
-            chrome_data['last visit time'] = ''
-            chrome_data['visit duration (seconds)'] = ''
-            chrome_data['hidden'] = ''
+            chrome_data['Keyword Id'] = entry[0]
+            chrome_data['Url Id'] = entry[1]
+            chrome_data['Visit Id'] = ''
+            chrome_data['Lower Search Term'] = entry[2]
+            chrome_data['Search Term'] = entry[3]
+            chrome_data['Url'] = ''
+            chrome_data['Title'] = ''
+            chrome_data['Visit Count'] = ''
+            chrome_data['Typed Count'] = ''
+            chrome_data['Visit Time'] = ''
+            chrome_data['Last Visit Time'] = ''
+            chrome_data['Visit Duration (Seconds)'] = ''
+            chrome_data['Hidden'] = ''
 
             chrome_history_list.append(chrome_data)
             chrome_data = OrderedDict()
@@ -161,20 +168,21 @@ def android_chrome(file_list):
     # Add data from urls table to chrome_data
     if urls_data:
         for entry in urls_data:
+            chrome_data['Database'] = history_database
             chrome_data['Table'] = 'urls'
-            chrome_data['keyword id'] = ''
-            chrome_data['url id'] = entry[0]
-            chrome_data['visit id'] = ''
-            chrome_data['lower search term'] = ''
-            chrome_data['search term'] = ''
-            chrome_data['url'] = entry[1]
-            chrome_data['title'] = entry[2]
-            chrome_data['visit count'] = entry[3]
-            chrome_data['typed count'] = entry[4]
-            chrome_data['visit time'] = ''
-            chrome_data['last visit time'] = chrome_time(entry[5])
-            chrome_data['visit duration (seconds)'] = ''
-            chrome_data['hidden'] = entry[6]
+            chrome_data['Keyword Id'] = ''
+            chrome_data['Url Id'] = entry[0]
+            chrome_data['Visit Id'] = ''
+            chrome_data['Lower Search Term'] = ''
+            chrome_data['Search Term'] = ''
+            chrome_data['Url'] = entry[1]
+            chrome_data['Title'] = entry[2]
+            chrome_data['Visit Count'] = entry[3]
+            chrome_data['Typed Count'] = entry[4]
+            chrome_data['Visit Time'] = ''
+            chrome_data['Last Visit Time'] = chrome_time(entry[5])
+            chrome_data['Visit Duration (Seconds)'] = ''
+            chrome_data['Hidden'] = entry[6]
 
             chrome_history_list.append(chrome_data)
             chrome_data = OrderedDict()
@@ -182,23 +190,24 @@ def android_chrome(file_list):
     # Add data from visits table to chrome_data
     if visits_data:
         for entry in visits_data:
+            chrome_data['Database'] = history_database
             chrome_data['Table'] = 'visits'
-            chrome_data['keyword id'] = ''
-            chrome_data['url id'] = entry[1]
-            chrome_data['visit id'] = entry[0]
-            chrome_data['lower search term'] = ''
-            chrome_data['search term'] = ''
-            chrome_data['url'] = ''
-            chrome_data['title'] = ''
-            chrome_data['visit count'] = ''
-            chrome_data['typed count'] = ''
-            chrome_data['visit time'] = chrome_time(entry[2])
-            chrome_data['last visit time'] = ''
+            chrome_data['Keyword Id'] = ''
+            chrome_data['Url Id'] = entry[1]
+            chrome_data['Visit Id'] = entry[0]
+            chrome_data['Lower Search Term'] = ''
+            chrome_data['Search Term'] = ''
+            chrome_data['Url'] = ''
+            chrome_data['Title'] = ''
+            chrome_data['Visit Count'] = ''
+            chrome_data['Typed Count'] = ''
+            chrome_data['Visit Time'] = chrome_time(entry[2])
+            chrome_data['Last Visit Time'] = ''
             try:
-                chrome_data['visit duration (seconds)'] = entry[3] * (1*10**-6)
+                chrome_data['Visit Duration (Seconds)'] = entry[3] * (1*10**-6)
             except TypeError:
-                chrome_data['visit duration (seconds)'] = ''
-            chrome_data['hidden'] = ''
+                chrome_data['Visit Duration (Seconds))'] = ''
+            chrome_data['Hidden'] = ''
 
             chrome_history_list.append(chrome_data)
             chrome_data = OrderedDict()

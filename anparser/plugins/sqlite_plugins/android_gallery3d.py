@@ -36,6 +36,9 @@ def android_gallery3d(file_list):
     :return: Dictionary of parsed data from database
     """
     # Initialize table variables: file_info, download, albums, photos, users
+    file_database = None
+    download_database = None
+    picasa_database = None
     file_info_data = None
     download_data = None
     albums_data = None
@@ -44,6 +47,7 @@ def android_gallery3d(file_list):
 
     for file_path in file_list:
         if file_path.endswith('FileInfo.db'):
+            file_database = file_path
             try:
                 tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
@@ -59,6 +63,7 @@ def android_gallery3d(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('download.db') and file_path.count('gallery3d') > 0:
+            download_database = file_path
             try:
                 tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
@@ -75,6 +80,7 @@ def android_gallery3d(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('picasa.db'):
+            picasa_database = file_path
             try:
                 tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
@@ -120,17 +126,18 @@ def android_gallery3d(file_list):
     # Add data from file_info table to gallery_data
     if file_info_data:
         for entry in file_info_data:
+            gallery_data['Database'] = file_database
             gallery_data['Table'] = 'file_info'
-            gallery_data['download id'] = ''
-            gallery_data['file path'] = entry[1]
-            gallery_data['data'] = ''
-            gallery_data['content url'] = ''
-            gallery_data['hash key'] = entry[0]
-            gallery_data['hash code'] = ''
-            gallery_data['file info type'] = entry[2]
-            gallery_data['last access'] = ''
-            gallery_data['last updated'] = ''
-            gallery_data['size'] = ''
+            gallery_data['Download Id'] = ''
+            gallery_data['File Path'] = entry[1]
+            gallery_data['Data'] = ''
+            gallery_data['Content Url'] = ''
+            gallery_data['Hash Key'] = entry[0]
+            gallery_data['Hash Code'] = ''
+            gallery_data['File Info Type'] = entry[2]
+            gallery_data['Last Access'] = ''
+            gallery_data['Last Updated'] = ''
+            gallery_data['Size'] = ''
 
             file_data_list.append(gallery_data)
             gallery_data = OrderedDict()
@@ -139,23 +146,24 @@ def android_gallery3d(file_list):
     # Add data from download table to gallery_data
     if download_data:
         for entry in download_data:
+            gallery_data['Database'] = download_database
             gallery_data['Table'] = 'download'
-            gallery_data['download id'] = entry[0]
-            gallery_data['file path'] = ''
-            gallery_data['data'] = entry[1]
-            gallery_data['content url'] = entry[2]
-            gallery_data['hash key'] = ''
-            gallery_data['hash code'] = entry[3]
-            gallery_data['file info type'] = ''
+            gallery_data['Download Id'] = entry[0]
+            gallery_data['File Path'] = ''
+            gallery_data['Data'] = entry[1]
+            gallery_data['Content Url'] = entry[2]
+            gallery_data['Hash Key'] = ''
+            gallery_data['Hash Code'] = entry[3]
+            gallery_data['File Info Type'] = ''
             try:
-                gallery_data['last access'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                gallery_data['Last Access'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
             except TypeError:
-                gallery_data['last access'] = ''
+                gallery_data['Last Access'] = ''
             try:
-                gallery_data['last updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                gallery_data['Last Updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
             except TypeError:
-                gallery_data['last updated'] = ''
-            gallery_data['size'] = entry[6]
+                gallery_data['Last Updated'] = ''
+            gallery_data['Size'] = entry[6]
 
             file_data_list.append(gallery_data)
             gallery_data = OrderedDict()
@@ -164,27 +172,28 @@ def android_gallery3d(file_list):
     # Add data from users table to gallery_data
     if users_data:
         for entry in users_data:
+            gallery_data['Database'] = picasa_database
             gallery_data['Table'] = 'users'
-            gallery_data['user id'] = entry[0]
-            gallery_data['photo id'] = ''
-            gallery_data['album id'] = ''
-            gallery_data['account'] = entry[1]
-            gallery_data['user'] = ''
-            gallery_data['title'] = ''
-            gallery_data['summary'] = ''
-            gallery_data['num photos'] = ''
-            gallery_data['size'] = ''
-            gallery_data['content type'] = ''
-            gallery_data['date taken'] = ''
-            gallery_data['date edited'] = ''
-            gallery_data['date updated'] = ''
-            gallery_data['date published'] = ''
-            gallery_data['location'] = ''
-            gallery_data['latitude'] = ''
-            gallery_data['longitude'] = ''
-            gallery_data['cache pathname'] = ''
-            gallery_data['content url'] = ''
-            gallery_data['html page url'] = ''
+            gallery_data['User Id'] = entry[0]
+            gallery_data['Photo Id'] = ''
+            gallery_data['Album Id'] = ''
+            gallery_data['Account'] = entry[1]
+            gallery_data['User'] = ''
+            gallery_data['Title'] = ''
+            gallery_data['Summary'] = ''
+            gallery_data['# Photos'] = ''
+            gallery_data['Size'] = ''
+            gallery_data['Content Type'] = ''
+            gallery_data['Date Taken'] = ''
+            gallery_data['Date Edited'] = ''
+            gallery_data['Date Updated'] = ''
+            gallery_data['Date Published'] = ''
+            gallery_data['Location'] = ''
+            gallery_data['Latitude'] = ''
+            gallery_data['Longitude'] = ''
+            gallery_data['Cache Path Name'] = ''
+            gallery_data['Content Url'] = ''
+            gallery_data['Html Page Url'] = ''
 
             picasa_data_list.append(gallery_data)
             gallery_data = OrderedDict()
@@ -192,36 +201,37 @@ def android_gallery3d(file_list):
     # Add data from albums table to gallery_data
     if albums_data:
         for entry in albums_data:
+            gallery_data['Database'] = picasa_database
             gallery_data['Table'] = 'albums'
-            gallery_data['user id'] = ''
-            gallery_data['photo id'] = ''
-            gallery_data['album id'] = entry[0]
-            gallery_data['account'] = entry[9]
-            gallery_data['user'] = entry[11]
-            gallery_data['title'] = entry[10]
-            gallery_data['summary'] = entry[8]
-            gallery_data['num photos'] = entry[7]
-            gallery_data['size'] = entry[1]
-            gallery_data['content type'] = ''
-            gallery_data['date taken'] = ''
+            gallery_data['User Id'] = ''
+            gallery_data['Photo Id'] = ''
+            gallery_data['Album Id'] = entry[0]
+            gallery_data['Account'] = entry[9]
+            gallery_data['User'] = entry[11]
+            gallery_data['Title'] = entry[10]
+            gallery_data['Summary'] = entry[8]
+            gallery_data['# Photos'] = entry[7]
+            gallery_data['Size'] = entry[1]
+            gallery_data['Content Type'] = ''
+            gallery_data['Date Taken'] = ''
             try:
-                gallery_data['date edited'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
+                gallery_data['Date Edited'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
             except TypeError:
-                gallery_data['date edited'] = ''
+                gallery_data['Date Edited'] = ''
             try:
-                gallery_data['date published'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                gallery_data['Date Published'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
             except TypeError:
-                gallery_data['date published'] = ''
+                gallery_data['Date Published'] = ''
             try:
-                gallery_data['date updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                gallery_data['Date Updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
             except TypeError:
-                gallery_data['date updated'] = ''
-            gallery_data['location'] = entry[6]
-            gallery_data['latitude'] = ''
-            gallery_data['longitude'] = ''
-            gallery_data['cache pathname'] = ''
-            gallery_data['content url'] = ''
-            gallery_data['html page url'] = entry[5]
+                gallery_data['Date Updated'] = ''
+            gallery_data['Location'] = entry[6]
+            gallery_data['Latitude'] = ''
+            gallery_data['Longitude'] = ''
+            gallery_data['Cache Path Name'] = ''
+            gallery_data['Content Url'] = ''
+            gallery_data['Html Page Url'] = entry[5]
 
             picasa_data_list.append(gallery_data)
             gallery_data = OrderedDict()
@@ -229,39 +239,40 @@ def android_gallery3d(file_list):
     # Add data from photos table to gallery_data
     if photos_data:
         for entry in photos_data:
+            gallery_data['Database'] = picasa_database
             gallery_data['Table'] = 'photos'
-            gallery_data['user id'] = ''
-            gallery_data['photo id'] = entry[0]
-            gallery_data['album id'] = entry[1]
-            gallery_data['account'] = entry[13]
-            gallery_data['user'] = ''
-            gallery_data['title'] = entry[14]
-            gallery_data['summary'] = ''
-            gallery_data['num photos'] = ''
-            gallery_data['size'] = entry[12]
-            gallery_data['content type'] = entry[3]
+            gallery_data['User Id'] = ''
+            gallery_data['Photo Id'] = entry[0]
+            gallery_data['Album Id'] = entry[1]
+            gallery_data['Account'] = entry[13]
+            gallery_data['User'] = ''
+            gallery_data['Title'] = entry[14]
+            gallery_data['Summary'] = ''
+            gallery_data['# Photos'] = ''
+            gallery_data['Size'] = entry[12]
+            gallery_data['Content Type'] = entry[3]
             try:
-                gallery_data['date taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
+                gallery_data['Date Taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
             except TypeError:
-                gallery_data['date taken'] = ''
+                gallery_data['Date Taken'] = ''
             try:
-                gallery_data['date edited'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                gallery_data['Date Edited'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
             except TypeError:
-                gallery_data['date edited'] = ''
+                gallery_data['Date Edited'] = ''
             try:
-                gallery_data['date published'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[6] / 1000.))
+                gallery_data['Date Published'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[6] / 1000.))
             except TypeError:
-                gallery_data['date published'] = ''
+                gallery_data['Date Published'] = ''
             try:
-                gallery_data['date updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
+                gallery_data['Date Updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
             except TypeError:
-                gallery_data['date updated'] = ''
-            gallery_data['location'] = ''
-            gallery_data['latitude'] = entry[10]
-            gallery_data['longitude'] = entry[11]
-            gallery_data['cache pathname'] = entry[2]
-            gallery_data['content url'] = entry[4]
-            gallery_data['html page url'] = entry[9]
+                gallery_data['Date Updated'] = ''
+            gallery_data['Location'] = ''
+            gallery_data['Latitude'] = entry[10]
+            gallery_data['Longitude'] = entry[11]
+            gallery_data['Cache Path Name'] = entry[2]
+            gallery_data['Content Url'] = entry[4]
+            gallery_data['Html Page Url'] = entry[9]
 
             picasa_data_list.append(gallery_data)
             gallery_data = OrderedDict()

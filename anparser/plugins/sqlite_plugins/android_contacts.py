@@ -37,12 +37,14 @@ def android_contacts(file_list):
     """
 
     # Initialize Variable
+    contacts_database = None
     raw_contacts_data = None
     accounts_data = None
     phone_lookup_data = None
 
     for file_path in file_list:
         if file_path.endswith('contacts2.db'):
+            contacts_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'raw_contacts' in tables:
                 try:
@@ -70,15 +72,16 @@ def android_contacts(file_list):
 
     if raw_contacts_data:
         for entry in raw_contacts_data:
-            contact_data['contact_id'] = entry[0]
-            contact_data['display_name'] = entry[1]
+            contact_data['Database'] = contacts_database
+            contact_data['Contact Id'] = entry[0]
+            contact_data['Display Name'] = entry[1]
             try:
-                contact_data['modified_time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.0))
+                contact_data['Modified Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.0))
             except TypeError:
-                contact_data['modified_time'] = ''
+                contact_data['Modified Time'] = ''
             for item in phone_lookup_data:
                 if item[0] == entry[0]:
-                    contact_data['normalized_number'] = item[1]
+                    contact_data['Normalized Number'] = item[1]
             contact_data_list.append(contact_data)
             contact_data = OrderedDict()
 

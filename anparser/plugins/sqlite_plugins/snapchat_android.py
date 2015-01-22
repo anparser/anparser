@@ -38,6 +38,7 @@ def snapchat_android(file_list):
 
     # Initialize table variables: Chat, Conversation, Friends, MyStoriesFiles, ReceivedSnaps, SentSnaps,
     # SnapImageFiles, SnapVideoFiles, ViewingSessions
+    tcspahn_database = None
     chat_data = None
     conversation_data = None
     friends_data = None
@@ -50,6 +51,7 @@ def snapchat_android(file_list):
 
     for file_path in file_list:
         if file_path.endswith('tcspahn.db'):
+            tcspahn_database = file_path
             try:
                 tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
@@ -144,6 +146,7 @@ def snapchat_android(file_list):
     # Add data from Friends table to snapchat_data
     if friends_data:
         for entry in friends_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'Friends'
             snapchat_data['Id'] = entry[0]
             snapchat_data['Username'] = entry[1]
@@ -165,6 +168,7 @@ def snapchat_android(file_list):
     # Add data from Chat table to snapchat_data
     if chat_data:
         for entry in chat_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'Chat'
             snapchat_data['Chat Id'] = entry[0]
             snapchat_data['Conversation Id'] = entry[8]
@@ -193,6 +197,7 @@ def snapchat_android(file_list):
     # Add data from Conversation table to snapchat_data
     if conversation_data:
         for entry in conversation_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'Conversation'
             snapchat_data['Chat Id'] = ''
             snapchat_data['Conversation Id'] = entry[0]
@@ -221,6 +226,7 @@ def snapchat_android(file_list):
     # Add data from ReceivedSnaps table to snapchat_data
     if recvsnaps_data:
         for entry in recvsnaps_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'ReceivedSnaps'
             snapchat_data['Chat Id'] = ''
             snapchat_data['Conversation Id'] = entry[7]
@@ -255,6 +261,7 @@ def snapchat_android(file_list):
     # Add data from SentSnaps table to snapchat_data
     if sentsnaps_data:
         for entry in sentsnaps_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'SentSnaps'
             snapchat_data['Chat Id'] = ''
             snapchat_data['Conversation Id'] = entry[4]
@@ -287,6 +294,7 @@ def snapchat_android(file_list):
     # Add data from ViewingSessions table to snapchat_data
     if viewing_sessions_data:
         for entry in viewing_sessions_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'ViewingSessions'
             snapchat_data['ViewingSessions Id'] = entry[0]
             snapchat_data['Sender'] = entry[1]
@@ -308,6 +316,7 @@ def snapchat_android(file_list):
     # Add data from MyStoriesFiles table to snapchat_data
     if storyfiles_data:
         for entry in storyfiles_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'MyStoriesFiles'
             snapchat_data['MyStoriesFiles Id'] = entry[0]
             snapchat_data['SnapImagesFiles Id'] = ''
@@ -321,6 +330,7 @@ def snapchat_android(file_list):
     # Add data from SnapImageFiles table to snapchat_data
     if image_files_data:
         for entry in image_files_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'SnapImageFiles'
             snapchat_data['MyStoriesFiles Id'] = ''
             snapchat_data['SnapImagesFiles Id'] = entry[0]
@@ -334,6 +344,7 @@ def snapchat_android(file_list):
     # Add data from SnapVideoFiles table to snapchat_data
     if video_files_data:
         for entry in video_files_data:
+            snapchat_data['Database'] = tcspahn_database
             snapchat_data['Table'] = 'SnapVideoFiles'
             snapchat_data['MyStoriesFiles Id'] = ''
             snapchat_data['SnapImagesFiles Id'] = ''

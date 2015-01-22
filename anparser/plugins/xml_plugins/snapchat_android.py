@@ -33,10 +33,12 @@ def snapchat_android(file_listing):
     :param file_listing: list of files
     :return: list of dictionaries containing XML values
     """
+    snapchat_pref_xml = None
     snapchat_data = []
 
     for file_entry in file_listing:
         if file_entry.endswith('com.snapchat.android_preferences.xml'):
+            snapchat_pref_xml = file_entry
             snapchat_data = __init__.parse_xml_file_notree(file_entry)
 
     snapchat_data_list = []
@@ -44,6 +46,7 @@ def snapchat_android(file_listing):
 
     # Add data from XML file to snapchat_data
     if snapchat_data:
+        snapchat_dict_data['XML File'] = snapchat_pref_xml
         for entry in snapchat_data:
             if entry['name'] == 'device_id':
                 snapchat_dict_data['Device ID'] = entry['text_entry']

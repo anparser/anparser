@@ -33,13 +33,17 @@ def kik_android(file_listing):
     :param file_listing: list of files
     :return: list of dictionaries containing XML values
     """
+    kik_pref_xml = None
+    kik_per_xml = None
     kik_data = []
     kik_persistance_data = []
 
     for file_entry in file_listing:
         if file_entry.endswith('KikPreferences.xml'):
+            kik_pref_xml = file_entry
             kik_data = __init__.parse_xml_file_notree(file_entry)
         if file_entry.endswith('KikUltraPersistence.xml'):
+            kik_per_xml = file_entry
             kik_persistance_data = __init__.parse_xml_file_notree(file_entry)
 
     kik_data_list = []
@@ -47,6 +51,7 @@ def kik_android(file_listing):
 
     # Add data from XML file to kik_data
     if kik_data:
+        kik_dict_data['XML Files'] = kik_pref_xml + ' & ' + kik_per_xml
         for entry in kik_data:
             if entry['name'] == 'kik.version_number':
                 kik_dict_data['Kik Version'] = entry['text_entry']

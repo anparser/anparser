@@ -37,12 +37,14 @@ def kik_android(file_list):
     """
 
     # Initialize table variables: KIKContentTable, KIKcontactsTable, messagesTable
+    kik_database = None
     content_data = None
     contacts_data = None
     messages_data = None
 
     for file_path in file_list:
         if file_path.endswith('kikDatabase.db'):
+            kik_database = file_path
             try:
                 tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
@@ -84,6 +86,7 @@ def kik_android(file_list):
     # Add data from KIKcontactsTable table to kik_data
     if contacts_data:
         for entry in contacts_data:
+            kik_data['Database'] = kik_database
             kik_data['Table'] = 'KIKcontactsTable'
             kik_data['Id'] = entry[0]
             kik_data['Jid'] = entry[1]
@@ -99,6 +102,7 @@ def kik_android(file_list):
     # Add data from KIKContentTable table to kik_data
     if content_data:
         for entry in content_data:
+            kik_data['Database'] = kik_database
             kik_data['Table'] = 'KIKContentTable'
             kik_data['App Id'] = ''
             kik_data['KIKContentTable Id'] = entry[0]
@@ -121,6 +125,7 @@ def kik_android(file_list):
     # Add data from messagesTable table to kik_data
     if messages_data:
         for entry in messages_data:
+            kik_data['Database'] = kik_database
             kik_data['Table'] = 'messagesTable'
             kik_data['App Id'] = entry[9]
             kik_data['KIKContentTable Id'] = ''

@@ -36,12 +36,16 @@ def android_vending(file_list):
     :return: Dictionary of parsed data from databases
     """
     # Initialize table variables: library, localappstate, suggestions
+    library_database = None
+    localapp_database = None
+    suggestions_database = None
     library_data = None
     localapp_data = None
     suggestions_data = None
 
     for file_path in file_list:
         if file_path.endswith('library.db'):
+            library_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'ownership' in tables:
                 try:
@@ -53,6 +57,7 @@ def android_vending(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('localappstate.db'):
+            localapp_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'appstate' in tables:
                 try:
@@ -65,6 +70,7 @@ def android_vending(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('suggestions.db'):
+            suggestions_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'suggestions' in tables:
                 try:
@@ -84,12 +90,13 @@ def android_vending(file_list):
     # Add data from ownership table to vending_data
     if library_data:
         for entry in library_data:
+            vending_data['Database'] = library_database
             vending_data['Table'] = 'ownership'
-            vending_data['library id'] = entry[1]
-            vending_data['doc id'] = entry[2]
-            vending_data['account'] = entry[0]
-            vending_data['document hash'] = entry[3]
-            vending_data['app certificate hash'] = entry[4]
+            vending_data['Library Id'] = entry[1]
+            vending_data['Doc Id'] = entry[2]
+            vending_data['Account'] = entry[0]
+            vending_data['Document Hash'] = entry[3]
+            vending_data['App Certificate Hash'] = entry[4]
 
             vending_library_list.append(vending_data)
             vending_data = OrderedDict()
@@ -98,31 +105,32 @@ def android_vending(file_list):
     # Add data from appstate table to vending_data
     if localapp_data:
         for entry in localapp_data:
+            vending_data['Database'] = localapp_database
             vending_data['Table'] = 'appstate'
             try:
-                vending_data['title'] = entry[6].encode('utf-8')
+                vending_data['Title'] = entry[6].encode('utf-8')
             except AttributeError:
-                vending_data['title'] = entry[6]
+                vending_data['Title'] = entry[6]
             try:
-                vending_data['package name'] = entry[0].encode('utf-8')
+                vending_data['Package Name'] = entry[0].encode('utf-8')
             except AttributeError:
-                vending_data['package name'] = entry[0]
-            vending_data['account'] = entry[5]
+                vending_data['Package Name'] = entry[0]
+            vending_data['Account'] = entry[5]
             try:
-                vending_data['first download'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                vending_data['First Download'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
             except TypeError:
-                vending_data['first download'] = ''
-            vending_data['auto update'] = entry[1]
+                vending_data['First Download'] = ''
+            vending_data['Auto Update'] = entry[1]
             try:
-                vending_data['last update'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
+                vending_data['Last Update'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
             except TypeError:
-                vending_data['last update'] = ''
-            vending_data['last_notified_version'] = entry[7]
-            vending_data['desired version'] = entry[2]
+                vending_data['Last Update'] = ''
+            vending_data['Last Notified Version'] = entry[7]
+            vending_data['Desired Version'] = entry[2]
             try:
-                vending_data['download uri'] = entry[3].encode('utf-8')
+                vending_data['Download Uri'] = entry[3].encode('utf-8')
             except AttributeError:
-                vending_data['download uri'] = entry[3]
+                vending_data['Download Uri'] = entry[3]
 
             vending_localapp_list.append(vending_data)
             vending_data = OrderedDict()
@@ -131,14 +139,15 @@ def android_vending(file_list):
     # Add data from suggestions table to vending_data
     if suggestions_data:
         for entry in suggestions_data:
+            vending_data['Database'] = suggestions_database
             vending_data['Table'] = 'suggestions'
-            vending_data['id'] = entry[0]
-            vending_data['display'] = entry[1]
-            vending_data['query'] = entry[2]
+            vending_data['Id'] = entry[0]
+            vending_data['Display'] = entry[1]
+            vending_data['Query'] = entry[2]
             try:
-                vending_data['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                vending_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
             except TypeError:
-                vending_data['date'] = ''
+                vending_data['Date'] = ''
 
             vending_suggestions_list.append(vending_data)
             vending_data = OrderedDict()

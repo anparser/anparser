@@ -37,10 +37,12 @@ def android_downloads(file_list):
     """
 
     # Initialize table variable: downloads
+    downloads_database = None
     download_data = None
 
     for file_path in file_list:
         if file_path.endswith('downloads.db'):
+            downloads_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'downloads' in tables:
                 try:
@@ -58,22 +60,23 @@ def android_downloads(file_list):
     # Add data from downloads table to downloads_data
     if download_data:
         for entry in download_data:
+            downloads_data['Database'] = downloads_database
             downloads_data['Table'] = 'downloads'
-            downloads_data['id'] = entry[0]
-            downloads_data['title'] = entry[1]
-            downloads_data['description'] = entry[2]
-            downloads_data['mimetype'] = entry[3]
+            downloads_data['Id'] = entry[0]
+            downloads_data['Title'] = entry[1]
+            downloads_data['Description'] = entry[2]
+            downloads_data['Mime Type'] = entry[3]
             try:
-                downloads_data['modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                downloads_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
             except TypeError:
-                downloads_data['modified'] = ''
-            downloads_data['uid'] = entry[5]
-            downloads_data['etag'] = entry[6]
-            downloads_data['uri'] = entry[7]
-            downloads_data['hint'] = entry[8]
-            downloads_data['data'] = entry[9]
-            downloads_data['total bytes'] = entry[10]
-            downloads_data['mediaprovider_uri'] = entry[11]
+                downloads_data['Modified'] = ''
+            downloads_data['Uid'] = entry[5]
+            downloads_data['Etag'] = entry[6]
+            downloads_data['Uri'] = entry[7]
+            downloads_data['Hint'] = entry[8]
+            downloads_data['Data'] = entry[9]
+            downloads_data['Total Bytes'] = entry[10]
+            downloads_data['Media Provider Uri'] = entry[11]
 
             downloads_data_list.append(downloads_data)
             downloads_data = OrderedDict()

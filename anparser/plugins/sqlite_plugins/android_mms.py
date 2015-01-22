@@ -36,11 +36,13 @@ def android_mms(file_list):
     :return: Dictionary of parsed data from database
     """
     # Initialize table variables: events, logs
+    message_database = None
     events_data = None
     logs_data = None
 
     for file_path in file_list:
         if file_path.endswith('message_glance.db'):
+            message_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'events' in tables:
                 try:
@@ -66,17 +68,18 @@ def android_mms(file_list):
     # Add data from events table to mms_data
     if events_data:
         for entry in events_data:
+            mms_data['Database'] = message_database
             mms_data['Table'] = 'events'
-            mms_data['event id'] = entry[0]
-            mms_data['log id'] = ''
-            mms_data['address'] = entry[1]
-            mms_data['deleted'] = entry[2]
+            mms_data['Event Id'] = entry[0]
+            mms_data['Log Id'] = ''
+            mms_data['Address'] = entry[1]
+            mms_data['Deleted'] = entry[2]
             try:
-                mms_data['event date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                mms_data['Event Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
             except (TypeError, ValueError):
-                mms_data['event date'] = ''
-            mms_data['incoming'] = ''
-            mms_data['outgoing'] = ''
+                mms_data['Event Date'] = ''
+            mms_data['Incoming'] = ''
+            mms_data['Outgoing'] = ''
 
             mms_data_list.append(mms_data)
             mms_data = OrderedDict()
@@ -84,14 +87,15 @@ def android_mms(file_list):
     # Add data from logs table to mms_data
     if logs_data:
         for entry in logs_data:
+            mms_data['Database'] = message_database
             mms_data['Table'] = 'logs'
-            mms_data['event id'] = ''
-            mms_data['log id'] = entry[0]
-            mms_data['address'] = entry[1]
-            mms_data['deleted'] = entry[2]
-            mms_data['event date'] = ''
-            mms_data['incoming'] = entry[3]
-            mms_data['outgoing'] = entry[4]
+            mms_data['Event Id'] = ''
+            mms_data['Log Id'] = entry[0]
+            mms_data['Address'] = entry[1]
+            mms_data['Deleted'] = entry[2]
+            mms_data['Event Date'] = ''
+            mms_data['Incoming'] = entry[3]
+            mms_data['Outgoing'] = entry[4]
 
             mms_data_list.append(mms_data)
             mms_data = OrderedDict()

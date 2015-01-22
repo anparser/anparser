@@ -37,12 +37,14 @@ def android_browser(file_list):
     """
     # TODO: Add in support for other tables (images, thumbnails).
     # Initialize table variables: bookmarks, history, v_accounts
+    browser_database = None
     bookmarks_data = None
     history_data = None
     accounts_data = None
 
     for file_path in file_list:
         if file_path.endswith('browser2.db'):
+            browser_database = file_path
             try:
                 tables = __init__.get_sqlite_table_names(file_path)
             except (IndexError, TypeError) as exception:
@@ -86,23 +88,24 @@ def android_browser(file_list):
     # Add data from bookmarks table to browser_data
     if bookmarks_data:
         for entry in bookmarks_data:
+            browser_data['Database'] = browser_database
             browser_data['Table'] = 'bookmarks'
-            browser_data['id'] = entry[0]
-            browser_data['title'] = entry[1]
-            browser_data['url'] = entry[2]
-            browser_data['deleted'] = entry[3]
+            browser_data['Id'] = entry[0]
+            browser_data['Title'] = entry[1]
+            browser_data['Url'] = entry[2]
+            browser_data['Deleted'] = entry[3]
             try:
-                browser_data['created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                browser_data['Created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
             except TypeError:
-                browser_data['created'] = ''
+                browser_data['Created'] = ''
             try:
-                browser_data['modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                browser_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
             except TypeError:
-                browser_data['modified'] = ''
-            browser_data['date'] = ''
-            browser_data['visits'] = ''
-            browser_data['account_name'] = ''
-            browser_data['account_type'] = ''
+                browser_data['Modified'] = ''
+            browser_data['Date'] = ''
+            browser_data['Visits'] = ''
+            browser_data['Account Name'] = ''
+            browser_data['Account Type'] = ''
 
             browser_data_list.append(browser_data)
             browser_data = OrderedDict()
@@ -110,20 +113,21 @@ def android_browser(file_list):
     # Add data from history table to browser_data
     if history_data:
         for entry in history_data:
+            browser_data['Database'] = browser_database
             browser_data['Table'] = 'history'
-            browser_data['id'] = entry[0]
-            browser_data['title'] = entry[1]
-            browser_data['url'] = entry[2]
-            browser_data['deleted'] = ''
-            browser_data['created'] = ''
-            browser_data['modified'] = ''
+            browser_data['Id'] = entry[0]
+            browser_data['Title'] = entry[1]
+            browser_data['Url'] = entry[2]
+            browser_data['Deleted'] = ''
+            browser_data['Created'] = ''
+            browser_data['Modified'] = ''
             try:
-                browser_data['date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                browser_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
             except TypeError:
-                browser_data['date'] = ''
-            browser_data['visits'] = entry[4]
-            browser_data['account_name'] = ''
-            browser_data['account_type'] = ''
+                browser_data['Date'] = ''
+            browser_data['Visits'] = entry[4]
+            browser_data['Account Name'] = ''
+            browser_data['Account Type'] = ''
 
             browser_data_list.append(browser_data)
             browser_data = OrderedDict()
@@ -131,17 +135,18 @@ def android_browser(file_list):
     # Add data from v_accounts table to browser_data
     if accounts_data:
         for entry in accounts_data:
+            browser_data['Database'] = browser_database
             browser_data['Table'] = 'v_accounts'
-            browser_data['id'] = entry[2]
-            browser_data['title'] = ''
-            browser_data['url'] = ''
-            browser_data['deleted'] = ''
-            browser_data['created'] = ''
-            browser_data['modified'] = ''
-            browser_data['date'] = ''
-            browser_data['visits'] = ''
-            browser_data['account_name'] = entry[0]
-            browser_data['account_type'] = entry[1]
+            browser_data['Id'] = entry[2]
+            browser_data['Title'] = ''
+            browser_data['Url'] = ''
+            browser_data['Deleted'] = ''
+            browser_data['Created'] = ''
+            browser_data['Modified'] = ''
+            browser_data['Date'] = ''
+            browser_data['Visits'] = ''
+            browser_data['Account Name'] = entry[0]
+            browser_data['Account Type'] = entry[1]
 
             browser_data_list.append(browser_data)
             browser_data = OrderedDict()

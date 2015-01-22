@@ -43,11 +43,12 @@ def android_gmail_process(file_to_process):
 
     if xml_entries_notree:
         for entry in xml_entries_notree:
+            gmail_dict['XML'] = file_to_process
             for item in entry.keys():
                 if item.__contains__('name') and entry['name'] == "active-account":
-                    gmail_dict['active_account'] = entry["text_entry"]
+                    gmail_dict['Active Account'] = entry["text_entry"]
                 elif item.__contains__('name') and entry['name'] == "cache-google-accounts-synced":
-                    gmail_dict['cached_google_accounts_synced'] = entry['text_entry']
+                    gmail_dict['Cached Google Accounts Synced'] = entry['text_entry']
         gmail_dict_list.append(gmail_dict)
         gmail_dict = collections.OrderedDict()
 

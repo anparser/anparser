@@ -36,11 +36,14 @@ def android_media(file_list):
     :return: Dictionary of parsed data from database
     """
     # Initialize table variables: external_files and internal_files
+    external_database = None
+    internal_database = None
     external_data = None
     internal_data = None
 
     for file_path in file_list:
         if file_path.endswith('external.db'):
+            external_database = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'files' in tables:
                 try:
@@ -56,6 +59,7 @@ def android_media(file_list):
                     logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
                     pass
         if file_path.endswith('internal.db'):
+            internal_data = file_path
             tables = __init__.get_sqlite_table_names(file_path)
             if 'files' in tables:
                 try:
@@ -78,42 +82,43 @@ def android_media(file_list):
     # Add data from files table to media_data
     if external_data:
         for entry in external_data:
-            media_data['Table'] = 'external - files'
-            media_data['id'] = entry[0]
-            media_data['data'] = entry[1]
-            media_data['size'] = entry[2]
+            media_data['Database'] = external_database
+            media_data['Table'] = 'files'
+            media_data['Id'] = entry[0]
+            media_data['Data'] = entry[1]
+            media_data['Size'] = entry[2]
             try:
-                media_data['created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3]))
+                media_data['Created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3]))
             except (TypeError, ValueError):
-                media_data['created'] = ''
+                media_data['Created'] = ''
             try:
-                media_data['modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
+                media_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
             except (TypeError, ValueError):
-                media_data['modified'] = ''
-            media_data['mime type'] = entry[5]
-            media_data['title'] = entry[6]
-            media_data['description'] = entry[7]
-            media_data['display name'] = entry[8]
-            media_data['latitude'] = entry[9]
-            media_data['longitude'] = entry[10]
+                media_data['Modified'] = ''
+            media_data['Mime Type'] = entry[5]
+            media_data['Title'] = entry[6]
+            media_data['Description'] = entry[7]
+            media_data['Display Name'] = entry[8]
+            media_data['Latitude'] = entry[9]
+            media_data['Longitude'] = entry[10]
             try:
-                media_data['date taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[11]))
+                media_data['Date Taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[11]))
             except (TypeError, ValueError):
-                media_data['date taken'] = ''
-            media_data['is ringtone'] = entry[12]
-            media_data['is music'] = entry[13]
-            media_data['is alarm'] = entry[14]
-            media_data['is notification'] = entry[15]
-            media_data['is podcast'] = entry[16]
+                media_data['Date Taken'] = ''
+            media_data['Is Ringtone'] = entry[12]
+            media_data['Is Music'] = entry[13]
+            media_data['Is Alarm'] = entry[14]
+            media_data['Is Notification'] = entry[15]
+            media_data['Is Podcast'] = entry[16]
             try:
-                media_data['date played'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[17]))
+                media_data['Date Played'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[17]))
             except (TypeError, ValueError):
-                media_data['date played'] = ''
-            media_data['count played'] = entry[18]
-            media_data['width'] = entry[19]
-            media_data['height'] = entry[20]
-            media_data['video filetype'] = entry[21]
-            media_data['video is watched'] = entry[22]
+                media_data['Date Played'] = ''
+            media_data['Count Played'] = entry[18]
+            media_data['Width'] = entry[19]
+            media_data['Height'] = entry[20]
+            media_data['Video File Type'] = entry[21]
+            media_data['Video Is Watched'] = entry[22]
 
             media_data_list.append(media_data)
             media_data = OrderedDict()
@@ -122,42 +127,43 @@ def android_media(file_list):
     # Add data from files table to media_data
     if internal_data:
         for entry in internal_data:
-            media_data['Table'] = 'internal - files'
-            media_data['id'] = entry[0]
-            media_data['data'] = entry[1]
-            media_data['size'] = entry[2]
+            media_data['Database'] = internal_database
+            media_data['Table'] = 'files'
+            media_data['Id'] = entry[0]
+            media_data['Data'] = entry[1]
+            media_data['Size'] = entry[2]
             try:
-                media_data['created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3]))
+                media_data['Created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3]))
             except (TypeError, ValueError):
-                media_data['created'] = ''
+                media_data['Created'] = ''
             try:
-                media_data['modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
+                media_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
             except (TypeError, ValueError):
-                media_data['modified'] = ''
-            media_data['mime type'] = entry[5]
-            media_data['title'] = entry[6]
-            media_data['description'] = entry[7]
-            media_data['display name'] = entry[8]
-            media_data['latitude'] = entry[9]
-            media_data['longitude'] = entry[10]
+                media_data['Modified'] = ''
+            media_data['Mime Type'] = entry[5]
+            media_data['Title'] = entry[6]
+            media_data['Description'] = entry[7]
+            media_data['Display Name'] = entry[8]
+            media_data['Latitude'] = entry[9]
+            media_data['Longitude'] = entry[10]
             try:
-                media_data['date taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[11]))
+                media_data['Date Taken'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[11]))
             except (TypeError, ValueError):
-                media_data['date taken'] = ''
-            media_data['is ringtone'] = entry[12]
-            media_data['is music'] = entry[13]
-            media_data['is alarm'] = entry[14]
-            media_data['is notification'] = entry[15]
-            media_data['is podcast'] = entry[16]
+                media_data['Date Taken'] = ''
+            media_data['Is Ringtone'] = entry[12]
+            media_data['Is Music'] = entry[13]
+            media_data['Is Alarm'] = entry[14]
+            media_data['Is Notification'] = entry[15]
+            media_data['Is Podcast'] = entry[16]
             try:
-                media_data['date played'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[17]))
+                media_data['Date Played'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[17]))
             except (TypeError, ValueError):
-                media_data['date played'] = ''
-            media_data['count played'] = entry[18]
-            media_data['width'] = entry[19]
-            media_data['height'] = entry[20]
-            media_data['video filetype'] = entry[21]
-            media_data['video is watched'] = entry[22]
+                media_data['Date Played'] = ''
+            media_data['Count Played'] = entry[18]
+            media_data['Width'] = entry[19]
+            media_data['Height'] = entry[20]
+            media_data['Video File Type'] = entry[21]
+            media_data['Video Is Watched'] = entry[22]
 
             media_data_list.append(media_data)
             media_data = OrderedDict()
