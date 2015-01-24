@@ -102,6 +102,7 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.android_mms
     import plugins.sqlite_plugins.android_vending
     import plugins.sqlite_plugins.google_docs
+    import plugins.sqlite_plugins.google_plus
     import plugins.sqlite_plugins.facebook_katana
     import plugins.sqlite_plugins.facebook_orca
     import plugins.sqlite_plugins.kik_android
@@ -109,6 +110,7 @@ if __name__ == "__main__":
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
+    import plugins.xml_plugins.google_plus
     import plugins.xml_plugins.google_talk
     import plugins.xml_plugins.kik_android
     import plugins.xml_plugins.snapchat_android
@@ -344,6 +346,36 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Google Plus Parser
+    msg = 'Processing Google Plus'
+    logging.info(msg)
+    print(msg)
+    google_plus_photos, google_plus_contacts, google_plus_guns = \
+        plugins.sqlite_plugins.google_plus.google_plus(files_to_process)
+    google_plus_accounts = plugins.xml_plugins.google_plus.google_plus(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        try:
+            google_dict['google_plus_photos'] = pd.DataFrame(google_plus_photos,
+                                                               columns=google_plus_photos[0].keys())
+        except IndexError:
+            pass
+        try:
+            google_dict['google_plus_contacts'] = pd.DataFrame(google_plus_contacts,
+                                                               columns=google_plus_contacts[0].keys())
+        except IndexError:
+            pass
+        try:
+            google_dict['google_plus_guns'] = pd.DataFrame(google_plus_guns,
+                                                               columns=google_plus_guns[0].keys())
+        except IndexError:
+            pass
+        try:
+            google_dict['google_plus_accounts'] = pd.DataFrame(google_plus_accounts,
+                                                               columns=google_plus_accounts[0].keys())
+        except IndexError:
+            pass
+
     # Facebook Parser
     msg = 'Processing Facebook'
     logging.info(msg)
@@ -507,6 +539,11 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(google_docs_account_data, os.path.join(path, 'google_docs_accounts.csv'))
         writers.csv_writer.csv_writer(google_docs_collection_data, os.path.join(path, 'google_docs_collection.csv'))
         writers.csv_writer.csv_writer(google_talk_data, os.path.join(path, 'google_talk_accounts.csv'))
+        writers.csv_writer.csv_writer(google_plus_accounts, os.path.join(path, 'google_plus_accounts.csv'))
+        writers.csv_writer.csv_writer(google_plus_photos, os.path.join(path, 'google_plus_photos.csv'))
+        writers.csv_writer.csv_writer(google_plus_contacts, os.path.join(path, 'google_plus_contacts.csv'))
+        writers.csv_writer.csv_writer(google_plus_guns, os.path.join(path, 'google_plus_guns.csv'))
+
 
         path = args.destination + '//Facebook'
         if not os.path.exists(path):
