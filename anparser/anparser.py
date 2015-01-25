@@ -96,8 +96,10 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.android_chrome
     import plugins.sqlite_plugins.android_contacts
     import plugins.sqlite_plugins.android_downloads
+    import plugins.sqlite_plugins.android_emergencymode
     import plugins.sqlite_plugins.android_telephony
     import plugins.sqlite_plugins.android_gallery3d
+    import plugins.sqlite_plugins.android_logsprovider
     import plugins.sqlite_plugins.android_media
     import plugins.sqlite_plugins.android_mms
     import plugins.sqlite_plugins.android_vending
@@ -106,8 +108,11 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.facebook_katana
     import plugins.sqlite_plugins.facebook_orca
     import plugins.sqlite_plugins.kik_android
+    import plugins.sqlite_plugins.samsung_galaxyfinder
     import plugins.sqlite_plugins.snapchat_android
+    import plugins.sqlite_plugins.teslacoilsw_launcher
     import plugins.sqlite_plugins.valvesoftware_android
+    import plugins.sqlite_plugins.vlingo_midas
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
@@ -206,6 +211,19 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Android Emergencymode Parser
+    msg = 'Processing Android EmergencyMode'
+    logging.info(msg)
+    print(msg)
+    emergency_data = plugins.sqlite_plugins.android_emergencymode.android_emergencymode(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        try:
+            android_dict['android_emergencymode'] = pd.DataFrame(emergency_data,
+                                                                 columns=emergency_data[0].keys())
+        except IndexError:
+            pass
+
     # Android Gallery3d Parser
     msg = 'Processing Android Gallery3d'
     logging.info(msg)
@@ -239,6 +257,19 @@ if __name__ == "__main__":
 
     plugins.other_plugins.android_gmail_message_parser.android_gmail_message_parser(files_to_process, os.path.join(
         args.destination, "Android/Gmail_Messages/"))
+
+    # Android Logsprovider Parser
+    msg = 'Processing Android Logsprovider'
+    logging.info(msg)
+    print(msg)
+    android_logsprovider_data = plugins.sqlite_plugins.android_logsprovider.android_logsprovider(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        try:
+            android_dict['android_logsprovider'] = pd.DataFrame(android_logsprovider_data,
+                                                                columns=android_logsprovider_data[0].keys())
+        except IndexError:
+            pass
 
     # Android Media Parser
     msg = 'Processing Android Media'
@@ -457,6 +488,20 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Samsung Galaxyfinder Parser
+    msg = 'Processing Samsung Galaxyfinder'
+    logging.info(msg)
+    print(msg)
+    samsung_galaxyfinder_data = plugins.sqlite_plugins.samsung_galaxyfinder.samsung_galaxyfinder(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        samsung_dict = OrderedDict()
+        try:
+            samsung_dict['samsung_galaxyfinder'] = pd.DataFrame(samsung_galaxyfinder_data,
+                                                                columns=samsung_galaxyfinder_data[0].keys())
+        except IndexError:
+            pass
+
     # Snapchat Parser
     msg = 'Processing Snapchat'
     logging.info(msg)
@@ -493,6 +538,26 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Teslacoilsw Launcer Parser
+    msg = 'Processing Teslacoilsw'
+    logging.info(msg)
+    print(msg)
+    tesla_allapps_data, tesla_favorites_data = \
+        plugins.sqlite_plugins.teslacoilsw_launcher.teslacoilsw_launcher(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        tesla_dict = OrderedDict()
+        try:
+            tesla_dict['teslacoilsw_all_apps'] = pd.DataFrame(tesla_allapps_data,
+                                                              columns=tesla_allapps_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            tesla_dict['teslacoilsw_favorites'] = pd.DataFrame(tesla_favorites_data,
+                                                               columns=tesla_favorites_data[0].keys())
+        except IndexError:
+            pass
+
     # Valve Parser
     msg = 'Processing Valve'
     logging.info(msg)
@@ -521,6 +586,20 @@ if __name__ == "__main__":
         try:
             valve_dict['valve_preferences'] = pd.DataFrame(valve_preferences_data,
                                                                  columns=valve_preferences_data[0].keys())
+        except IndexError:
+            pass
+
+    # Vlingo Midas Parser
+    msg = 'Processing Vlingo Midas'
+    logging.info(msg)
+    print(msg)
+    vlingo_contacts_data = plugins.sqlite_plugins.vlingo_midas.vlingo_midas(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        vlingo_dict = OrderedDict()
+        try:
+            vlingo_dict['vlingo_midas_contacts'] = pd.DataFrame(vlingo_contacts_data,
+                                                                columns=vlingo_contacts_data[0].keys())
         except IndexError:
             pass
 
@@ -554,9 +633,11 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(chrome_history_data, os.path.join(path, 'android_chrome_history.csv'))
         writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
         writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
+        writers.csv_writer.csv_writer(emergency_data, os.path.join(path, 'android_emergencymode.csv'))
         writers.csv_writer.csv_writer(photo_file_data, os.path.join(path, 'android_gallery3d_files.csv'))
         writers.csv_writer.csv_writer(picasa_data, os.path.join(path, 'android_gallery3d_picasa.csv'))
         writers.csv_writer.csv_writer(gmail_accounts_data, os.path.join(path, 'android_gmail_accounts.csv'))
+        writers.csv_writer.csv_writer(android_logsprovider_data, os.path.join(path, 'android_logsprovider.csv'))
         writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
         writers.csv_writer.csv_writer(android_mms_data, os.path.join(path, 'android_mms_glance.csv'))
         writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
@@ -596,6 +677,11 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(kik_chat_data, os.path.join(path, 'kik_chat.csv'))
         writers.csv_writer.csv_writer(kik_preferences_data, os.path.join(path, 'kik_preferences.csv'))
 
+        path = args.destination + '//Samsung'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.csv_writer.csv_writer(samsung_galaxyfinder_data, os.path.join(path, 'samsung_galaxyfinder.csv'))
+
         path = args.destination + '//Snapchat'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
@@ -605,6 +691,12 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(snapchat_files_data, os.path.join(path, 'snapchat_files.csv'))
         writers.csv_writer.csv_writer(snapchat_preferences_data, os.path.join(path, 'snapchat_preferences.csv'))
 
+        path = args.destination + '//Teslacoilsw'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.csv_writer.csv_writer(tesla_allapps_data, os.path.join(path, 'teslacoilsw_allapps.csv'))
+        writers.csv_writer.csv_writer(tesla_favorites_data, os.path.join(path, 'teslacoilsw_favorites.csv'))
+
         path = args.destination + '//Valve'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
@@ -612,6 +704,11 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(valve_chat_data, os.path.join(path, 'valve_chat.csv'))
         writers.csv_writer.csv_writer(valve_debug_data, os.path.join(path, 'valve_debug.csv'))
         writers.csv_writer.csv_writer(valve_preferences_data, os.path.join(path, 'valve_preferences.csv'))
+
+        path = args.destination + '//Vlingo'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.csv_writer.csv_writer(vlingo_contacts_data, os.path.join(path, 'vlingo_midas_contacts.csv'))
 
     if args.o.lower() == 'xlsx':
         path = args.destination + '//Android'
@@ -634,15 +731,30 @@ if __name__ == "__main__":
             os.mkdir(path, 0777)
         writers.xlsx_writer.xlsx_writer(kik_dict, os.path.join(path, 'kik.xlsx'))
 
+        path = args.destination + '//Samsung'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.xlsx_writer.xlsx_writer(samsung_dict, os.path.join(path, 'samsung.xlsx'))
+
         path = args.destination + '//Snapchat'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
         writers.xlsx_writer.xlsx_writer(snapchat_dict, os.path.join(path, 'snapchat.xlsx'))
 
+        path = args.destination + '//Teslacoilsw'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.xlsx_writer.xlsx_writer(tesla_dict, os.path.join(path, 'teslacoilsw.xlsx'))
+
         path = args.destination + '//Valve'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
         writers.xlsx_writer.xlsx_writer(valve_dict, os.path.join(path, 'valve.xlsx'))
+
+        path = args.destination + '//Vlingo'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.xlsx_writer.xlsx_writer(vlingo_dict, os.path.join(path, 'vlingo.xlsx'))
     msg = 'Completed'
     logging.info(msg)
     print(msg)
