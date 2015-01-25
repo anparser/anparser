@@ -107,6 +107,7 @@ if __name__ == "__main__":
     import plugins.sqlite_plugins.facebook_orca
     import plugins.sqlite_plugins.kik_android
     import plugins.sqlite_plugins.snapchat_android
+    import plugins.sqlite_plugins.valvesoftware_android
     import plugins.xml_plugins.android_gmail
     import plugins.xml_plugins.android_browser
     import plugins.xml_plugins.android_vending
@@ -114,6 +115,7 @@ if __name__ == "__main__":
     import plugins.xml_plugins.google_talk
     import plugins.xml_plugins.kik_android
     import plugins.xml_plugins.snapchat_android
+    import plugins.xml_plugins.valvesoftware_android
     import plugins.other_plugins.android_gmail_message_parser
     # run plugins
 
@@ -491,6 +493,37 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Valve Parser
+    msg = 'Processing Valve'
+    logging.info(msg)
+    print(msg)
+    valve_friends_data, valve_chat_data, valve_debug_data = \
+        plugins.sqlite_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
+    valve_preferences_data = plugins.xml_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
+
+    if args.o.lower() == 'xlsx':
+        valve_dict = OrderedDict()
+        try:
+            valve_dict['valve_friends'] = pd.DataFrame(valve_friends_data,
+                                                             columns=valve_friends_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            valve_dict['valve_chat'] = pd.DataFrame(valve_chat_data,
+                                                          columns=valve_chat_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            valve_dict['valve_debug'] = pd.DataFrame(valve_debug_data,
+                                                             columns=valve_debug_data[0].keys())
+        except IndexError:
+            pass
+        try:
+            valve_dict['valve_preferences'] = pd.DataFrame(valve_preferences_data,
+                                                                 columns=valve_preferences_data[0].keys())
+        except IndexError:
+            pass
+
     msg = 'Processors Complete'
     logging.info(msg)
     print(msg)
@@ -572,6 +605,14 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(snapchat_files_data, os.path.join(path, 'snapchat_files.csv'))
         writers.csv_writer.csv_writer(snapchat_preferences_data, os.path.join(path, 'snapchat_preferences.csv'))
 
+        path = args.destination + '//Valve'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.csv_writer.csv_writer(valve_friends_data, os.path.join(path, 'valve_friends.csv'))
+        writers.csv_writer.csv_writer(valve_chat_data, os.path.join(path, 'valve_chat.csv'))
+        writers.csv_writer.csv_writer(valve_debug_data, os.path.join(path, 'valve_debug.csv'))
+        writers.csv_writer.csv_writer(valve_preferences_data, os.path.join(path, 'valve_preferences.csv'))
+
     if args.o.lower() == 'xlsx':
         path = args.destination + '//Android'
         if not os.path.exists(path):
@@ -597,6 +638,11 @@ if __name__ == "__main__":
         if not os.path.exists(path):
             os.mkdir(path, 0777)
         writers.xlsx_writer.xlsx_writer(snapchat_dict, os.path.join(path, 'snapchat.xlsx'))
+
+        path = args.destination + '//Valve'
+        if not os.path.exists(path):
+            os.mkdir(path, 0777)
+        writers.xlsx_writer.xlsx_writer(valve_dict, os.path.join(path, 'valve.xlsx'))
     msg = 'Completed'
     logging.info(msg)
     print(msg)

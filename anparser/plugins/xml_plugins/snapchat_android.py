@@ -49,7 +49,7 @@ def snapchat_android(file_listing):
         snapchat_dict_data['XML File'] = snapchat_pref_xml
         for entry in snapchat_data:
             if entry['name'] == 'device_id':
-                snapchat_dict_data['Device ID'] = entry['text_entry']
+                snapchat_dict_data['Device Id'] = entry['text_entry']
             elif entry['name'] == 'phone_number':
                 snapchat_dict_data['Phone Number'] = entry['text_entry']
             elif entry['name'] == 'lastSuccessfulLoginUsername':
