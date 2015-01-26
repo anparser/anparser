@@ -65,18 +65,18 @@ def csv_writer(data, file_name):
     :param file_name: file name to write to
     :return: Completion State
     """
+    if data != []:
+        fout = open(file_name, mode='wb')
+        try:
+            writer = DictUnicodeWriter(fout, data[0].keys(), delimiter='|')
+            writer.writeheader()
+            writer.writerows(data)
+        except (IndexError, TypeError) as exception:
+            logging.error('CSV Writer Error: {0:s}'.format(file_name + " > " + str(exception)))
+            pass
 
-    fout = open(file_name, mode='wb')
-    try:
-        writer = DictUnicodeWriter(fout, data[0].keys(), delimiter='|')
-        writer.writeheader()
-        writer.writerows(data)
-    except (IndexError, TypeError) as exception:
-        logging.error('CSV Writer Error: {0:s}'.format(file_name + " > " + str(exception)))
-        pass
+        fout.flush()
+        fout.close()
 
-    fout.flush()
-    fout.close()
-
-    return True
+        return True
 
