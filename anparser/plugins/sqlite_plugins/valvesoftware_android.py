@@ -96,13 +96,13 @@ def valvesoftware_android(file_list):
         for entry in debug_data:
             valve_data['Database'] = debug_database
             valve_data['Table'] = 'dbgutil'
-            valve_data['Id'] = entry[0]
+            valve_data['Id'] = entry['_id']
             try:
-                valve_data['Message Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[1]))
+                valve_data['Message Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['msgtime']))
             except TypeError:
                 valve_data['Message Time'] = ''
-            valve_data['Key'] = entry[2]
-            valve_data['Value'] = entry[3]
+            valve_data['Key'] = entry['key']
+            valve_data['Value'] = entry['value']
 
             valve_debug_list.append(valve_data)
             valve_data = OrderedDict()
@@ -113,9 +113,9 @@ def valvesoftware_android(file_list):
         for entry in friends_data:
             valve_data['Database'] = message_database
             valve_data['Table'] = 'UmqInfo'
-            valve_data['Id 1'] = entry[0]
-            valve_data['Id 2'] = entry[1]
-            valve_data['Name'] = entry[2]
+            valve_data['Id 1'] = entry['id1']
+            valve_data['Id 2'] = entry['id2']
+            valve_data['Name'] = entry['name']
 
             valve_friends_list.append(valve_data)
             valve_data = OrderedDict()
@@ -126,19 +126,19 @@ def valvesoftware_android(file_list):
         for entry in message_data:
             valve_data['Database'] = message_database
             valve_data['Table'] = 'UmqMsg'
-            valve_data['Id'] = entry[0]
-            valve_data['My User 1'] = entry[1]
-            valve_data['My User 2'] = entry[2]
-            valve_data['W User 1'] = entry[3]
-            valve_data['W User 2'] = entry[4]
-            valve_data['Message Incoming'] = entry[5]
-            valve_data['Message Unread'] = entry[6]
+            valve_data['Id'] = entry['_id']
+            valve_data['My User 1'] = entry['myuser1']
+            valve_data['My User 2'] = entry['myuser2']
+            valve_data['W User 1'] = entry['wuser1']
+            valve_data['W User 2'] = entry['wuser2']
+            valve_data['Message Incoming'] = entry['msgincoming']
+            valve_data['Message Unread'] = entry['msgunread']
             try:
-                valve_data['Message Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7]))
+                valve_data['Message Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['msgtime']))
             except TypeError:
                 valve_data['Message Time'] = ''
-            valve_data['Message Type'] = entry[8]
-            valve_data['Data'] = entry[9]
+            valve_data['Message Type'] = entry['msgtype']
+            valve_data['Data'] = entry['bindata']
 
             valve_chat_list.append(valve_data)
             valve_data = OrderedDict()

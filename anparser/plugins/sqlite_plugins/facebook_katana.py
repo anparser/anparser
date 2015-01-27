@@ -130,12 +130,12 @@ def facebook_katana(file_list):
         for entry in contacts_data:
             katana_data['Database'] = contacts_database
             katana_data['Table'] = 'contacts'
-            katana_data['Id'] = entry[0]
-            katana_data['Contact Id'] = entry[1]
-            katana_data['FaceBook Id'] = entry[2]
-            katana_data['First Name'] = entry[3]
-            katana_data['Last Name'] = entry[4]
-            katana_data['Name'] = entry[5]
+            katana_data['Id'] = entry['internal_id']
+            katana_data['Contact Id'] = entry['contact_id']
+            katana_data['FaceBook Id'] = entry['fbid']
+            katana_data['First Name'] = entry['first_name']
+            katana_data['Last Name'] = entry['last_name']
+            katana_data['Name'] = entry['display_name']
 
             katana_contacts_list.append(katana_data)
             katana_data = OrderedDict()
@@ -146,7 +146,7 @@ def facebook_katana(file_list):
         for entry in folder_counts_data:
             katana_data['Database'] = threads_database
             katana_data['Table'] = 'folder_counts'
-            katana_data['Folder'] = entry[0]
+            katana_data['Folder'] = entry['folder']
             katana_data['Thread'] = ''
             katana_data['Thread Id'] = ''
             katana_data['FaceBook Id'] = ''
@@ -155,18 +155,19 @@ def facebook_katana(file_list):
             katana_data['Name'] = ''
             katana_data['Timestamp'] = ''
             try:
-                katana_data['Last Seen'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                katana_data['Last Seen'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['last_seen_time'] / 1000.))
             except TypeError:
                 katana_data['Last Seen'] = ''
             katana_data['Last Fetch Time'] = ''
             katana_data['Unread'] = ''
-            katana_data['Unread Count'] = entry[1]
-            katana_data['Unseen Count'] = entry[2]
+            katana_data['Unread Count'] = entry['unread_count']
+            katana_data['Unseen Count'] = entry['unseen_count']
             katana_data['Participants'] = ''
             katana_data['Former Participants'] = ''
             katana_data['Senders'] = ''
             katana_data['Action Id'] = ''
-            katana_data['Last Action Id'] = entry[4]
+            katana_data['Last Action Id'] = entry['last_action_id']
 
             katana_threads_list.append(katana_data)
             katana_data = OrderedDict()
@@ -176,15 +177,16 @@ def facebook_katana(file_list):
         for entry in folders_data:
             katana_data['Database'] = threads_database
             katana_data['Table'] = 'folders'
-            katana_data['Folder'] = entry[0]
-            katana_data['Thread'] = entry[1]
+            katana_data['Folder'] = entry['folder']
+            katana_data['Thread'] = entry['thread_key']
             katana_data['Thread Id'] = ''
             katana_data['FaceBook Id'] = ''
             katana_data['First Name'] = ''
             katana_data['Last Name'] = ''
             katana_data['Name'] = ''
             try:
-                katana_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
+                katana_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['timestamp_ms'] / 1000.))
             except TypeError:
                 katana_data['Timestamp'] = ''
             katana_data['Last Seen'] = ''
@@ -209,10 +211,10 @@ def facebook_katana(file_list):
             katana_data['Folder'] = ''
             katana_data['Thread'] = ''
             katana_data['Thread Id'] = ''
-            katana_data['FaceBook Id'] = entry[0]
-            katana_data['First Name'] = entry[1]
-            katana_data['Last Name'] = entry[2]
-            katana_data['Name'] = entry[3]
+            katana_data['FaceBook Id'] = entry['user_key']
+            katana_data['First Name'] = entry['first_name']
+            katana_data['Last Name'] = entry['last_name']
+            katana_data['Name'] = entry['name']
             katana_data['Timestamp'] = ''
             katana_data['Last Seen'] = ''
             katana_data['Last Fetch Time'] = ''
@@ -233,29 +235,31 @@ def facebook_katana(file_list):
         for entry in threads_data:
             katana_data['Database'] = threads_database
             katana_data['Table'] = 'threads'
-            katana_data['Folder'] = entry[10]
-            katana_data['Thread'] = entry[0]
-            katana_data['Thread Id'] = entry[1]
+            katana_data['Folder'] = entry['folder']
+            katana_data['Thread'] = entry['thread_key']
+            katana_data['Thread Id'] = entry['thread_fbid']
             katana_data['FaceBook Id'] = ''
             katana_data['First Name'] = ''
             katana_data['Last Name'] = ''
-            katana_data['Name'] = entry[3]
+            katana_data['Name'] = entry['name']
             try:
-                katana_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
+                katana_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['timestamp_ms'] / 1000.))
             except TypeError:
                 katana_data['Timestamp'] = ''
             katana_data['Last Seen'] = ''
             try:
-                katana_data['Last Fetch Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
+                katana_data['Last Fetch Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['last_fetch_time_ms'] / 1000.))
             except TypeError:
                 katana_data['Last Fetch Time'] = ''
-            katana_data['Unread'] = entry[9]
+            katana_data['Unread'] = entry['unread']
             katana_data['Unread Count'] = ''
             katana_data['Unseen Count'] = ''
-            katana_data['Participants'] = entry[4]
-            katana_data['Former Participants'] = entry[5]
-            katana_data['Senders'] = entry[6]
-            katana_data['Action Id'] = entry[2]
+            katana_data['Participants'] = entry['participants']
+            katana_data['Former Participants'] = entry['former_participants']
+            katana_data['Senders'] = entry['senders']
+            katana_data['Action Id'] = entry['action_id']
             katana_data['Last Action Id'] = ''
 
             katana_threads_list.append(katana_data)
@@ -268,14 +272,14 @@ def facebook_katana(file_list):
         for entry in messages_data:
             katana_data['Database'] = threads_database
             katana_data['Table'] = 'messages'
-            katana_data['Thread'] = entry[1]
+            katana_data['Thread'] = entry['thread_key']
             try:
-                katana_data['Text'] = entry[3].strip('\n')
+                katana_data['Text'] = entry['text'].strip('\n')
             except AttributeError:
-                katana_data['Text'] = entry[3]
+                katana_data['Text'] = entry['text']
 
             try:
-                tmp_dict = simplejson.loads(entry[4].encode('utf-8'))
+                tmp_dict = simplejson.loads(entry['sender'].encode('utf-8'))
                 katana_data['Email'] = tmp_dict['email']
                 katana_data['FaceBook Id'] = tmp_dict['user_key']
                 katana_data['Name'] = tmp_dict['name']
@@ -285,24 +289,26 @@ def facebook_katana(file_list):
                 katana_data['Name'] = ''
 
             try:
-                katana_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                katana_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['timestamp_ms'] / 1000.))
             except TypeError:
                 katana_data['Timestamp'] = ''
             try:
-                katana_data['Timestamp Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[6] / 1000.))
+                katana_data['Timestamp Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['timestamp_sent_ms'] / 1000.))
             except TypeError:
                 katana_data['Timestamp Sent'] = ''
-            katana_data['Message Id'] = entry[0]
-            katana_data['Source'] = entry[10]
-            if len(entry[7]) < 0:
-                katana_data['Attachment'] = simplejson.loads(entry[7].encode('utf-8'))[0]['filename']
-                katana_data['Attachment Url'] = simplejson.loads(entry[7].encode('utf-8'))[0]['urls']['FULL_SCREEN'][
-                    'src']
+            katana_data['Message Id'] = entry['msg_id']
+            katana_data['Source'] = entry['source']
+            if len(entry['attachments']) < 0:
+                katana_data['Attachment'] = simplejson.loads(entry['attachments'].encode('utf-8'))[0]['filename']
+                katana_data['Attachment Url'] = simplejson.loads(
+                    entry['attachments'].encode('utf-8'))[0]['urls']['FULL_SCREEN']['src']
             else:
                 katana_data['Attachment'] = ''
                 katana_data['Attachment Url'] = ''
             try:
-                tmp_dict = simplejson.loads(entry[8].encode('utf-8'))
+                tmp_dict = simplejson.loads(entry['coordinates'].encode('utf-8'))
                 katana_data['Latitude'] = tmp_dict['latitude']
                 katana_data['Longitude'] = tmp_dict['longitude']
                 katana_data['Accuracy'] = tmp_dict['accuracy']
@@ -310,10 +316,10 @@ def facebook_katana(file_list):
                 katana_data['Latitude'] = ''
                 katana_data['Longitude'] = ''
                 katana_data['Accuracy'] = ''
-            katana_data['Offline Thread Id'] = entry[9]
-            katana_data['Action Id'] = entry[2]
-            katana_data['Send Error'] = entry[11]
-            katana_data['Send Error Message'] = entry[12]
+            katana_data['Offline Thread Id'] = entry['offline_threading_id']
+            katana_data['Action Id'] = entry['action_id']
+            katana_data['Send Error'] = entry['send_error']
+            katana_data['Send Error Message'] = entry['send_error_message']
 
             katana_msg_list.append(katana_data)
             katana_data = OrderedDict()
@@ -324,16 +330,16 @@ def facebook_katana(file_list):
         for entry in notification_data:
             katana_data['Database'] = notification_database
             katana_data['Table'] = 'gql_notification'
-            katana_data['Id'] = entry[0]
-            katana_data['Notification Id'] = entry[1]
-            katana_data['Recipient FaceBook Id'] = entry[2]
-            katana_data['Seen State'] = entry[3]
+            katana_data['Id'] = entry['_id']
+            katana_data['Notification Id'] = entry['notif_id']
+            katana_data['Recipient FaceBook Id'] = entry['recipient_id']
+            katana_data['Seen State'] = entry['seen_state']
             try:
-                katana_data['Updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4]))
+                katana_data['Updated'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['updated']))
             except TypeError:
                 katana_data['Updated'] = ''
             try:
-                tmp_dict = simplejson.loads(str(entry[6]).encode('utf-8'))
+                tmp_dict = simplejson.loads(str(entry['gql_payload']).encode('utf-8'))
                 try:
                     katana_data['Text'] = tmp_dict['attachments'][0]['description']['text']
                 except KeyError:
@@ -356,9 +362,9 @@ def facebook_katana(file_list):
                 katana_data['Sender FaceBook Id'] = ''
                 katana_data['Sender Name'] = ''
                 katana_data['Creation Time'] = ''
-            katana_data['Cache Id'] = entry[5]
-            katana_data['Profile Picture Uri'] = entry[7]
-            katana_data['Photo Uri'] = entry[8]
+            katana_data['Cache Id'] = entry['cache_id']
+            katana_data['Profile Picture Uri'] = entry['profile_picture_uri']
+            katana_data['Photo Uri'] = entry['photo_uri']
 
             katana_notification_list.append(katana_data)
             katana_data = OrderedDict()

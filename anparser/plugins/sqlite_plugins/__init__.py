@@ -22,6 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+import itertools
 import sqlite3
 import logging
 
@@ -91,16 +92,47 @@ def read_sqlite_table(db_path, table_name, columns=None):
     :param columns: string of table names to parse
     :return: List of all entries
     """
+    data = []
+    missing_fields = []
 
     con = sqlite3.connect(db_path)
+    con.row_factory = sqlite3.Row
     cur = con.cursor()
 
     if columns:
-        cur.execute('select ' + columns + ' from ' + table_name + ';', )
+        try:
+            cur.execute('select ' + columns + ' from ' + table_name + ';', )
+            for row in cur:
+                rowDict = {}
+                rowDict = dict(itertools.izip(row.keys(), row))
+                data.append(rowDict)
+        except sqlite3.OperationalError as exception:
+            if str(exception).__contains__('no such column:'):
+                print str(exception)[16:]
+                print type(str(exception))
+                while True:
+                    missing_fields.append(str(exception)[16:])
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    columns = columns.replace(', ' + str(exception)[16:], '')
+                    try:
+                        cur.execute('select ' + columns + ' from ' + table_name + ';', )
+                        for row in cur:
+                            rowDict = {}
+                            rowDict = dict(itertools.izip(row.keys(), row))
+                            for field in missing_fields:
+                                rowDict[field] = ''
+                            data.append(rowDict)
+                        break
+                    except sqlite3.OperationalError as exception:
+                        logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                        continue
     else:
         cur.execute('select * from ' + table_name + ';', )
+        for row in cur:
+            rowDict = {}
+            rowDict = dict(itertools.izip(row.keys(), row))
 
-    return cur.fetchall()
+    return data
 
 
 def read_sqlite_tables(db_path):

@@ -67,13 +67,13 @@ def vlingo_midas(file_list):
         for entry in data_data:
             vlingo_data['Database'] = vlingo_database
             vlingo_data['Table'] = 'data'
-            vlingo_data['Data Id'] = entry[0]
-            vlingo_data['Raw Contact Id'] = entry[1]
-            vlingo_data['Contact Id'] = entry[2]
-            vlingo_data['Display Name'] = entry[5]
-            vlingo_data['Times Contacted'] = entry[3]
-            vlingo_data['Starred'] = entry[4]
-            vlingo_data['Lookup'] = entry[6]
+            vlingo_data['Data Id'] = entry['_id']
+            vlingo_data['Raw Contact Id'] = entry['raw_contact_id']
+            vlingo_data['Contact Id'] = entry['contact_id']
+            vlingo_data['Display Name'] = entry['display_name']
+            vlingo_data['Times Contacted'] = entry['times_contacted']
+            vlingo_data['Starred'] = entry['starred']
+            vlingo_data['Lookup'] = entry['lookup']
 
             vlingo_contacts_list.append(vlingo_data)
             vlingo_data = OrderedDict()

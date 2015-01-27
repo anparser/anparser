@@ -92,11 +92,11 @@ def android_vending(file_list):
         for entry in library_data:
             vending_data['Database'] = library_database
             vending_data['Table'] = 'ownership'
-            vending_data['Library Id'] = entry[1]
-            vending_data['Doc Id'] = entry[2]
-            vending_data['Account'] = entry[0]
-            vending_data['Document Hash'] = entry[3]
-            vending_data['App Certificate Hash'] = entry[4]
+            vending_data['Library Id'] = entry['library_id']
+            vending_data['Doc Id'] = entry['doc_id']
+            vending_data['Account'] = entry['account']
+            vending_data['Document Hash'] = entry['document_hash']
+            vending_data['App Certificate Hash'] = entry['app_certificate_hash']
 
             vending_library_list.append(vending_data)
             vending_data = OrderedDict()
@@ -108,29 +108,31 @@ def android_vending(file_list):
             vending_data['Database'] = localapp_database
             vending_data['Table'] = 'appstate'
             try:
-                vending_data['Title'] = entry[6].encode('utf-8')
+                vending_data['Title'] = entry['title'].encode('utf-8')
             except AttributeError:
-                vending_data['Title'] = entry[6]
+                vending_data['Title'] = entry['title']
             try:
-                vending_data['Package Name'] = entry[0].encode('utf-8')
+                vending_data['Package Name'] = entry['package_name'].encode('utf-8')
             except AttributeError:
-                vending_data['Package Name'] = entry[0]
-            vending_data['Account'] = entry[5]
+                vending_data['Package Name'] = entry['package_name']
+            vending_data['Account'] = entry['account']
             try:
-                vending_data['First Download'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                vending_data['First Download'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['first_download_ms'] / 1000.))
             except TypeError:
                 vending_data['First Download'] = ''
-            vending_data['Auto Update'] = entry[1]
+            vending_data['Auto Update'] = entry['auto_update']
             try:
-                vending_data['Last Update'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
+                vending_data['Last Update'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['last_update_timestamp_ms'] / 1000.))
             except TypeError:
                 vending_data['Last Update'] = ''
-            vending_data['Last Notified Version'] = entry[7]
-            vending_data['Desired Version'] = entry[2]
+            vending_data['Last Notified Version'] = entry['last_notified_version']
+            vending_data['Desired Version'] = entry['desired_version']
             try:
-                vending_data['Download Uri'] = entry[3].encode('utf-8')
+                vending_data['Download Uri'] = entry['download_uri'].encode('utf-8')
             except AttributeError:
-                vending_data['Download Uri'] = entry[3]
+                vending_data['Download Uri'] = entry['download_uri']
 
             vending_localapp_list.append(vending_data)
             vending_data = OrderedDict()
@@ -141,11 +143,11 @@ def android_vending(file_list):
         for entry in suggestions_data:
             vending_data['Database'] = suggestions_database
             vending_data['Table'] = 'suggestions'
-            vending_data['Id'] = entry[0]
-            vending_data['Display'] = entry[1]
-            vending_data['Query'] = entry[2]
+            vending_data['Id'] = entry['_id']
+            vending_data['Display'] = entry['display1']
+            vending_data['Query'] = entry['query']
             try:
-                vending_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                vending_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.))
             except TypeError:
                 vending_data['Date'] = ''
 

@@ -68,31 +68,31 @@ def android_logsprovider(file_list):
         for entry in logsprovider_data:
             logs_data['Database'] = logs_database
             logs_data['Table'] = 'logs'
-            logs_data['Log Id'] = entry[0]
-            logs_data['Account Id'] = entry[17]
-            logs_data['Message Id'] = entry[12]
-            logs_data['Contact Id'] = entry[13]
-            logs_data['Account Name'] = entry[16]
-            logs_data['F Name'] = entry[18]
-            logs_data['L Name'] = entry[19]
-            logs_data['Name'] = entry[7]
-            logs_data['Number'] = entry[1]
-            logs_data['Normalized Number'] = entry[11]
-            logs_data['M Subject'] = entry[14]
-            logs_data['M Content'] = entry[15]
-            logs_data['Duration'] = entry[4]
+            logs_data['Log Id'] = entry['_id']
+            logs_data['Account Id'] = entry['account_id']
+            logs_data['Message Id'] = entry['messageid']
+            logs_data['Contact Id'] = entry['contactid']
+            logs_data['Account Name'] = entry['account_name']
+            logs_data['F Name'] = entry['fname']
+            logs_data['L Name'] = entry['lname']
+            logs_data['Name'] = entry['name']
+            logs_data['Number'] = entry['number']
+            logs_data['Normalized Number'] = entry['normalized_number']
+            logs_data['M Subject'] = entry['m_subject']
+            logs_data['M Content'] = entry['m_content']
+            logs_data['Duration'] = entry['duration']
             try:
-                logs_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                logs_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.))
             except TypeError:
                 logs_data['Date'] = ''
-            logs_data['Address'] = entry[2]
-            logs_data['Country Iso'] = entry[9]
-            logs_data['Geocoded Location'] = entry[10]
-            logs_data['City Id'] = entry[21]
-            logs_data['Country Code'] = entry[20]
-            logs_data['Type'] = entry[5]
-            logs_data['New'] = entry[6]
-            logs_data['Is Read'] = entry[8]
+            logs_data['Address'] = entry['address']
+            logs_data['Country Iso'] = entry['countryiso']
+            logs_data['Geocoded Location'] = entry['geocoded_location']
+            logs_data['City Id'] = entry['cityid']
+            logs_data['Country Code'] = entry['country_code']
+            logs_data['Type'] = entry['type']
+            logs_data['New'] = entry['new']
+            logs_data['Is Read'] = entry['is_read']
 
             logs_data_list.append(logs_data)
             logs_data = OrderedDict()

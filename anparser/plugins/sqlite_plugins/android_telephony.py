@@ -36,21 +36,21 @@ def read_sms(db_data, db_path):
     for entry in db_data:
         data_dict['Database'] = db_path
         data_dict['Table'] = 'sms'
-        data_dict['Id'] = entry[0]
-        data_dict['Thread Id'] = entry[1]
-        data_dict['Address'] = entry[2]
-        data_dict['Person'] = entry[3]
+        data_dict['Id'] = entry['_id']
+        data_dict['Thread Id'] = entry['thread_id']
+        data_dict['Address'] = entry['address']
+        data_dict['Person'] = entry['person']
         try:
-            data_dict['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.0))
+            data_dict['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.0))
         except TypeError:
             data_dict['Date'] = ''
         try:
-            data_dict['Date_Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.0))
+            data_dict['Date_Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date_sent'] / 1000.0))
         except TypeError:
             data_dict['Date_Sent'] = ''
-        data_dict['Body'] = entry[6]
-        data_dict['Read'] = entry[7]
-        data_dict['Seen'] = entry[8]
+        data_dict['Body'] = entry['body']
+        data_dict['Read'] = entry['read']
+        data_dict['Seen'] = entry['seen']
         data_dict_list.append(data_dict)
         data_dict = OrderedDict()
 
@@ -65,15 +65,15 @@ def read_sms_threads(db_data, db_path):
     for entry in db_data:
         data_dict['Database'] = db_path
         data_dict['Table'] = 'threads'
-        data_dict['Id'] = entry[0]
+        data_dict['Id'] = entry['_id']
         try:
-            data_dict['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[1] / 1000.0))
+            data_dict['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.0))
         except TypeError:
             data_dict['Date'] = ''
-        data_dict['Message Count'] = entry[2]
-        data_dict['Snippet'] = entry[3]
-        data_dict['Read'] = entry[4]
-        data_dict['Has Attachment'] = entry[5]
+        data_dict['Message Count'] = entry['message_count']
+        data_dict['Snippet'] = entry['snippet']
+        data_dict['Read'] = entry['read']
+        data_dict['Has Attachment'] = entry['has_attachment']
         data_dict_list.append(data_dict)
         data_dict = OrderedDict()
 
