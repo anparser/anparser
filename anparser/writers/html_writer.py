@@ -67,6 +67,9 @@ class OverviewParser():
     def add_section_contacts(self):
         # This section correlates the contacts across applications on the devices
 
+        # Should be structured with the following columns:
+        # Name, Sources, Phone, Email, ID, Username, Combined Hit Count of Communications
+
         # Facebook
         fb_contact_set = set()
         fb_msg_dict = {}
