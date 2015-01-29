@@ -17,6 +17,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import android_browser
+import android_calendar
+import android_chrome
+import android_contacts
+import android_downloads
+import android_emergencymode
+import android_gallery3d
+import android_logsprovider
+import android_media
+import android_mms
+import android_telephony
+import android_vending
+import facebook_katana
+import facebook_orca
+import google_docs
+import google_plus
+import kik_android
+import samsung_galaxyfinder
+import snapchat_android
+import teslacoilsw_launcher
+import valvesoftware_android
+import vlingo_midas
+
 __author__ = 'cbryce'
 __license__ = 'GPLv3'
 __date__ = '20150102'

@@ -23,6 +23,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import android_browser
+import android_gmail
+import android_vending
+import google_plus
+import google_talk
+import kik_android
+import snapchat_android
+import valvesoftware_android
+
 import xml.etree.ElementTree as ET
 import collections
 

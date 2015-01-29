@@ -30,7 +30,7 @@ import os
 import sys
 import pandas as pd
 import plugins
-import plugins.sqlite_plugins
+import writers
 
 
 def scan_for_files(input_dir):
@@ -90,39 +90,7 @@ if __name__ == "__main__":
     # Start of Plugin Processing
     #
 
-    # import plugins to process the file listing
-    import plugins.sqlite_plugins.android_browser
-    import plugins.sqlite_plugins.android_calendar
-    import plugins.sqlite_plugins.android_chrome
-    import plugins.sqlite_plugins.android_contacts
-    import plugins.sqlite_plugins.android_downloads
-    import plugins.sqlite_plugins.android_emergencymode
-    import plugins.sqlite_plugins.android_telephony
-    import plugins.sqlite_plugins.android_gallery3d
-    import plugins.sqlite_plugins.android_logsprovider
-    import plugins.sqlite_plugins.android_media
-    import plugins.sqlite_plugins.android_mms
-    import plugins.sqlite_plugins.android_vending
-    import plugins.sqlite_plugins.google_docs
-    import plugins.sqlite_plugins.google_plus
-    import plugins.sqlite_plugins.facebook_katana
-    import plugins.sqlite_plugins.facebook_orca
-    import plugins.sqlite_plugins.kik_android
-    import plugins.sqlite_plugins.samsung_galaxyfinder
-    import plugins.sqlite_plugins.snapchat_android
-    import plugins.sqlite_plugins.teslacoilsw_launcher
-    import plugins.sqlite_plugins.valvesoftware_android
-    import plugins.sqlite_plugins.vlingo_midas
-    import plugins.xml_plugins.android_gmail
-    import plugins.xml_plugins.android_browser
-    import plugins.xml_plugins.android_vending
-    import plugins.xml_plugins.google_plus
-    import plugins.xml_plugins.google_talk
-    import plugins.xml_plugins.kik_android
-    import plugins.xml_plugins.snapchat_android
-    import plugins.xml_plugins.valvesoftware_android
-    import plugins.other_plugins.android_gmail_message_parser
-    # run plugins
+    # Run plugins
 
     # Android Browser Parser
     msg = 'Processing Android Browser'
@@ -613,8 +581,6 @@ if __name__ == "__main__":
     #
     # Start of Writers
     #
-    import writers.csv_writer
-    import writers.xlsx_writer
 
     # Write Contact Data
     msg = 'Writing data to output...'
