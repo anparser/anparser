@@ -131,6 +131,7 @@ def read_sqlite_table(db_path, table_name, columns=None):
         for row in cur:
             rowDict = {}
             rowDict = dict(itertools.izip(row.keys(), row))
+            data.append(rowDict)
 
     return data
 
