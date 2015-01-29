@@ -88,12 +88,12 @@ def kik_android(file_list):
         for entry in contacts_data:
             kik_data['Database'] = kik_database
             kik_data['Table'] = 'KIKcontactsTable'
-            kik_data['Id'] = entry[0]
-            kik_data['Jid'] = entry[1]
-            kik_data['Display Name'] = entry[2]
-            kik_data['User Name'] = entry[3]
-            kik_data['Is Blocked'] = entry[4]
-            kik_data['Is Ignored'] = entry[5]
+            kik_data['Id'] = entry['_id']
+            kik_data['Jid'] = entry['jid']
+            kik_data['Display Name'] = entry['display_name']
+            kik_data['User Name'] = entry['user_name']
+            kik_data['Is Blocked'] = entry['is_blocked']
+            kik_data['Is Ignored'] = entry['is_ignored']
 
             kik_contacts_list.append(kik_data)
             kik_data = OrderedDict()
@@ -105,8 +105,8 @@ def kik_android(file_list):
             kik_data['Database'] = kik_database
             kik_data['Table'] = 'KIKContentTable'
             kik_data['App Id'] = ''
-            kik_data['KIKContentTable Id'] = entry[0]
-            kik_data['Content Id'] = entry[1]
+            kik_data['KIKContentTable Id'] = entry['_id']
+            kik_data['Content Id'] = entry['content_id']
             kik_data['Message Id'] = ''
             kik_data['Body'] = ''
             kik_data['Length'] = ''
@@ -115,9 +115,9 @@ def kik_android(file_list):
             kik_data['Read State'] = ''
             kik_data['Uid'] = ''
             kik_data['Timestamp'] = ''
-            kik_data['Content Type'] = entry[2]
-            kik_data['Content Name'] = entry[3]
-            kik_data['Content String'] = entry[4]
+            kik_data['Content Type'] = entry['content_type']
+            kik_data['Content Name'] = entry['content_name']
+            kik_data['Content String'] = entry['content_string']
 
             kik_chat_list.append(kik_data)
             kik_data = OrderedDict()
@@ -127,18 +127,18 @@ def kik_android(file_list):
         for entry in messages_data:
             kik_data['Database'] = kik_database
             kik_data['Table'] = 'messagesTable'
-            kik_data['App Id'] = entry[9]
+            kik_data['App Id'] = entry['app_id']
             kik_data['KIKContentTable Id'] = ''
-            kik_data['Content Id'] = entry[8]
-            kik_data['Message Id'] = entry[0]
-            kik_data['Body'] = entry[1]
-            kik_data['Length'] = entry[6]
-            kik_data['Partner Jid'] = entry[2]
-            kik_data['Was Me'] = entry[3]
-            kik_data['Read State'] = entry[4]
-            kik_data['Uid'] = entry[5]
+            kik_data['Content Id'] = entry['content_id']
+            kik_data['Message Id'] = entry['_id']
+            kik_data['Body'] = entry['body']
+            kik_data['Length'] = entry['length']
+            kik_data['Partner Jid'] = entry['partner_jid']
+            kik_data['Was Me'] = entry['was_me']
+            kik_data['Read State'] = entry['read_state']
+            kik_data['Uid'] = entry['uid']
             try:
-                kik_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
+                kik_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp'] / 1000.))
             except TypeError:
                 kik_data['Timestamp'] = ''
             kik_data['Content Type'] = ''

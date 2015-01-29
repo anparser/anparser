@@ -100,11 +100,11 @@ def google_docs(file_list):
         for entry in account_data:
             google_docs_data['Database'] = doclist_database
             google_docs_data['Table'] = 'Account101'
-            google_docs_data['Account Id'] = entry[0]
-            google_docs_data['Account Name'] = entry[1]
+            google_docs_data['Account Id'] = entry['Account_id']
+            google_docs_data['Account Name'] = entry['accountHolderName']
             try:
                 google_docs_data['Last Sync Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastSyncTime'] / 1000.))
             except TypeError:
                 google_docs_data['Last Sync Time'] = ''
 
@@ -116,8 +116,8 @@ def google_docs(file_list):
         for entry in contains_data:
             google_docs_data['Database'] = doclist_database
             google_docs_data['Table'] = 'ContainsId101'
-            google_docs_data['Collection Id'] = entry[1]
-            google_docs_data['Entry Id'] = entry[0]
+            google_docs_data['Collection Id'] = entry['collectionId']
+            google_docs_data['Entry Id'] = entry['entryId']
             google_docs_data['Title'] = ''
             google_docs_data['Creator'] = ''
             google_docs_data['Owner'] = ''
@@ -149,50 +149,50 @@ def google_docs(file_list):
         for entry in collection_data:
             google_docs_data['Database'] = doclist_database
             google_docs_data['Table'] = 'CollectionView'
-            google_docs_data['Collection Id'] = entry[22]
-            google_docs_data['Entry Id'] = entry[1]
-            google_docs_data['Title'] = entry[2]
-            google_docs_data['Creator'] = entry[3]
-            google_docs_data['Owner'] = entry[4]
-            google_docs_data['Account Id'] = entry[21]
+            google_docs_data['Collection Id'] = entry['Collection_id']
+            google_docs_data['Entry Id'] = entry['Entry_id']
+            google_docs_data['Title'] = entry['title']
+            google_docs_data['Creator'] = entry['creator']
+            google_docs_data['Owner'] = entry['owner']
+            google_docs_data['Account Id'] = entry['accountId']
             google_docs_data['md5 Checksum'] = ''
             google_docs_data['Size'] = ''
             try:
                 google_docs_data['Creation Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['creationTime'] / 1000.))
             except TypeError:
                 google_docs_data['Creation Time'] = ''
             try:
                 google_docs_data['Last Modified Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[6] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastModifiedTime'] / 1000.))
             except TypeError:
                 google_docs_data['Last Modified Time'] = ''
-            google_docs_data['Last Modifier Account Alias'] = entry[7]
-            google_docs_data['Last Modifier Account Name'] = entry[8]
+            google_docs_data['Last Modifier Account Alias'] = entry['lastModifierAccountAlias']
+            google_docs_data['Last Modifier Account Name'] = entry['lastModifierAccountName']
             try:
                 google_docs_data['Last Opened Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[9] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastOpenedTime'] / 1000.))
             except TypeError:
                 google_docs_data['Last Opened Time'] = ''
             try:
                 google_docs_data['Shared With Me Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[10] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['sharedWithMeTime'] / 1000.))
             except TypeError:
                 google_docs_data['Shared With Me Time'] = ''
-            google_docs_data['Shareable By Owner'] = entry[11]
-            google_docs_data['Shared'] = entry[12]
+            google_docs_data['Shareable By Owner'] = entry['shareableByOwner']
+            google_docs_data['Shared'] = entry['shared']
             try:
                 google_docs_data['Modified By Me Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[13] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['modifiedByMeTime'] / 1000.))
             except TypeError:
                 google_docs_data['Modified By Me Time'] = ''
-            google_docs_data['Mime Type'] = entry[14]
-            google_docs_data['Kind'] = entry[15]
-            google_docs_data['Can Edit'] = entry[16]
-            google_docs_data['Starred'] = entry[17]
-            google_docs_data['Archived'] = entry[18]
-            google_docs_data['Trashed'] = entry[19]
-            google_docs_data['Pinned'] = entry[20]
+            google_docs_data['Mime Type'] = entry['mimetype']
+            google_docs_data['Kind'] = entry['kind']
+            google_docs_data['Can Edit'] = entry['canEdit']
+            google_docs_data['Starred'] = entry['starred']
+            google_docs_data['Archived'] = entry['archived']
+            google_docs_data['Trashed'] = entry['trashed']
+            google_docs_data['Pinned'] = entry['pinned']
 
             google_docs_collection_list.append(google_docs_data)
             google_docs_data = OrderedDict()
@@ -203,49 +203,49 @@ def google_docs(file_list):
             google_docs_data['Database'] = doclist_database
             google_docs_data['Table'] = 'EntryView'
             google_docs_data['Collection Id'] = ''
-            google_docs_data['Entry Id'] = entry[0]
-            google_docs_data['Title'] = entry[1]
-            google_docs_data['Creator'] = entry[2]
-            google_docs_data['Owner'] = entry[3]
-            google_docs_data['Account Id'] = entry[20]
-            google_docs_data['md5 Checksum'] = entry[21]
-            google_docs_data['Size'] = entry[22]
+            google_docs_data['Entry Id'] = entry['Entry_id']
+            google_docs_data['Title'] = entry['title']
+            google_docs_data['Creator'] = entry['creator']
+            google_docs_data['Owner'] = entry['owner']
+            google_docs_data['Account Id'] = entry['accountId']
+            google_docs_data['md5 Checksum'] = entry['md5Checksum']
+            google_docs_data['Size'] = entry['size']
             try:
                 google_docs_data['Creation Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['creationTime'] / 1000.))
             except TypeError:
                 google_docs_data['Creation Time'] = ''
             try:
                 google_docs_data['Last Modified Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastModifiedTime'] / 1000.))
             except TypeError:
                 google_docs_data['Last Modified Time'] = ''
-            google_docs_data['Last Modifier Account Alias'] = entry[6]
-            google_docs_data['Last Modifier Account Name'] = entry[7]
+            google_docs_data['Last Modifier Account Alias'] = entry['lastModifierAccountAlias']
+            google_docs_data['Last Modifier Account Name'] = entry['lastModifierAccountName']
             try:
                 google_docs_data['Last Opened Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastOpenedTime'] / 1000.))
             except TypeError:
                 google_docs_data['Last Opened Time'] = ''
             try:
                 google_docs_data['Shared With Me Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[9] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['sharedWithMeTime'] / 1000.))
             except TypeError:
                 google_docs_data['Shared With Me Time'] = ''
-            google_docs_data['Shareable By Owner'] = entry[10]
-            google_docs_data['Shared'] = entry[11]
+            google_docs_data['Shareable By Owner'] = entry['shareableByOwner']
+            google_docs_data['Shared'] = entry['shared']
             try:
                 google_docs_data['Modified By Me Time'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry[12] / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(entry['modifiedByMeTime'] / 1000.))
             except TypeError:
                 google_docs_data['Modified By Me Time'] = ''
-            google_docs_data['Mime Type'] = entry[13]
-            google_docs_data['Kind'] = entry[14]
-            google_docs_data['Can Edit'] = entry[15]
-            google_docs_data['Starred'] = entry[16]
-            google_docs_data['Archived'] = entry[17]
-            google_docs_data['Trashed'] = entry[18]
-            google_docs_data['Pinned'] = entry[19]
+            google_docs_data['Mime Type'] = entry['mimeType']
+            google_docs_data['Kind'] = entry['kind']
+            google_docs_data['Can Edit'] = entry['canEdit']
+            google_docs_data['Starred'] = entry['starred']
+            google_docs_data['Archived'] = entry['archived']
+            google_docs_data['Trashed'] = entry['trashed']
+            google_docs_data['Pinned'] = entry['pinned']
 
             google_docs_collection_list.append(google_docs_data)
             google_docs_data = OrderedDict()

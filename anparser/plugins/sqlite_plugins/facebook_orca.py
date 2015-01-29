@@ -115,12 +115,12 @@ def facebook_orca(file_list):
         for entry in contacts_data:
             orca_data['Database'] = contacts_database
             orca_data['Table'] = 'contacts'
-            orca_data['Id'] = entry[0]
-            orca_data['Contact Id'] = entry[1]
-            orca_data['FaceBook Id'] = entry[2]
-            orca_data['First Name'] = entry[3]
-            orca_data['Last Name'] = entry[4]
-            orca_data['Name'] = entry[5]
+            orca_data['Id'] = entry['internal_id']
+            orca_data['Contact Id'] = entry['contact_id']
+            orca_data['FaceBook Id'] = entry['fbid']
+            orca_data['First Name'] = entry['first_name']
+            orca_data['Last Name'] = entry['last_name']
+            orca_data['Name'] = entry['display_name']
 
             orca_contacts_list.append(orca_data)
             orca_data = OrderedDict()
@@ -131,7 +131,7 @@ def facebook_orca(file_list):
         for entry in folder_counts_data:
             orca_data['Database'] = threads_database
             orca_data['Table'] = 'folder_counts'
-            orca_data['Folder'] = entry[0]
+            orca_data['Folder'] = entry['folder']
             orca_data['Thread'] = ''
             orca_data['Thread Id'] = ''
             orca_data['FaceBook Id'] = ''
@@ -140,18 +140,19 @@ def facebook_orca(file_list):
             orca_data['Name'] = ''
             orca_data['Timestamp'] = ''
             try:
-                orca_data['Last Seen'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                orca_data['Last Seen'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['last_seen_time'] / 1000.))
             except TypeError:
                 orca_data['Last Seen'] = ''
             orca_data['Last Fetch Time'] = ''
             orca_data['Unread'] = ''
-            orca_data['Unread Count'] = entry[1]
-            orca_data['Unseen Count'] = entry[2]
+            orca_data['Unread Count'] = entry['unread_count']
+            orca_data['Unseen Count'] = entry['unseen_count']
             orca_data['Participants'] = ''
             orca_data['Former Participants'] = ''
             orca_data['Senders'] = ''
             orca_data['Action Id'] = ''
-            orca_data['Last Action Id'] = entry[4]
+            orca_data['Last Action Id'] = entry['last_action_id']
 
             orca_threads_list.append(orca_data)
             orca_data = OrderedDict()
@@ -161,15 +162,16 @@ def facebook_orca(file_list):
         for entry in folders_data:
             orca_data['Database'] = threads_database
             orca_data['Table'] = 'folders'
-            orca_data['Folder'] = entry[0]
-            orca_data['Thread'] = entry[1]
+            orca_data['Folder'] = entry['folder']
+            orca_data['Thread'] = entry['thread_key']
             orca_data['Thread Id'] = ''
             orca_data['FaceBook Id'] = ''
             orca_data['First Name'] = ''
             orca_data['Last Name'] = ''
             orca_data['Name'] = ''
             try:
-                orca_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
+                orca_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['timestamp_ms'] / 1000.))
             except TypeError:
                 orca_data['Timestamp'] = ''
             orca_data['Last Seen'] = ''
@@ -194,10 +196,10 @@ def facebook_orca(file_list):
             orca_data['Folder'] = ''
             orca_data['Thread'] = ''
             orca_data['Thread Id'] = ''
-            orca_data['FaceBook Id'] = entry[0]
-            orca_data['First Name'] = entry[1]
-            orca_data['Last Name'] = entry[2]
-            orca_data['Name'] = entry[3]
+            orca_data['FaceBook Id'] = entry['user_key']
+            orca_data['First Name'] = entry['first_name']
+            orca_data['Last Name'] = entry['last_name']
+            orca_data['Name'] = entry['name']
             orca_data['Timestamp'] = ''
             orca_data['Last Seen'] = ''
             orca_data['Last Fetch Time'] = ''
@@ -218,29 +220,30 @@ def facebook_orca(file_list):
         for entry in threads_data:
             orca_data['Database'] = threads_database
             orca_data['Table'] = 'threads'
-            orca_data['Folder'] = entry[10]
-            orca_data['Thread'] = entry[0]
-            orca_data['Thread Id'] = entry[1]
+            orca_data['Folder'] = entry['folder']
+            orca_data['Thread'] = entry['thread_key']
+            orca_data['Thread Id'] = entry['thread_fbid']
             orca_data['FaceBook Id'] = ''
             orca_data['First Name'] = ''
             orca_data['Last Name'] = ''
-            orca_data['Name'] = entry[3]
+            orca_data['Name'] = entry['name']
             try:
-                orca_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
+                orca_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp_ms'] / 1000.))
             except TypeError:
                 orca_data['Timestamp'] = ''
             orca_data['Last Seen'] = ''
             try:
-                orca_data['Last Fetch Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[8] / 1000.))
+                orca_data['Last Fetch Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['last_fetch_time_ms'] / 1000.))
             except TypeError:
                 orca_data['Last Fetch Time'] = ''
-            orca_data['Unread'] = entry[9]
+            orca_data['Unread'] = entry['unread']
             orca_data['Unread Count'] = ''
             orca_data['Unseen Count'] = ''
-            orca_data['Participants'] = entry[4]
-            orca_data['Former Participants'] = entry[5]
-            orca_data['Senders'] = entry[6]
-            orca_data['Action Id'] = entry[2]
+            orca_data['Participants'] = entry['participants']
+            orca_data['Former Participants'] = entry['former_participants']
+            orca_data['Senders'] = entry['senders']
+            orca_data['Action Id'] = entry['action_id']
             orca_data['Last Action Id'] = ''
 
             orca_threads_list.append(orca_data)
@@ -253,14 +256,14 @@ def facebook_orca(file_list):
         for entry in messages_data:
             orca_data['Database'] = threads_database
             orca_data['Table'] = 'messages'
-            orca_data['Thread'] = entry[1]
+            orca_data['Thread'] = entry['msg_id']
             try:
-                orca_data['Text'] = entry[3].strip('\n')
+                orca_data['Text'] = entry['text'].strip('\n')
             except AttributeError:
-                orca_data['Text'] = entry[3]
+                orca_data['Text'] = entry['text']
 
             try:
-                tmp_dict = simplejson.loads(entry[4].encode('utf-8'))
+                tmp_dict = simplejson.loads(entry['sender'].encode('utf-8'))
                 orca_data['Email'] = tmp_dict['email']
                 orca_data['FaceBook Id'] = tmp_dict['user_key']
                 orca_data['Name'] = tmp_dict['name']
@@ -270,24 +273,25 @@ def facebook_orca(file_list):
                 orca_data['Name'] = ''
 
             try:
-                orca_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                orca_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp_ms'] / 1000.))
             except TypeError:
                 orca_data['Timestamp'] = ''
             try:
-                orca_data['Timestamp Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[6] / 1000.))
+                orca_data['Timestamp Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['timestamp_sent_ms'] / 1000.))
             except TypeError:
                 orca_data['Timestamp Sent'] = ''
-            orca_data['Message Id'] = entry[0]
-            orca_data['Source'] = entry[10]
-            if len(entry[7]) < 0:
-                orca_data['Attachment'] = simplejson.loads(entry[7].encode('utf-8'))[0]['filename']
-                orca_data['Attachment Url'] = simplejson.loads(entry[7].encode('utf-8'))[0]['urls']['FULL_SCREEN'][
-                    'src']
+            orca_data['Message Id'] = entry['msg_id']
+            orca_data['Source'] = entry['source']
+            if len(entry['attachments']) < 0:
+                orca_data['Attachment'] = simplejson.loads(entry['attachments'].encode('utf-8'))[0]['filename']
+                orca_data['Attachment Url'] = simplejson.loads(
+                    entry['attachments'].encode('utf-8'))[0]['urls']['FULL_SCREEN']['src']
             else:
                 orca_data['Attachment'] = ''
                 orca_data['Attachment Url'] = ''
             try:
-                tmp_dict = simplejson.loads(entry[8].encode('utf-8'))
+                tmp_dict = simplejson.loads(entry['coordinates'].encode('utf-8'))
                 orca_data['Latitude'] = tmp_dict['latitude']
                 orca_data['Longitude'] = tmp_dict['longitude']
                 orca_data['Accuracy'] = tmp_dict['accuracy']
@@ -295,10 +299,10 @@ def facebook_orca(file_list):
                 orca_data['Latitude'] = ''
                 orca_data['Longitude'] = ''
                 orca_data['Accuracy'] = ''
-            orca_data['Offline Thread Id'] = entry[9]
-            orca_data['Action Id'] = entry[2]
-            orca_data['Send Error'] = entry[11]
-            orca_data['Send Error Message'] = entry[12]
+            orca_data['Offline Thread Id'] = entry['offline_threading_id']
+            orca_data['Action Id'] = entry['action_id']
+            orca_data['Send Error'] = entry['send_error']
+            orca_data['Send Error Message'] = entry['send_error_message']
 
             orca_msg_list.append(orca_data)
             orca_data = OrderedDict()

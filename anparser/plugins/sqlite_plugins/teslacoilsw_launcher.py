@@ -77,9 +77,9 @@ def teslacoilsw_launcher(file_list):
         for entry in favorites_data:
             tesla_data['Database'] = tesla_database
             tesla_data['Table'] = 'favorites'
-            tesla_data['Favorites Id'] = entry[0]
-            tesla_data['Title'] = entry[1]
-            tesla_data['Intent'] = entry[2]
+            tesla_data['Favorites Id'] = entry['_id']
+            tesla_data['Title'] = entry['title']
+            tesla_data['Intent'] = entry['intent']
 
             tesla_favorites_list.append(tesla_data)
             tesla_data = OrderedDict()
@@ -89,10 +89,11 @@ def teslacoilsw_launcher(file_list):
         for entry in allapps_data:
             tesla_data['Database'] = tesla_database
             tesla_data['Table'] = 'allapps'
-            tesla_data['Component Name'] = entry[0]
-            tesla_data['Title'] = entry[1]
+            tesla_data['Component Name'] = entry['componentName']
+            tesla_data['Title'] = entry['title']
             try:
-                tesla_data['Last Update Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
+                tesla_data['Last Update Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['lastUpdateTime'] / 1000.))
             except TypeError:
                 tesla_data['Last Update Time'] = ''
 

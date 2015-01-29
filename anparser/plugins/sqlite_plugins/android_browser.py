@@ -90,16 +90,16 @@ def android_browser(file_list):
         for entry in bookmarks_data:
             browser_data['Database'] = browser_database
             browser_data['Table'] = 'bookmarks'
-            browser_data['Id'] = entry[0]
-            browser_data['Title'] = entry[1]
-            browser_data['Url'] = entry[2]
-            browser_data['Deleted'] = entry[3]
+            browser_data['Id'] = entry['_id']
+            browser_data['Title'] = entry['title']
+            browser_data['Url'] = entry['url']
+            browser_data['Deleted'] = entry['deleted']
             try:
-                browser_data['Created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                browser_data['Created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['created'] / 1000.))
             except TypeError:
                 browser_data['Created'] = ''
             try:
-                browser_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                browser_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['modified'] / 1000.))
             except TypeError:
                 browser_data['Modified'] = ''
             browser_data['Date'] = ''
@@ -115,17 +115,17 @@ def android_browser(file_list):
         for entry in history_data:
             browser_data['Database'] = browser_database
             browser_data['Table'] = 'history'
-            browser_data['Id'] = entry[0]
-            browser_data['Title'] = entry[1]
-            browser_data['Url'] = entry[2]
+            browser_data['Id'] = entry['_id']
+            browser_data['Title'] = entry['title']
+            browser_data['Url'] = entry['url']
             browser_data['Deleted'] = ''
             browser_data['Created'] = ''
             browser_data['Modified'] = ''
             try:
-                browser_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                browser_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.))
             except TypeError:
                 browser_data['Date'] = ''
-            browser_data['Visits'] = entry[4]
+            browser_data['Visits'] = entry['visits']
             browser_data['Account Name'] = ''
             browser_data['Account Type'] = ''
 
@@ -137,7 +137,7 @@ def android_browser(file_list):
         for entry in accounts_data:
             browser_data['Database'] = browser_database
             browser_data['Table'] = 'v_accounts'
-            browser_data['Id'] = entry[2]
+            browser_data['Id'] = entry['root_id']
             browser_data['Title'] = ''
             browser_data['Url'] = ''
             browser_data['Deleted'] = ''
@@ -145,8 +145,8 @@ def android_browser(file_list):
             browser_data['Modified'] = ''
             browser_data['Date'] = ''
             browser_data['Visits'] = ''
-            browser_data['Account Name'] = entry[0]
-            browser_data['Account Type'] = entry[1]
+            browser_data['Account Name'] = entry['account_name']
+            browser_data['Account Type'] = entry['account_type']
 
             browser_data_list.append(browser_data)
             browser_data = OrderedDict()

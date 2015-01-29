@@ -62,21 +62,21 @@ def android_downloads(file_list):
         for entry in download_data:
             downloads_data['Database'] = downloads_database
             downloads_data['Table'] = 'downloads'
-            downloads_data['Id'] = entry[0]
-            downloads_data['Title'] = entry[1]
-            downloads_data['Description'] = entry[2]
-            downloads_data['Mime Type'] = entry[3]
+            downloads_data['Id'] = entry['_id']
+            downloads_data['Title'] = entry['title']
+            downloads_data['Description'] = entry['description']
+            downloads_data['Mime Type'] = entry['mimetype']
             try:
-                downloads_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                downloads_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastmod'] / 1000.))
             except TypeError:
                 downloads_data['Modified'] = ''
-            downloads_data['Uid'] = entry[5]
-            downloads_data['Etag'] = entry[6]
-            downloads_data['Uri'] = entry[7]
-            downloads_data['Hint'] = entry[8]
-            downloads_data['Data'] = entry[9]
-            downloads_data['Total Bytes'] = entry[10]
-            downloads_data['Media Provider Uri'] = entry[11]
+            downloads_data['Uid'] = entry['uid']
+            downloads_data['Etag'] = entry['etag']
+            downloads_data['Uri'] = entry['uri']
+            downloads_data['Hint'] = entry['hint']
+            downloads_data['Data'] = entry['_data']
+            downloads_data['Total Bytes'] = entry['total_bytes']
+            downloads_data['Media Provider Uri'] = entry['mediaprovider_uri']
 
             downloads_data_list.append(downloads_data)
             downloads_data = OrderedDict()

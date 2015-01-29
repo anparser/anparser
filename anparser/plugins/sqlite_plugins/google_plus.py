@@ -95,14 +95,14 @@ def google_plus(file_list):
         for entry in photos_data:
             google_plus_data['Database'] = es0_database
             google_plus_data['Table'] = 'all_photos'
-            google_plus_data['All Photos Id'] = entry[0]
-            google_plus_data['Photo Id'] = entry[1]
-            google_plus_data['Image Url'] = entry[2]
-            google_plus_data['Local File Path'] = entry[3]
-            google_plus_data['Fingerprint'] = entry[4]
+            google_plus_data['All Photos Id'] = entry['_id']
+            google_plus_data['Photo Id'] = entry['photo_id']
+            google_plus_data['Image Url'] = entry['image_url']
+            google_plus_data['Local File Path'] = entry['local_file_path']
+            google_plus_data['Fingerprint'] = entry['fingerprint']
             try:
                 google_plus_data['Timestamp'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(int(entry[5]) / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(int(entry['timestamp']) / 1000.))
             except TypeError:
                 google_plus_data['Timestamp'] = ''
 
@@ -114,10 +114,10 @@ def google_plus(file_list):
         for entry in contact_search_data:
             google_plus_data['Database'] = es0_database
             google_plus_data['Table'] = 'contact_search'
-            google_plus_data['Search Id'] = entry[0]
+            google_plus_data['Search Id'] = entry['search_person_id']
             google_plus_data['Person Id'] = ''
             google_plus_data['Gaia Id'] = ''
-            google_plus_data['Search Key'] = entry[1]
+            google_plus_data['Search Key'] = entry['search_key']
             google_plus_data['Name'] = ''
             google_plus_data['Profile Type'] = ''
             google_plus_data['Profile State'] = ''
@@ -134,17 +134,17 @@ def google_plus(file_list):
             google_plus_data['Database'] = es0_database
             google_plus_data['Table'] = 'contacts'
             google_plus_data['Search Id'] = ''
-            google_plus_data['Person Id'] = entry[0]
-            google_plus_data['Gaia Id'] = entry[1]
+            google_plus_data['Person Id'] = entry['person_id']
+            google_plus_data['Gaia Id'] = entry['gaia_id']
             google_plus_data['Search Key'] = ''
-            google_plus_data['Name'] = entry[2]
-            google_plus_data['Profile Type'] = entry[4]
-            google_plus_data['Profile State'] = entry[5]
-            google_plus_data['In My Circles'] = entry[6]
-            google_plus_data['Blocked'] = entry[7]
+            google_plus_data['Name'] = entry['name']
+            google_plus_data['Profile Type'] = entry['profile_type']
+            google_plus_data['Profile State'] = entry['profile_state']
+            google_plus_data['In My Circles'] = entry['in_my_circles']
+            google_plus_data['Blocked'] = entry['blocked']
             try:
                 google_plus_data['Last Updated'] = time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(int(entry[3]) / 1000.))
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(int(entry['last_updated_time']) / 1000.))
             except TypeError:
                 google_plus_data['Last Updated'] = ''
 
@@ -156,25 +156,25 @@ def google_plus(file_list):
         for entry in gun_data:
             google_plus_data['Database'] = es0_database
             google_plus_data['Table'] = 'guns'
-            google_plus_data['Guns Id'] = entry[0]
-            google_plus_data['Activity Id'] = entry[7]
-            google_plus_data['Album Id'] = entry[9]
-            google_plus_data['Community Id'] = entry[10]
-            google_plus_data['Event Id'] = entry[8]
-            google_plus_data['Collapsed Heading'] = entry[4]
-            google_plus_data['Collapsed Description'] = entry[2]
-            google_plus_data['Collapsed Destination'] = entry[3]
+            google_plus_data['Guns Id'] = entry['_id']
+            google_plus_data['Activity Id'] = entry['activity_id']
+            google_plus_data['Album Id'] = entry['album_id']
+            google_plus_data['Community Id'] = entry['community_id']
+            google_plus_data['Event Id'] = entry['event_id']
+            google_plus_data['Collapsed Heading'] = entry['collapsed_heading']
+            google_plus_data['Collapsed Description'] = entry['collapsed_description']
+            google_plus_data['Collapsed Destination'] = entry['collapsed_destination']
             try:
-                google_plus_data['Creation Time'] = prtime(entry[1])
+                google_plus_data['Creation Time'] = prtime(entry['creation_time'])
             except TypeError:
                 google_plus_data['Creation Time'] = ''
             try:
-                google_plus_data['Updated Version'] = prtime((entry[11]))
+                google_plus_data['Updated Version'] = prtime((entry['updated_version']))
             except TypeError:
                 google_plus_data['Updated Version'] = ''
-            google_plus_data['Read State'] = entry[5]
-            google_plus_data['Seen'] = entry[6]
-            google_plus_data['Photos'] = entry[12]
+            google_plus_data['Read State'] = entry['read_state']
+            google_plus_data['Seen'] = entry['seen']
+            google_plus_data['Photos'] = entry['PHOTOS']
 
             google_plus_guns_list.append(google_plus_data)
             google_plus_data = OrderedDict()

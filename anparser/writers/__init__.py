@@ -23,4 +23,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+import csv_writer
+import xlsx_writer
+
 __all__ = ['csv_writer', 'xlsx_writer']

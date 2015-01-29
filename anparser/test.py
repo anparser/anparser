@@ -48,26 +48,24 @@ class TestAnParser(unittest.TestCase):
     def test_sqliteGetTableNames(self):
         self.sqlite_table_names_return = sqlite_plugins.get_sqlite_table_names('anparser/tests/test.sqlite')
 
-        self.expected_data = ['test1', 'test2']
+        self.expected_data = [u'test1', u'test2']
 
         self.assertEqual(self.sqlite_table_names_return, self.expected_data)
 
     def test_sqliteGetTableRows(self):
         self.sqlite_table_rows_return = sqlite_plugins.read_sqlite_table('anparser/tests/test.sqlite', 'test1')
 
-        self.expected_data = [(u'1', u'Dan', u'33'), (u'2', u'Jon', u'23')]
+        self.expected_data = [{'age': u'33', 'id':u'1', 'name':u'Dan'}, {'age':u'23', 'id':u'2', 'name':u'Jon'}]
 
         self.assertEqual(self.sqlite_table_rows_return, self.expected_data)
 
     def test_sqliteGetTablesRows(self):
         self.sqlite_tables_rows_return = sqlite_plugins.read_sqlite_tables('anparser/tests/test.sqlite')
 
-        self.expected_data = {u'test1': [(u'1', u'Dan', u'33'), (u'2', u'Jon', u'23')], u'test2': [(u'1',
-                                                                                                    u'New York City',
-                                                                                                    u'NY'),
-                                                                                                      (u'2',
-                                                                                                    u'Portland',
-                                                                                                    u'OR')]}
+        self.expected_data = {u'test1': [{'age': u'33', 'id':u'1', 'name':u'Dan'},
+                                         {'age':u'23', 'id':u'2', 'name':u'Jon'}],
+                              u'test2': [{'city':u'New York City', 'state':u'NY', 'id':u'1'},
+                                          {'city':u'Portland', 'state':u'OR', 'id':u'2'}]}
 
         self.assertEqual(self.sqlite_tables_rows_return, self.expected_data)
 

@@ -131,12 +131,12 @@ def facebook_katana(file_list):
         for entry in contacts_data:
             katana_data['Database'] = contacts_database
             katana_data['Table'] = 'contacts'
-            katana_data['Id'] = entry[0]
-            katana_data['Contact Id'] = base64.b64decode(entry[1])
-            katana_data['FaceBook Id'] = entry[2]
-            katana_data['First Name'] = entry[3]
-            katana_data['Last Name'] = entry[4]
-            katana_data['Name'] = entry[5]
+            katana_data['Id'] = entry['internal_id']
+            katana_data['Contact Id'] = base64.b64decode(entry['contact_id'])
+            katana_data['FaceBook Id'] = entry['fbid']
+            katana_data['First Name'] = entry['first_name']
+            katana_data['Last Name'] = entry['last_name']
+            katana_data['Name'] = entry['display_name']
 
             katana_contacts_list.append(katana_data)
             katana_data = OrderedDict()

@@ -60,8 +60,8 @@ def android_emergencymode(file_list):
         for entry in preference_data:
             emergency_data['Database'] = emergency_database
             emergency_data['Table'] = 'prefsettings'
-            emergency_data['Preference'] = entry[0]
-            emergency_data['Value'] = entry[1]
+            emergency_data['Preference'] = entry['pref']
+            emergency_data['Value'] = entry['value']
 
             emergency_data_list.append(emergency_data)
             emergency_data = OrderedDict()

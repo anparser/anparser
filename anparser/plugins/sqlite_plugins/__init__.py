@@ -17,11 +17,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import android_browser
+import android_calendar
+import android_chrome
+import android_contacts
+import android_downloads
+import android_emergencymode
+import android_gallery3d
+import android_logsprovider
+import android_media
+import android_mms
+import android_telephony
+import android_vending
+import facebook_katana
+import facebook_orca
+import google_docs
+import google_plus
+import kik_android
+import samsung_galaxyfinder
+import snapchat_android
+import teslacoilsw_launcher
+import valvesoftware_android
+import vlingo_midas
+
 __author__ = 'cbryce'
 __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
+import itertools
 import sqlite3
 import logging
 
@@ -91,16 +115,48 @@ def read_sqlite_table(db_path, table_name, columns=None):
     :param columns: string of table names to parse
     :return: List of all entries
     """
+    data = []
+    missing_fields = []
 
     con = sqlite3.connect(db_path)
+    con.row_factory = sqlite3.Row
     cur = con.cursor()
 
     if columns:
-        cur.execute('select ' + columns + ' from ' + table_name + ';', )
+        try:
+            cur.execute('select ' + columns + ' from ' + table_name + ';', )
+            for row in cur:
+                rowDict = {}
+                rowDict = dict(itertools.izip(row.keys(), row))
+                data.append(rowDict)
+        except sqlite3.OperationalError as exception:
+            if str(exception).__contains__('no such column:'):
+                print str(exception)[16:]
+                print type(str(exception))
+                while True:
+                    missing_fields.append(str(exception)[16:])
+                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                    columns = columns.replace(', ' + str(exception)[16:], '')
+                    try:
+                        cur.execute('select ' + columns + ' from ' + table_name + ';', )
+                        for row in cur:
+                            rowDict = {}
+                            rowDict = dict(itertools.izip(row.keys(), row))
+                            for field in missing_fields:
+                                rowDict[field] = ''
+                            data.append(rowDict)
+                        break
+                    except sqlite3.OperationalError as exception:
+                        logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+                        continue
     else:
         cur.execute('select * from ' + table_name + ';', )
+        for row in cur:
+            rowDict = {}
+            rowDict = dict(itertools.izip(row.keys(), row))
+            data.append(rowDict)
 
-    return cur.fetchall()
+    return data
 
 
 def read_sqlite_tables(db_path):

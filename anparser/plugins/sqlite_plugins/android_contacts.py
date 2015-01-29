@@ -73,15 +73,16 @@ def android_contacts(file_list):
     if raw_contacts_data:
         for entry in raw_contacts_data:
             contact_data['Database'] = contacts_database
-            contact_data['Contact Id'] = entry[0]
-            contact_data['Display Name'] = entry[1]
+            contact_data['Contact Id'] = entry['contact_id']
+            contact_data['Display Name'] = entry['display_name']
             try:
-                contact_data['Modified Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.0))
+                contact_data['Modified Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['modified_time'] / 1000.0))
             except TypeError:
                 contact_data['Modified Time'] = ''
             for item in phone_lookup_data:
-                if item[0] == entry[0]:
-                    contact_data['Normalized Number'] = item[1]
+                if item['raw_contact_id'] == entry['contact_id']:
+                    contact_data['Normalized Number'] = item['raw_contact_id']
             contact_data_list.append(contact_data)
             contact_data = OrderedDict()
 

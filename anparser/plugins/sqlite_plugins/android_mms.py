@@ -70,12 +70,12 @@ def android_mms(file_list):
         for entry in events_data:
             mms_data['Database'] = message_database
             mms_data['Table'] = 'events'
-            mms_data['Event Id'] = entry[0]
+            mms_data['Event Id'] = entry['_id']
             mms_data['Log Id'] = ''
-            mms_data['Address'] = entry[1]
-            mms_data['Deleted'] = entry[2]
+            mms_data['Address'] = entry['address']
+            mms_data['Deleted'] = entry['deleted']
             try:
-                mms_data['Event Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[3] / 1000.))
+                mms_data['Event Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['eventDate'] / 1000.))
             except (TypeError, ValueError):
                 mms_data['Event Date'] = ''
             mms_data['Incoming'] = ''
@@ -90,12 +90,12 @@ def android_mms(file_list):
             mms_data['Database'] = message_database
             mms_data['Table'] = 'logs'
             mms_data['Event Id'] = ''
-            mms_data['Log Id'] = entry[0]
-            mms_data['Address'] = entry[1]
-            mms_data['Deleted'] = entry[2]
+            mms_data['Log Id'] = entry['_id']
+            mms_data['Address'] = entry['address']
+            mms_data['Deleted'] = entry['deleted']
             mms_data['Event Date'] = ''
-            mms_data['Incoming'] = entry[3]
-            mms_data['Outgoing'] = entry[4]
+            mms_data['Incoming'] = entry['incoming']
+            mms_data['Outgoing'] = entry['outgoing']
 
             mms_data_list.append(mms_data)
             mms_data = OrderedDict()

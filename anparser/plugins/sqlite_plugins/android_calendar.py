@@ -96,13 +96,13 @@ def android_calendar(file_list):
         for entry in attendees_data:
             calendar_data['Database'] = calendar_database
             calendar_data['Table'] = 'Attendees'
-            calendar_data['Attendee Id'] = entry[0]
-            calendar_data['Event Id'] = entry[1]
+            calendar_data['Attendee Id'] = entry['_id']
+            calendar_data['Event Id'] = entry['event_id']
             calendar_data['Reminder Id'] = ''
             calendar_data['Task Id'] = ''
             calendar_data['Client Id'] = ''
-            calendar_data['Attendee Name'] = entry[2]
-            calendar_data['Attendee Email'] = entry[3]
+            calendar_data['Attendee Name'] = entry['attendeeName']
+            calendar_data['Attendee Email'] = entry['attendeeEmail']
             calendar_data['Reminder Set'] = ''
             calendar_data['Reminder Time'] = ''
             calendar_data['Reminder (Minutes)'] = ''
@@ -131,15 +131,15 @@ def android_calendar(file_list):
             calendar_data['Database'] = calendar_database
             calendar_data['Table'] = 'Reminders'
             calendar_data['Attendee Id'] = ''
-            calendar_data['Event Id'] = entry[1]
-            calendar_data['Reminder Id'] = entry[0]
+            calendar_data['Event Id'] = entry['event_id']
+            calendar_data['Reminder Id'] = entry['_id']
             calendar_data['Task Id'] = ''
             calendar_data['Client Id'] = ''
             calendar_data['Attendee Name'] = ''
             calendar_data['Attendee Email'] = ''
             calendar_data['Reminder Set'] = ''
             calendar_data['Reminder Time'] = ''
-            calendar_data['Reminder (Minutes)'] = entry[2]
+            calendar_data['Reminder (Minutes)'] = entry['minutes']
             calendar_data['Organizer'] = ''
             calendar_data['Title'] = ''
             calendar_data['Description'] = ''
@@ -165,7 +165,7 @@ def android_calendar(file_list):
             calendar_data['Database'] = calendar_database
             calendar_data['Table'] = 'Events'
             calendar_data['Attendee Id'] = ''
-            calendar_data['Event Id'] = entry[0]
+            calendar_data['Event Id'] = entry['_id']
             calendar_data['Reminder Id'] = ''
             calendar_data['Task Id'] = ''
             calendar_data['Client Id'] = ''
@@ -174,30 +174,30 @@ def android_calendar(file_list):
             calendar_data['Reminder Set'] = ''
             calendar_data['Reminder Time'] = ''
             calendar_data['Reminder (Minutes)'] = ''
-            calendar_data['Organizer'] = entry[8]
-            calendar_data['Title'] = entry[1]
-            calendar_data['Description'] = entry[3]
-            calendar_data['Deleted'] = entry[9]
+            calendar_data['Organizer'] = entry['organizer']
+            calendar_data['Title'] = entry['title']
+            calendar_data['Description'] = entry['description']
+            calendar_data['Deleted'] = entry['deleted']
             try:
-                calendar_data['Event Start'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[4] / 1000.))
+                calendar_data['Event Start'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['dtstart'] / 1000.))
             except TypeError:
                 calendar_data['Event Start'] = ''
             try:
-                calendar_data['Event End'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[5] / 1000.))
+                calendar_data['Event End'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['dtend'] / 1000.))
             except TypeError:
                 calendar_data['Event End'] = ''
-            calendar_data['Event Timezone'] = entry[6]
+            calendar_data['Event Timezone'] = entry['eventTimezone']
             try:
-                calendar_data['Last Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
+                calendar_data['Last Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastDate'] / 1000.))
             except TypeError:
                 calendar_data['Last Date'] = ''
             calendar_data['UTC Due Date'] = ''
             calendar_data['Recurrence Type'] = ''
             calendar_data['Recurrence Start'] = ''
             calendar_data['Recurrence Until'] = ''
-            calendar_data['Event Location'] = entry[2]
-            calendar_data['Latitude'] = entry[10]
-            calendar_data['Longitude'] = entry[11]
+            calendar_data['Event Location'] = entry['eventLocation']
+            calendar_data['Latitude'] = entry['latitude']
+            calendar_data['Longitude'] = entry['longitude']
 
             calendar_data_list.append(calendar_data)
             calendar_data = OrderedDict()
@@ -210,31 +210,33 @@ def android_calendar(file_list):
             calendar_data['Attendee Id'] = ''
             calendar_data['Event Id'] = ''
             calendar_data['Reminder Id'] = ''
-            calendar_data['Task Id'] = entry[0]
-            calendar_data['Client Id'] = entry[1]
+            calendar_data['Task Id'] = entry['_id']
+            calendar_data['Client Id'] = entry['clientId']
             calendar_data['Attendee Name'] = ''
             calendar_data['Attendee Email'] = ''
-            calendar_data['Reminder Set'] = entry[6]
+            calendar_data['Reminder Set'] = entry['reminder_set']
             try:
-                calendar_data['Reminder Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[7] / 1000.))
+                calendar_data['Reminder Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['reminder_time'] / 1000.))
             except TypeError:
                 calendar_data['Reminder Time'] = ''
-            calendar_data['Reminder (Minutes)'] = entry[2]
+            calendar_data['Reminder (Minutes)'] = ''
             calendar_data['Organizer'] = ''
-            calendar_data['Title'] = entry[8]
-            calendar_data['Description'] = entry[9]
-            calendar_data['Deleted'] = entry[10]
+            calendar_data['Title'] = entry['subject']
+            calendar_data['Description'] = entry['body']
+            calendar_data['Deleted'] = entry['deleted']
             calendar_data['Event Start'] = ''
             calendar_data['Event End'] = ''
             calendar_data['Event Timezone'] = ''
             calendar_data['Last Date'] = ''
             try:
-                calendar_data['UTC Due Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[2] / 1000.))
+                calendar_data['UTC Due Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
+                    entry['utc_due_date'] / 1000.))
             except TypeError:
                 calendar_data['UTC Due Date'] = ''
-            calendar_data['Recurrence Type'] = entry[3]
-            calendar_data['Recurrence Start'] = entry[4]
-            calendar_data['Recurrence Until'] = entry[5]
+            calendar_data['Recurrence Type'] = entry['recurrence_type']
+            calendar_data['Recurrence Start'] = entry['recurrence_start']
+            calendar_data['Recurrence Until'] = entry['recurrence_until']
             calendar_data['Event Location'] = ''
             calendar_data['Latitude'] = ''
             calendar_data['Longitude'] = ''

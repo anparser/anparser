@@ -85,9 +85,9 @@ def samsung_galaxyfinder(file_list):
         for entry in tagging_data:
             galaxyfinder_data['Database'] = tag_database
             galaxyfinder_data['Table'] = 'tagging'
-            galaxyfinder_data['Tagging Id'] = entry[0]
-            galaxyfinder_data['Tag Id'] = entry[2]
-            galaxyfinder_data['Content Id'] = entry[1]
+            galaxyfinder_data['Tagging Id'] = entry['_id']
+            galaxyfinder_data['Tag Id'] = entry['tag_id']
+            galaxyfinder_data['Content Id'] = entry['content_id']
             galaxyfinder_data['Tag Type'] = ''
             galaxyfinder_data['Tag Rawdata'] = ''
             galaxyfinder_data['Tag Data'] = ''
@@ -106,11 +106,11 @@ def samsung_galaxyfinder(file_list):
             galaxyfinder_data['Database'] = tag_database
             galaxyfinder_data['Table'] = 'tags'
             galaxyfinder_data['Tagging Id'] = ''
-            galaxyfinder_data['Tag Id'] = entry[0]
+            galaxyfinder_data['Tag Id'] = entry['_id']
             galaxyfinder_data['Content Id'] = ''
-            galaxyfinder_data['Tag Type'] = entry[1]
-            galaxyfinder_data['Tag Rawdata'] = entry[2]
-            galaxyfinder_data['Tag Data'] = entry[3]
+            galaxyfinder_data['Tag Type'] = entry['type']
+            galaxyfinder_data['Tag Rawdata'] = entry['rawdata']
+            galaxyfinder_data['Tag Data'] = entry['data']
             galaxyfinder_data['Content Uri'] = ''
             galaxyfinder_data['App Name'] = ''
             galaxyfinder_data['File Path'] = ''
@@ -126,15 +126,15 @@ def samsung_galaxyfinder(file_list):
             galaxyfinder_data['Table'] = 'contents'
             galaxyfinder_data['Tagging Id'] = ''
             galaxyfinder_data['Tag Id'] = ''
-            galaxyfinder_data['Content Id'] = entry[0]
+            galaxyfinder_data['Content Id'] = entry['_id']
             galaxyfinder_data['Tag Type'] = ''
             galaxyfinder_data['Tag Rawdata'] = ''
             galaxyfinder_data['Tag Data'] = ''
-            galaxyfinder_data['Content Uri'] = entry[2]
-            galaxyfinder_data['App Name'] = entry[3]
-            galaxyfinder_data['File Path'] = entry[4]
+            galaxyfinder_data['Content Uri'] = entry['contenturi']
+            galaxyfinder_data['App Name'] = entry['appname']
+            galaxyfinder_data['File Path'] = entry['filepath']
             try:
-                galaxyfinder_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry[1] / 1000.))
+                galaxyfinder_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp'] / 1000.))
             except TypeError:
                 galaxyfinder_data['Timestamp'] = ''
 
