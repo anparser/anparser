@@ -67,6 +67,8 @@ if __name__ == "__main__":
     parser.add_argument('evidence', help='Directory of Android Acquisition')
     parser.add_argument('destination', help='Destination directory to write output files to')
     parser.add_argument('-o', help='Output Type: csv, xlsx', default='csv')
+    parser.add_argument('-y', action='store_true', help='Run Yara Malware Signature Scanner', default=False)
+    parser.add_argument('-r', help='Run custom command line Yara rule, must run with -y switch')
 
     args = parser.parse_args()
     if not os.path.exists(args.evidence) or not os.path.isdir(args.evidence):
@@ -571,6 +573,24 @@ if __name__ == "__main__":
         except IndexError:
             pass
 
+    # Yara Malware Parser
+    if args.y:
+        msg = 'Running Yara Malware Scanner'
+        logging.info(msg)
+        print(msg)
+        if args.r:
+            yara_data = plugins.other_plugins.yara_parser.yara_parser(files_to_process, args.r)
+        else:
+            yara_data = plugins.other_plugins.yara_parser.yara_parser(files_to_process)
+
+        if args.o.lower() == 'xlsx':
+            yara_dict = OrderedDict()
+            try:
+                yara_dict['yara_matches'] = pd.DataFrame(yara_data,
+                                                         columns=yara_data[0].keys())
+            except IndexError:
+                pass
+
     msg = 'Processors Complete'
     logging.info(msg)
     print(msg)
@@ -678,6 +698,12 @@ if __name__ == "__main__":
             os.mkdir(path, 0777)
         writers.csv_writer.csv_writer(vlingo_contacts_data, os.path.join(path, 'vlingo_midas_contacts.csv'))
 
+        if args.y:
+            path = args.destination + '//Yara'
+            if not os.path.exists(path):
+                os.mkdir(path, 0777)
+            writers.csv_writer.csv_writer(yara_data, os.path.join(path, 'yara_matches.csv'))
+
     if args.o.lower() == 'xlsx':
         path = args.destination + '//Android'
         if not os.path.exists(path):
@@ -723,6 +749,12 @@ if __name__ == "__main__":
         if not os.path.exists(path):
             os.mkdir(path, 0777)
         writers.xlsx_writer.xlsx_writer(vlingo_dict, os.path.join(path, 'vlingo.xlsx'))
+
+        if args.y:
+            path = args.destination + '//Yara'
+            if not os.path.exists(path):
+                os.mkdir(path, 0777)
+            writers.xlsx_writer.xlsx_writer(yara_dict, os.path.join(path, 'yara.xlsx'))
     msg = 'Completed'
     logging.info(msg)
     print(msg)
