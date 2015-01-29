@@ -615,40 +615,10 @@ if __name__ == "__main__":
     #
     import writers.csv_writer
     import writers.xlsx_writer
-    import writers.html_writer
 
     msg = 'Writing data to output...'
     logging.info(msg)
     print(msg)
-
-    # Write Overview
-    htmlWriter = writers.html_writer.BootstrapHTML(args.destination + '//Overview.html')
-    htmlWriter.write(htmlWriter.header)
-    htmlWriter.setup_account_information()
-    account_set = set()
-
-    for item in vending_localapp_list:
-        if item['Account']:
-            data = ('Android Account', item['Account'])
-            account_set.add(data)
-    htmlWriter.add_account_information(account_set)
-    account_set = set()
-
-    for item in google_docs_account_data:
-            if item['Account Name']:
-                data = ('Google Docs Account', item['Account Name'])
-                account_set.add(data)
-    htmlWriter.add_account_information(account_set)
-    account_set = set()
-
-    for item in google_plus_accounts:
-            if item['Account Name']:
-                data = ('Google Plus Account', item['Account Name'])
-                account_set.add(data)
-    htmlWriter.add_account_information(account_set)
-    htmlWriter.close_outfile()
-
-
 
     # Write Contact Data
 

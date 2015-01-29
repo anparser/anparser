@@ -126,12 +126,13 @@ def facebook_katana(file_list):
 
     # Add data from contacts_db2 database to katana_contacts_list
     # Add data from contacts table to katana_data
+    import base64
     if contacts_data:
         for entry in contacts_data:
             katana_data['Database'] = contacts_database
             katana_data['Table'] = 'contacts'
             katana_data['Id'] = entry[0]
-            katana_data['Contact Id'] = entry[1]
+            katana_data['Contact Id'] = base64.b64decode(entry[1])
             katana_data['FaceBook Id'] = entry[2]
             katana_data['First Name'] = entry[3]
             katana_data['Last Name'] = entry[4]
