@@ -66,7 +66,7 @@ if __name__ == "__main__":
 
     parser.add_argument('evidence', help='Directory of Android Acquisition')
     parser.add_argument('destination', help='Destination directory to write output files to')
-    parser.add_argument('-o', help='Output: csv, xlsx', default='csv')
+    parser.add_argument('-o', help='Output Type: csv, xlsx', default='csv')
 
     args = parser.parse_args()
     if not os.path.exists(args.evidence) or not os.path.isdir(args.evidence):
@@ -615,11 +615,43 @@ if __name__ == "__main__":
     #
     import writers.csv_writer
     import writers.xlsx_writer
+    import writers.html_writer
 
-    # Write Contact Data
     msg = 'Writing data to output...'
     logging.info(msg)
     print(msg)
+
+    # Write Overview
+    htmlWriter = writers.html_writer.BootstrapHTML(args.destination + '//Overview.html')
+    htmlWriter.write(htmlWriter.header)
+    htmlWriter.setup_account_information()
+    account_set = set()
+
+    for item in vending_localapp_list:
+        if item['Account']:
+            data = ('Android Account', item['Account'])
+            account_set.add(data)
+    htmlWriter.add_account_information(account_set)
+    account_set = set()
+
+    for item in google_docs_account_data:
+            if item['Account Name']:
+                data = ('Google Docs Account', item['Account Name'])
+                account_set.add(data)
+    htmlWriter.add_account_information(account_set)
+    account_set = set()
+
+    for item in google_plus_accounts:
+            if item['Account Name']:
+                data = ('Google Plus Account', item['Account Name'])
+                account_set.add(data)
+    htmlWriter.add_account_information(account_set)
+    htmlWriter.close_outfile()
+
+
+
+    # Write Contact Data
+
     if args.o.lower() == 'csv':
         path = args.destination + '//Android'
         if not os.path.exists(path):
