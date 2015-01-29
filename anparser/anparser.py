@@ -627,10 +627,13 @@ if __name__ == "__main__":
     data_dict['Android Vending LocalApp List'] = vending_localapp_list
     data_dict['Google Docs Account Data'] = google_docs_account_data
     data_dict['Google Plus Accounts'] = google_plus_accounts
+    data_dict['katana_contact_data'] = katana_contact_data
+    data_dict['katana_msg_data'] = katana_msg_data
 
     dash = writers.html_writer.OverviewParser(data_dict, args.destination)
     dash.create_dashboard()
     dash.add_section_accounts()
+    dash.add_section_contacts()
     dash.close_dashboard()
 
 

@@ -31,31 +31,83 @@ class OverviewParser():
         self.data_dict = data_dict
         self.outfile = open(outfile + '/Dashboard.html', 'w')
         self.account_data = []
-        self.writer = HTMLDashboardWriter()
-
-        if data_dict['Android Vending LocalApp List']:
-            self._android_vending_localapp_account(data_dict['Android Vending LocalApp List'])
-        if data_dict['Google Docs Account Data']:
-            self._google_docs_account(data_dict['Google Docs Account Data'])
-        if data_dict['Google Plus Accounts']:
-            self._google_plus_account(data_dict['Google Plus Accounts'])
+        self.dash = HTMLDashboardWriter()
 
     def create_dashboard(self):
-        self.outfile.write(self.writer.header)
-        self.outfile.write(self.writer.boostrap_min_css)
-        self.outfile.write(self.writer.dashboard_css)
-        self.outfile.write(self.writer.navbar)
-        self.outfile.write(self.writer.dashboard_first_section)
+        # Creates the initial dashboard and header
+        # TODO: Add information within the Dashboard area before section 1
+
+        self.outfile.write(self.dash.header)
+        self.outfile.write(self.dash.boostrap_min_css)
+        self.outfile.write(self.dash.dashboard_css)
+        self.outfile.write(self.dash.navbar)
+        self.outfile.write(self.dash.dashboard_first_section)
 
     def add_section_accounts(self):
-        self.writer.dashboard_section_title = 'Account Information'
-        self.outfile.write(self.writer.build_section())
-        self.writer.dashboard_section_table_headers = ['Account Type', 'Account Identification']
-        self.writer.dashboard_section_table_data = self.account_data
-        self.outfile.write(self.writer.build_table())
+        # Creates a section specifically for accounts found on the device.
+        #  * Currently needs to have a support method to interpret data
+
+        # Retrieve Account Data
+        if self.data_dict['Android Vending LocalApp List']:
+            self._android_vending_localapp_account(self.data_dict['Android Vending LocalApp List'])
+        if self.data_dict['Google Docs Account Data']:
+            self._google_docs_account(self.data_dict['Google Docs Account Data'])
+        if self.data_dict['Google Plus Accounts']:
+            self._google_plus_account(self.data_dict['Google Plus Accounts'])
+
+        # Write Section
+        self.dash.dashboard_section_title = 'Account Information'
+        self.outfile.write(self.dash.build_section())
+        # Section description
+        self.outfile.write("<p><small>These are accounts based on data found in applications on the device</small></p>")
+        self.dash.dashboard_section_table_headers = ['Account Type', 'Account Identification']
+        self.dash.dashboard_section_table_data = self.account_data
+        self.outfile.write(self.dash.build_table())
+
+    def add_section_contacts(self):
+        # This section correlates the contacts across applications on the devices
+
+        # Facebook
+        fb_contact_set = set()
+        fb_msg_dict = {}
+        if self.data_dict['katana_contact_data']:
+            for entry in self.data_dict['katana_contact_data']:
+                fb_contact_set.add((entry['Name'], entry['FaceBook Id']))
+                fb_msg_dict[entry['Name']] = 0
+                fb_msg_dict[entry['FaceBook Id']] = 0
+
+        if self.data_dict['katana_msg_data']:
+            for entry in self.data_dict['katana_msg_data']:
+                for contact in fb_contact_set:
+                    if entry['Name'] == contact[0]:
+                        fb_msg_dict[contact[0]] += 1
+                    if entry['FaceBook Id'].strip('FACEBOOK:') == contact[1]:
+                        fb_msg_dict[contact[1]] += 1
+
+        fb_data = []
+        for contact in fb_contact_set:
+            fb_data.append([contact[0], contact[1], str(fb_msg_dict[contact[0]] + fb_msg_dict[contact[1]])])
+
+        # Write Section
+        self.dash.dashboard_section_title = 'Facebook Contacts'
+        self.outfile.write(self.dash.build_section())
+        # Section description
+        self.outfile.write("<p><small>Contacts Name & ID with communication hitcount</small></p>")
+        self.dash.dashboard_section_table_headers = ['Account Name', 'Account Identification',
+                                                     'Communication Hit Count']
+        self.dash.dashboard_section_table_data = fb_data
+        self.outfile.write(self.dash.build_table())
+
+        pass
+
+    def add_section_parsers(self):
+        # Creates a section to list sucessful parsers
+        # TODO: Write this
+        pass
 
     def close_dashboard(self):
-        self.outfile.write(self.writer.footer)
+        # Closes the HTML File
+        self.outfile.write(self.dash.footer)
         self.outfile.close()
 
     def _android_vending_localapp_account(self, d):
@@ -97,7 +149,7 @@ class HTMLDashboardWriter():
 '''
         self.title = ''
         self.navbar = '''
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-custom navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="#">AnParser Dashboard</a>
@@ -2653,6 +2705,7 @@ class HTMLDashboardWriter():
 
         .table>thead>tr>th {
             vertical-align:bottom;
+            background-color: #9BCCF5;
             border-bottom:2px solid #ddd
         }
 
@@ -2690,11 +2743,11 @@ class HTMLDashboardWriter():
         }
 
         .table-striped>tbody>tr:nth-child(odd) {
-            background-color:#f9f9f9
+            background-color:#CDE3F5
         }
 
         .table-hover>tbody>tr:hover {
-            background-color:#f5f5f5
+            background-color:#CDE3F5
         }
 
         table col[class*="col-"] {
@@ -4723,6 +4776,70 @@ class HTMLDashboardWriter():
         .navbar-right~.navbar-right {
             margin-right:0
         }
+        }
+
+        .navbar-custom {
+            background-color: #408fd0;
+            border-color: #5cccf1;
+        }
+        .navbar-custom .navbar-brand {
+            color: #e0e6fe;
+        }
+        .navbar-custom .navbar-brand:hover, .navbar-custom .navbar-brand:focus {
+            color: #0313d3;
+        }
+        .navbar-custom .navbar-text {
+            color: #e0e6fe;
+        }
+        .navbar-custom .navbar-nav > li > a {
+            color: #e0e6fe;
+        }
+        .navbar-custom .navbar-nav > li > a:hover, .navbar-custom .navbar-nav > li > a:focus {
+            color: #0313d3;
+        }
+        .navbar-custom .navbar-nav > .active > a, .navbar-custom .navbar-nav > .active > a:hover, .navbar-custom .navbar-nav
+        > .active > a:focus {
+            color: #0313d3;
+            background-color: #5cccf1;
+        }
+        .navbar-custom .navbar-nav > .open > a, .navbar-custom .navbar-nav > .open > a:hover, .navbar-custom .navbar-nav >
+        .open > a:focus {
+            color: #0313d3;
+            background-color: #5cccf1;
+        }
+        .navbar-custom .navbar-toggle {
+            border-color: #5cccf1;
+        }
+        .navbar-custom .navbar-toggle:hover, .navbar-custom .navbar-toggle:focus {
+            background-color: #5cccf1;
+        }
+        .navbar-custom .navbar-toggle .icon-bar {
+            background-color: #e0e6fe;
+        }
+        .navbar-custom .navbar-collapse,
+        .navbar-custom .navbar-form {
+            border-color: #e0e6fe;
+        }
+        .navbar-custom .navbar-link {
+            color: #e0e6fe;
+        }
+        .navbar-custom .navbar-link:hover {
+            color: #0313d3;
+        }
+
+        @media (max-width: 767px) {
+            .navbar-custom .navbar-nav .open .dropdown-menu > li > a {
+                color: #e0e6fe;
+            }
+            .navbar-custom .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-custom .navbar-nav .open .dropdown-menu >
+            li > a:focus {
+                color: #0313d3;
+            }
+            .navbar-custom .navbar-nav .open .dropdown-menu > .active > a, .navbar-custom .navbar-nav .open .dropdown-menu >
+            .active > a:hover, .navbar-custom .navbar-nav .open .dropdown-menu > .active > a:focus {
+                color: #0313d3;
+                background-color: #5cccf1;
+            }
         }
 
         .navbar-default {
