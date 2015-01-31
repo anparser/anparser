@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150119'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def kik_android(file_list):
@@ -37,115 +35,27 @@ def kik_android(file_list):
     """
 
     # Initialize table variables: KIKContentTable, KIKcontactsTable, messagesTable
-    kik_database = None
     content_data = None
     contacts_data = None
     messages_data = None
 
     for file_path in file_list:
-        if file_path.endswith('kikDatabase.db'):
+        if file_path.endswith(u'kikDatabase.db'):
             kik_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'KIKContentTable' in tables:
+                content_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'KIKContentTable',
+                    u'_id, content_id, content_type, content_name, content_string')
 
-            if 'KIKContentTable' in tables:
-                try:
-                    content_data = __init__.read_sqlite_table(
-                        file_path, 'KIKContentTable',
-                        columns='_id, content_id, content_type, content_name, content_string')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'KIKcontactsTable' in tables:
-                try:
-                    contacts_data = __init__.read_sqlite_table(
-                        file_path, 'KIKcontactsTable',
-                        columns='_id, jid, display_name, user_name, is_blocked, '
-                                'is_ignored')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'messagesTable' in tables:
-                try:
-                    messages_data = __init__.read_sqlite_table(
-                        file_path, 'messagesTable',
-                        columns='_id, body, partner_jid, was_me, read_state, uid, '
-                                'length, timestamp, content_id, app_id')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+            if u'KIKcontactsTable' in tables:
+                contacts_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'KIKcontactsTable',
+                    u'_id, jid, display_name, user_name, is_blocked, is_ignored')
 
-    kik_contacts_list = []
-    kik_chat_list = []
-    kik_data = OrderedDict()
+            if u'messagesTable' in tables:
+                messages_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'messagesTable',
+                    u'_id, body, partner_jid, was_me, read_state, uid, length, timestamp, content_id, app_id')
 
-    # Add tables from kikDatabase.db to kik_contacts_list
-    # Add data from KIKcontactsTable table to kik_data
-    if contacts_data:
-        for entry in contacts_data:
-            kik_data['Database'] = kik_database
-            kik_data['Table'] = 'KIKcontactsTable'
-            kik_data['Id'] = entry['_id']
-            kik_data['Jid'] = entry['jid']
-            kik_data['Display Name'] = entry['display_name']
-            kik_data['User Name'] = entry['user_name']
-            kik_data['Is Blocked'] = entry['is_blocked']
-            kik_data['Is Ignored'] = entry['is_ignored']
-
-            kik_contacts_list.append(kik_data)
-            kik_data = OrderedDict()
-
-    # Add data from kikDatabase.db to kik_chat_list
-    # Add data from KIKContentTable table to kik_data
-    if content_data:
-        for entry in content_data:
-            kik_data['Database'] = kik_database
-            kik_data['Table'] = 'KIKContentTable'
-            kik_data['App Id'] = ''
-            kik_data['KIKContentTable Id'] = entry['_id']
-            kik_data['Content Id'] = entry['content_id']
-            kik_data['Message Id'] = ''
-            kik_data['Body'] = ''
-            kik_data['Length'] = ''
-            kik_data['Partner Jid'] = ''
-            kik_data['Was Me'] = ''
-            kik_data['Read State'] = ''
-            kik_data['Uid'] = ''
-            kik_data['Timestamp'] = ''
-            kik_data['Content Type'] = entry['content_type']
-            kik_data['Content Name'] = entry['content_name']
-            kik_data['Content String'] = entry['content_string']
-
-            kik_chat_list.append(kik_data)
-            kik_data = OrderedDict()
-
-    # Add data from messagesTable table to kik_data
-    if messages_data:
-        for entry in messages_data:
-            kik_data['Database'] = kik_database
-            kik_data['Table'] = 'messagesTable'
-            kik_data['App Id'] = entry['app_id']
-            kik_data['KIKContentTable Id'] = ''
-            kik_data['Content Id'] = entry['content_id']
-            kik_data['Message Id'] = entry['_id']
-            kik_data['Body'] = entry['body']
-            kik_data['Length'] = entry['length']
-            kik_data['Partner Jid'] = entry['partner_jid']
-            kik_data['Was Me'] = entry['was_me']
-            kik_data['Read State'] = entry['read_state']
-            kik_data['Uid'] = entry['uid']
-            try:
-                kik_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp'] / 1000.))
-            except TypeError:
-                kik_data['Timestamp'] = ''
-            kik_data['Content Type'] = ''
-            kik_data['Content Name'] = ''
-            kik_data['Content String'] = ''
-
-            kik_chat_list.append(kik_data)
-            kik_data = OrderedDict()
-
-    return kik_contacts_list, kik_chat_list
+    return content_data, contacts_data, messages_data

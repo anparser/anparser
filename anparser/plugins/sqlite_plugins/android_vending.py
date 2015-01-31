@@ -44,21 +44,20 @@ def android_vending(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'ownership' in tables:
                 library_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'ownership', [u'account', u'library_id', u'doc_id', u'document_hash',
-                                              u'app_certificate_hash'])
+                    file_path, u'ownership', u'account, library_id, doc_id, document_hash, app_certificate_hash')
 
         if file_path.endswith(u'localappstate.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'appstate' in tables:
                 localapp_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'appstate', [u'package_name', u'auto_update', u'desired_version', u'download_uri',
-                                             u'first_download_ms', u'account', u'title', u'last_notified_version',
-                                             u'last_update_timestamp_ms'])
+                    file_path, u'appstate', u'package_name, auto_update, desired_version, download_uri, '
+                                             u'first_download_ms, account, title, last_notified_version, '
+                                             u'last_update_timestamp_ms')
 
         if file_path.endswith(u'suggestions.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'suggestions' in tables:
                 suggestions_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'suggestions', [u'_id', u'display1', u'query', u'date'])
+                    file_path, u'suggestions', u'_id, display1, query, date')
 
     return library_data, localapp_data, suggestions_data

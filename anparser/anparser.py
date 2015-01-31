@@ -182,26 +182,26 @@ if __name__ == "__main__":
         plugins.sqlite_plugins.android_vending.android_vending(files_to_process)
     vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
+    # Facebook Parser
+    msg = 'Processing Facebook'
+    logging.info(msg)
+    print(msg)
+    katana_contact, katana_folder_count, katana_folder, katana_msg, katana_thread_user,\
+    katana_threads, katana_notifications = plugins.sqlite_plugins.facebook_katana.facebook_katana(files_to_process)
 
-    # Google Docs Parser
+    # Facebook Orca (Messenger) Parser
+    msg = 'Processing Facebook Messenger'
+    logging.info(msg)
+    print(msg)
+    orca_contact, orca_folder_count, orca_folder, orca_msg, orca_thread_user, orca_threads = \
+        plugins.sqlite_plugins.facebook_orca.facebook_orca(files_to_process)
+
+ # Google Docs Parser
     msg = 'Processing Google Docs'
     logging.info(msg)
     print(msg)
-    google_docs_account_data, google_docs_collection_data = \
+    google_docs_account, google_docs_collection, google_docs_contains, google_docs_entry = \
         plugins.sqlite_plugins.google_docs.google_docs(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        google_dict = OrderedDict()
-        try:
-            google_dict['google_docs_accounts'] = pd.DataFrame(google_docs_account_data,
-                                                               columns=google_docs_account_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            google_dict['google_docs_collection'] = pd.DataFrame(google_docs_collection_data,
-                                                                 columns=google_docs_collection_data[0].keys())
-        except IndexError:
-            pass
 
     # Google Talk Parser
     msg = 'Processing Google Talk'
@@ -209,236 +209,57 @@ if __name__ == "__main__":
     print(msg)
     google_talk_data = plugins.xml_plugins.google_talk.google_talk(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            google_dict['google_talk_accounts'] = pd.DataFrame(google_talk_data,
-                                                               columns=google_talk_data[0].keys())
-        except IndexError:
-            pass
-
     # Google Plus Parser
     msg = 'Processing Google Plus'
     logging.info(msg)
     print(msg)
-    google_plus_photos, google_plus_contacts, google_plus_guns = \
+    google_plus_photos, google_plus_contacts_search, google_plus_contacts, google_plus_guns = \
         plugins.sqlite_plugins.google_plus.google_plus(files_to_process)
     google_plus_accounts = plugins.xml_plugins.google_plus.google_plus(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            google_dict['google_plus_photos'] = pd.DataFrame(google_plus_photos,
-                                                               columns=google_plus_photos[0].keys())
-        except IndexError:
-            pass
-        try:
-            google_dict['google_plus_contacts'] = pd.DataFrame(google_plus_contacts,
-                                                               columns=google_plus_contacts[0].keys())
-        except IndexError:
-            pass
-        try:
-            google_dict['google_plus_guns'] = pd.DataFrame(google_plus_guns,
-                                                               columns=google_plus_guns[0].keys())
-        except IndexError:
-            pass
-        try:
-            google_dict['google_plus_accounts'] = pd.DataFrame(google_plus_accounts,
-                                                               columns=google_plus_accounts[0].keys())
-        except IndexError:
-            pass
-
-    # Facebook Parser
-    msg = 'Processing Facebook'
-    logging.info(msg)
-    print(msg)
-    katana_contact_data, katana_threads_data, katana_msg_data, katana_notifications_data = \
-        plugins.sqlite_plugins.facebook_katana.facebook_katana(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        facebook_dict = OrderedDict()
-        try:
-            facebook_dict['facebook_katana_contacts'] = pd.DataFrame(katana_contact_data,
-                                                               columns=katana_contact_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            facebook_dict['facebook_katana_threads'] = pd.DataFrame(katana_threads_data,
-                                                                 columns=katana_threads_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            facebook_dict['facebook_katana_messages'] = pd.DataFrame(katana_msg_data,
-                                                               columns=katana_msg_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            facebook_dict['facebook_katana_notifications'] = pd.DataFrame(katana_notifications_data,
-                                                                 columns=katana_notifications_data[0].keys())
-        except IndexError:
-            pass
-
-    # Facebook Orca (Messenger) Parser
-    msg = 'Processing Facebook Messenger'
-    logging.info(msg)
-    print(msg)
-    orca_contact_data, orca_threads_data, orca_msg_data = \
-        plugins.sqlite_plugins.facebook_orca.facebook_orca(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            facebook_dict['facebook_orca_contacts'] = pd.DataFrame(orca_contact_data,
-                                                               columns=orca_contact_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            facebook_dict['facebook_orca_threads'] = pd.DataFrame(orca_threads_data,
-                                                                 columns=orca_threads_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            facebook_dict['facebook_orca_messages'] = pd.DataFrame(orca_msg_data,
-                                                               columns=orca_msg_data[0].keys())
-        except IndexError:
-            pass
 
     # Kik Messenger Parser
     msg = 'Processing Kik Messenger'
     logging.info(msg)
     print(msg)
-    kik_contact_data, kik_chat_data = plugins.sqlite_plugins.kik_android.kik_android(files_to_process)
+    kik_content, kik_contact, kik_messages = plugins.sqlite_plugins.kik_android.kik_android(files_to_process)
     kik_preferences_data = plugins.xml_plugins.kik_android.kik_android(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        kik_dict = OrderedDict()
-        try:
-            kik_dict['kik_contacts'] = pd.DataFrame(kik_contact_data,
-                                                    columns=kik_contact_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            kik_dict['kik_chat'] = pd.DataFrame(kik_chat_data,
-                                                columns=kik_chat_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            kik_dict['kik_preferences'] = pd.DataFrame(kik_preferences_data,
-                                                       columns=kik_preferences_data[0].keys())
-        except IndexError:
-            pass
 
     # Samsung Galaxyfinder Parser
     msg = 'Processing Samsung Galaxyfinder'
     logging.info(msg)
     print(msg)
-    samsung_galaxyfinder_data = plugins.sqlite_plugins.samsung_galaxyfinder.samsung_galaxyfinder(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        samsung_dict = OrderedDict()
-        try:
-            samsung_dict['samsung_galaxyfinder'] = pd.DataFrame(samsung_galaxyfinder_data,
-                                                                columns=samsung_galaxyfinder_data[0].keys())
-        except IndexError:
-            pass
+    galaxyfinder_content, galaxyfinder_tagging, galaxyfinder_tags =\
+        plugins.sqlite_plugins.samsung_galaxyfinder.samsung_galaxyfinder(files_to_process)
 
     # Snapchat Parser
     msg = 'Processing Snapchat'
     logging.info(msg)
     print(msg)
-    snapchat_friends_data, snapchat_chat_data, snapchat_viewing_data, snapchat_files_data = \
+    snapchat_chat, snapchat_conversation, snapchat_friends, snapchat_storyfiles, snapchat_recvsnaps,\
+    snapchat_sentsnaps, snapchat_images, snapchat_videos, snapchat_viewing = \
         plugins.sqlite_plugins.snapchat_android.snapchat_android(files_to_process)
-    snapchat_preferences_data = plugins.xml_plugins.snapchat_android.snapchat_android(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        snapchat_dict = OrderedDict()
-        try:
-            snapchat_dict['snapchat_friends'] = pd.DataFrame(snapchat_friends_data,
-                                                             columns=snapchat_friends_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            snapchat_dict['snapchat_chat'] = pd.DataFrame(snapchat_chat_data,
-                                                          columns=snapchat_chat_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            snapchat_dict['snapchat_viewing'] = pd.DataFrame(snapchat_viewing_data,
-                                                             columns=snapchat_viewing_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            snapchat_dict['snapchat_files'] = pd.DataFrame(snapchat_files_data,
-                                                           columns=snapchat_files_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            snapchat_dict['snapchat_preferences'] = pd.DataFrame(snapchat_preferences_data,
-                                                                 columns=snapchat_preferences_data[0].keys())
-        except IndexError:
-            pass
+    snapchat_preferences = plugins.xml_plugins.snapchat_android.snapchat_android(files_to_process)
 
     # Teslacoilsw Launcer Parser
     msg = 'Processing Teslacoilsw'
     logging.info(msg)
     print(msg)
-    tesla_allapps_data, tesla_favorites_data = \
+    tesla_allapps, tesla_favorites = \
         plugins.sqlite_plugins.teslacoilsw_launcher.teslacoilsw_launcher(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        tesla_dict = OrderedDict()
-        try:
-            tesla_dict['teslacoilsw_all_apps'] = pd.DataFrame(tesla_allapps_data,
-                                                              columns=tesla_allapps_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            tesla_dict['teslacoilsw_favorites'] = pd.DataFrame(tesla_favorites_data,
-                                                               columns=tesla_favorites_data[0].keys())
-        except IndexError:
-            pass
 
     # Valve Parser
     msg = 'Processing Valve'
     logging.info(msg)
     print(msg)
-    valve_friends_data, valve_chat_data, valve_debug_data = \
+    valve_friends, valve_chat, valve_debug = \
         plugins.sqlite_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
-    valve_preferences_data = plugins.xml_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        valve_dict = OrderedDict()
-        try:
-            valve_dict['valve_friends'] = pd.DataFrame(valve_friends_data,
-                                                             columns=valve_friends_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            valve_dict['valve_chat'] = pd.DataFrame(valve_chat_data,
-                                                          columns=valve_chat_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            valve_dict['valve_debug'] = pd.DataFrame(valve_debug_data,
-                                                             columns=valve_debug_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            valve_dict['valve_preferences'] = pd.DataFrame(valve_preferences_data,
-                                                                 columns=valve_preferences_data[0].keys())
-        except IndexError:
-            pass
+    valve_preferences = plugins.xml_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
 
     # Vlingo Midas Parser
     msg = 'Processing Vlingo Midas'
     logging.info(msg)
     print(msg)
-    vlingo_contacts_data = plugins.sqlite_plugins.vlingo_midas.vlingo_midas(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        vlingo_dict = OrderedDict()
-        try:
-            vlingo_dict['vlingo_midas_contacts'] = pd.DataFrame(vlingo_contacts_data,
-                                                                columns=vlingo_contacts_data[0].keys())
-        except IndexError:
-            pass
+    vlingo_contacts = plugins.sqlite_plugins.vlingo_midas.vlingo_midas(files_to_process)
 
     # Yara Malware Parser
     if args.y:
@@ -474,137 +295,147 @@ if __name__ == "__main__":
     print(msg)
 
     # Write Contact Data
-    # TODO: Recreate CSV writer instead of calling .to_csv manually.
-    # TODO: Check the None type errors from the try/except items below.
-    # TODO: Add back in xlsx support w/ pandas.
     # TODO: Add database path to pandas dataset.
     # TODO: Convert timestamps in pandas dataset.
 
+    android_dict = {}
+    facebook_dict = {}
+    google_dict = {}
+    kik_dict = {}
+    samsung_dict = {}
+    snapchat_dict = {}
+    tesla_dict = {}
+    valve_dict = {}
+    vlingo_dict = {}
+
+    android_path = args.destination + '//Android'
+    android_dict['android_browser_bookmarks'] = browser_bookmarks
+    android_dict['android_browser_history'] = browser_history
+    android_dict['android_browser_preferences'] = browser_preferences
+    android_dict['android_browser_user_defaults'] = browser_user_defaults
+    android_dict['android_calendar_attendees'] = calendar_attendees
+    android_dict['android_calendar_events'] = calendar_events
+    android_dict['android_calendar_reminders'] = calendar_reminders
+    android_dict['android_calendar_tasks'] = calendar_tasks
+    android_dict['android_chrome_cookies'] = chrome_cookies
+    android_dict['android_chrome_downloads'] = chrome_downloads
+    android_dict['android_chrome_keywords'] = chrome_keywords
+    android_dict['android_chrome_urls'] = chrome_urls
+    android_dict['android_chrome_visits'] = chrome_visits
+    android_dict['android_contacts_rawcontacts'] = contacts_raw
+    android_dict['android_contacts_accounts'] = contacts_accounts
+    android_dict['android_contacts_phonelookup'] = contacts_phone
+    android_dict['android_downloads'] = downloads_data
+    android_dict['android_emergencymode'] = emergency_data
+    android_dict['android_gallery3d_fileinfo'] = file_info
+    android_dict['android_gallery3d_downloads'] = gallery_download
+    android_dict['android_gallery3d_albums'] = gallery_albums
+    android_dict['android_gallery3d_photos'] = gallery_photos
+    android_dict['android_gallery3d_users'] = gallery_users
+    android_dict['android_gmail_accounts'] = gmail_accounts_data
+    android_dict['android_logsprovider'] = android_logsprovider_data
+    android_dict['android_media_external'] = external_media
+    android_dict['android_media_internal'] = internal_media
+    android_dict['android_mms_events'] = android_mms_events
+    android_dict['android_mms_logs'] = android_mms_logs
+    android_dict['android_telephony_sms'] = telephony_data_sms
+    android_dict['android_telephony_threads'] = telephony_data_threads
+    android_dict['android_vending_accounts'] = vending_data
+    android_dict['android_vending_library'] = vending_library
+    android_dict['android_vending_localapps'] = vending_localapp
+    android_dict['android_vending_suggestions'] = vending_suggestions
+
+    facebook_path = args.destination + '//Facebook'
+
+    facebook_dict['facebook_katana_contacts'] = katana_contact
+    facebook_dict['facebook_katana_folder_count'] = katana_folder_count
+    facebook_dict['facebook_katana_folder'] = katana_folder
+    facebook_dict['facebook_katana_messages'] = katana_msg
+    facebook_dict['facebook_katana_thread_users'] = katana_thread_user
+    facebook_dict['facebook_katana_threads'] = katana_threads
+    facebook_dict['facebook_katana_notifications'] = katana_notifications
+    facebook_dict['facebook_orca_contacts'] = orca_contact
+    facebook_dict['facebook_orca_folder_count'] = orca_folder_count
+    facebook_dict['facebook_orca_folder'] = orca_folder
+    facebook_dict['facebook_orca_messages'] = orca_msg
+    facebook_dict['facebook_orca_thread_users'] = orca_thread_user
+    facebook_dict['facebook_orca_threads'] = orca_threads
+
+    google_path = args.destination + '//Google'
+
+    google_dict['google_docs_accounts'] = google_docs_account
+    google_dict['google_docs_collection'] = google_docs_collection
+    google_dict['google_docs_contains'] = google_docs_contains
+    google_dict['google_docs_entry'] = google_docs_entry
+    google_dict['google_talk_accounts'] = google_talk_data
+    google_dict['google_plus_accounts'] = google_plus_accounts
+    google_dict['google_plus_photos'] = google_plus_photos
+    google_dict['google_plus_contact_search'] = google_plus_contacts_search
+    google_dict['google_plus_contacts'] = google_plus_contacts
+    google_dict['google_plus_guns'] = google_plus_guns
+
+    kik_path = args.destination + '//Kik'
+
+    kik_dict['kik_content'] = kik_content
+    kik_dict['kik_contacts'] = kik_contact
+    kik_dict['kik_messages'] = kik_messages
+    kik_dict['kik_preferences'] = kik_preferences_data
+
+    samsung_path = args.destination + '//Samsung'
+
+    samsung_dict['samsung_galaxyfinder_content'] = galaxyfinder_content
+    samsung_dict['samsung_galaxyfinder_tagging'] = galaxyfinder_tagging
+    samsung_dict['samsung_galaxyfinder_tags'] = galaxyfinder_tags
+
+    snapchat_path = args.destination + '//Snapchat'
+
+    snapchat_dict['snapchat_chat'] = snapchat_chat
+    snapchat_dict['snapchat_conversation'] = snapchat_conversation
+    snapchat_dict['snapchat_friends'] = snapchat_friends
+    snapchat_dict['snapchat_storyfiles'] = snapchat_storyfiles
+    snapchat_dict['snapchat_recvsnaps'] = snapchat_recvsnaps
+    snapchat_dict['snapchat_sentsnaps'] = snapchat_sentsnaps
+    snapchat_dict['snapchat_images'] = snapchat_images
+    snapchat_dict['snapchat_videos'] = snapchat_videos
+    snapchat_dict['snapchat_viewingsessions'] = snapchat_viewing
+    snapchat_dict['snapchat_preferences'] = snapchat_preferences
+
+    tesla_path = args.destination + '//Teslacoilsw'
+
+    tesla_dict['teslacoilsw_allapps.csv'] = tesla_allapps
+    tesla_dict['teslacoilsw_favorites.csv'] = tesla_favorites
+
+    valve_path = args.destination + '//Valve'
+
+    valve_dict['valve_friends.csv'] = valve_friends
+    valve_dict['valve_chat.csv'] = valve_chat
+    valve_dict['valve_debug.csv'] = valve_debug
+    valve_dict['valve_preferences.csv'] = valve_preferences
+
+    vlingo_path = args.destination + '//Vlingo'
+
+    vlingo_dict['vlingo_midas_contacts.csv'] = vlingo_contacts
+
     if args.o.lower() == 'csv':
-        path = args.destination + '//Android'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        browser_bookmarks.to_csv(os.path.join(path, 'android_browser_bookmarks.csv'), '|')
-        browser_history.to_csv(os.path.join(path, 'android_browser_history.csv'), '|')
-
-        writers.csv_writer.csv_writer(browser_preferences, os.path.join(path, 'android_browser_preferences.csv'))
-        writers.csv_writer.csv_writer(browser_user_defaults, os.path.join(path, 'android_browser_user_defaults.csv'))
-
-        calendar_attendees.to_csv(os.path.join(path, 'android_calendar_attendees.csv'), '|')
-        try:
-            calendar_events.to_csv(os.path.join(path, 'android_calendar_events.csv'), '|')
-        except AttributeError:
-            pass
-        calendar_reminders.to_csv(os.path.join(path, 'android_calendar_reminders.csv'), '|')
-        calendar_tasks.to_csv(os.path.join(path, 'android_calendar_tasks.csv'), '|')
-        chrome_cookies.to_csv(os.path.join(path, 'android_chrome_cookies.csv'), '|')
-        try:
-            chrome_downloads.to_csv(os.path.join(path, 'android_chrome_downloads.csv'), '|')
-        except AttributeError:
-            pass
-        chrome_keywords.to_csv(os.path.join(path, 'android_chrome_keywords.csv'), '|')
-        chrome_urls.to_csv(os.path.join(path, 'android_chrome_urls.csv'), '|', encoding='utf-8')
-        chrome_visits.to_csv(os.path.join(path, 'android_chrome_visits.csv'), '|')
-        try:
-            contacts_raw.to_csv(os.path.join(path, 'android_contacts_rawcontacts.csv'), '|')
-        except AttributeError:
-            pass
-        contacts_accounts.to_csv(os.path.join(path, 'android_contacts_accounts.csv'), '|')
-        try:
-            contacts_phone.to_csv(os.path.join(path, 'android_contacts_phonelookup.csv'), '|')
-        except AttributeError:
-            pass
-        downloads_data.to_csv(os.path.join(path, 'android_downloads.csv'), '|')
-        emergency_data.to_csv(os.path.join(path, 'android_emergencymode.csv'), '|')
-        file_info.to_csv(os.path.join(path, 'android_gallery3d_fileinfo.csv'), '|')
-        gallery_download.to_csv(os.path.join(path, 'android_gallery3d_downloads.csv'), '|')
-        gallery_albums.to_csv(os.path.join(path, 'android_gallery3d_albums.csv'), '|')
-        gallery_photos.to_csv(os.path.join(path, 'android_gallery3d_photos.csv'), '|')
-        gallery_users.to_csv(os.path.join(path, 'android_gallery3d_users.csv'), '|')
-
-        writers.csv_writer.csv_writer(gmail_accounts_data, os.path.join(path, 'android_gmail_accounts.csv'))
-
-        android_logsprovider_data.to_csv(os.path.join(path, 'android_logsprovider.csv'), '|', encoding='utf-8')
-        external_media.to_csv(os.path.join(path, 'android_media_external.csv'), '|')
-        internal_media.to_csv(os.path.join(path, 'android_media_internal.csv'), '|')
-        android_mms_events.to_csv(os.path.join(path, 'android_mms_events.csv'), '|')
-        android_mms_logs.to_csv(os.path.join(path, 'android_mms_logs.csv'), '|')
-        telephony_data_sms.to_csv(os.path.join(path, 'android_telephony_sms.csv'), '|')
-        telephony_data_threads.to_csv(os.path.join(path, 'android_telephony_threads.csv'), '|')
-        try:
-            vending_library.to_csv(os.path.join(path, 'android_vending_library.csv'), '|')
-        except AttributeError:
-            pass
-        try:
-            vending_localapp.to_csv(os.path.join(path, 'android_vending_localapps.csv'), '|')
-        except AttributeError:
-            pass
-        vending_suggestions.to_csv(os.path.join(path, 'android_vending_suggestions.csv'), '|')
-
-        writers.csv_writer.csv_writer(vending_data, os.path.join(path, 'android_vending_account_data.csv'))
-
-        path = args.destination + '//Google'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(google_docs_account_data, os.path.join(path, 'google_docs_accounts.csv'))
-        writers.csv_writer.csv_writer(google_docs_collection_data, os.path.join(path, 'google_docs_collection.csv'))
-        writers.csv_writer.csv_writer(google_talk_data, os.path.join(path, 'google_talk_accounts.csv'))
-        writers.csv_writer.csv_writer(google_plus_accounts, os.path.join(path, 'google_plus_accounts.csv'))
-        writers.csv_writer.csv_writer(google_plus_photos, os.path.join(path, 'google_plus_photos.csv'))
-        writers.csv_writer.csv_writer(google_plus_contacts, os.path.join(path, 'google_plus_contacts.csv'))
-        writers.csv_writer.csv_writer(google_plus_guns, os.path.join(path, 'google_plus_guns.csv'))
-
-
-        path = args.destination + '//Facebook'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(katana_contact_data, os.path.join(path, 'facebook_katana_contacts.csv'))
-        writers.csv_writer.csv_writer(katana_threads_data, os.path.join(path, 'facebook_katana_threads.csv'))
-        writers.csv_writer.csv_writer(katana_msg_data, os.path.join(path, 'facebook_katana_messages.csv'))
-        writers.csv_writer.csv_writer(katana_notifications_data, os.path.join(path, 'facebook_katana_notifications.csv'))
-        writers.csv_writer.csv_writer(orca_contact_data, os.path.join(path, 'facebook_orca_contacts.csv'))
-        writers.csv_writer.csv_writer(orca_threads_data, os.path.join(path, 'facebook_orca_threads.csv'))
-        writers.csv_writer.csv_writer(orca_msg_data, os.path.join(path, 'facebook_orca_messages.csv'))
-
-        path = args.destination + '//Kik'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(kik_contact_data, os.path.join(path, 'kik_contacts.csv'))
-        writers.csv_writer.csv_writer(kik_chat_data, os.path.join(path, 'kik_chat.csv'))
-        writers.csv_writer.csv_writer(kik_preferences_data, os.path.join(path, 'kik_preferences.csv'))
-
-        path = args.destination + '//Samsung'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(samsung_galaxyfinder_data, os.path.join(path, 'samsung_galaxyfinder.csv'))
-
-        path = args.destination + '//Snapchat'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(snapchat_friends_data, os.path.join(path, 'snapchat_friends.csv'))
-        writers.csv_writer.csv_writer(snapchat_chat_data, os.path.join(path, 'snapchat_chat.csv'))
-        writers.csv_writer.csv_writer(snapchat_viewing_data, os.path.join(path, 'snapchat_viewingsessions.csv'))
-        writers.csv_writer.csv_writer(snapchat_files_data, os.path.join(path, 'snapchat_files.csv'))
-        writers.csv_writer.csv_writer(snapchat_preferences_data, os.path.join(path, 'snapchat_preferences.csv'))
-
-        path = args.destination + '//Teslacoilsw'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(tesla_allapps_data, os.path.join(path, 'teslacoilsw_allapps.csv'))
-        writers.csv_writer.csv_writer(tesla_favorites_data, os.path.join(path, 'teslacoilsw_favorites.csv'))
-
-        path = args.destination + '//Valve'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(valve_friends_data, os.path.join(path, 'valve_friends.csv'))
-        writers.csv_writer.csv_writer(valve_chat_data, os.path.join(path, 'valve_chat.csv'))
-        writers.csv_writer.csv_writer(valve_debug_data, os.path.join(path, 'valve_debug.csv'))
-        writers.csv_writer.csv_writer(valve_preferences_data, os.path.join(path, 'valve_preferences.csv'))
-
-        path = args.destination + '//Vlingo'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(vlingo_contacts_data, os.path.join(path, 'vlingo_midas_contacts.csv'))
+        writers.pandas_csv_writer.csv_writer(android_dict, android_path)
+        writers.pandas_csv_writer.csv_writer(facebook_dict, facebook_path)
+        writers.pandas_csv_writer.csv_writer(google_dict, google_path)
+        writers.pandas_csv_writer.csv_writer(kik_dict, kik_path)
+        writers.pandas_csv_writer.csv_writer(samsung_dict, samsung_path)
+        writers.pandas_csv_writer.csv_writer(snapchat_dict, snapchat_path)
+        writers.pandas_csv_writer.csv_writer(tesla_dict, tesla_path)
+        writers.pandas_csv_writer.csv_writer(valve_dict, valve_path)
+        writers.pandas_csv_writer.csv_writer(vlingo_dict, vlingo_path)
+    else:
+        writers.pandas_xlsx_writer.xlsx_writer(android_dict, android_path, 'android.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(facebook_dict, facebook_path, 'facebook.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(google_dict, google_path, 'google.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(kik_dict, kik_path, 'kik.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(samsung_dict, samsung_path, 'samsung.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(snapchat_dict, snapchat_path, 'snapchat.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(tesla_dict, tesla_path, 'teslacoilsw.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
+        writers.pandas_xlsx_writer.xlsx_writer(vlingo_dict, vlingo_path, 'vlingo.xlsx')
 
         if args.y:
             path = args.destination + '//Yara'
@@ -612,52 +443,6 @@ if __name__ == "__main__":
                 os.mkdir(path, 0777)
             writers.csv_writer.csv_writer(yara_data, os.path.join(path, 'yara_matches.csv'))
 
-        '''
-        path = args.destination + '//Google'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(google_dict, os.path.join(path, 'google.xlsx'))
-
-        path = args.destination + '//Facebook'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(facebook_dict, os.path.join(path, 'facebook.xlsx'))
-
-        path = args.destination + '//Kik'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(kik_dict, os.path.join(path, 'kik.xlsx'))
-
-        path = args.destination + '//Samsung'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(samsung_dict, os.path.join(path, 'samsung.xlsx'))
-
-        path = args.destination + '//Snapchat'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(snapchat_dict, os.path.join(path, 'snapchat.xlsx'))
-
-        path = args.destination + '//Teslacoilsw'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(tesla_dict, os.path.join(path, 'teslacoilsw.xlsx'))
-
-        path = args.destination + '//Valve'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(valve_dict, os.path.join(path, 'valve.xlsx'))
-
-        path = args.destination + '//Vlingo'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(vlingo_dict, os.path.join(path, 'vlingo.xlsx'))
-
-        if args.y:
-            path = args.destination + '//Yara'
-            if not os.path.exists(path):
-                os.mkdir(path, 0777)
-            writers.xlsx_writer.xlsx_writer(yara_dict, os.path.join(path, 'yara.xlsx'))'''
     msg = 'Completed'
     logging.info(msg)
     print(msg)

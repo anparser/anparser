@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def teslacoilsw_launcher(file_list):
@@ -37,67 +35,21 @@ def teslacoilsw_launcher(file_list):
     """
 
     # Initialize table variables: allapps, favorites
-    tesla_database = None
     allapps_data = None
     favorites_data = None
 
     for file_path in file_list:
-        if file_path.endswith('launcher.db') and file_path.count('com.teslacoilsw.launcher') > 0:
-            tesla_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
+        if file_path.endswith(u'launcher.db') and file_path.count(u'com.teslacoilsw.launcher') > 0:
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
 
-            if 'allapps' in tables:
-                try:
-                    allapps_data = __init__.read_sqlite_table(
-                        file_path, 'allapps',
-                        columns='componentName, title, lastUpdateTime')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'favorites' in tables:
-                try:
-                    favorites_data = __init__.read_sqlite_table(
-                        file_path, 'favorites',
-                        columns='_id, title, intent')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+            if u'allapps' in tables:
+                allapps_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'allapps',
+                    u'componentName, title, lastUpdateTime')
 
-    tesla_favorites_list = []
-    tesla_allapps_list = []
-    tesla_data = OrderedDict()
+            if u'favorites' in tables:
+                favorites_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'favorites',
+                    u'_id, title, intent')
 
-    # Add tables from launcher.db to tesla_favorites_list
-    # Add data from favorites table to tesla_data
-    if favorites_data:
-        for entry in favorites_data:
-            tesla_data['Database'] = tesla_database
-            tesla_data['Table'] = 'favorites'
-            tesla_data['Favorites Id'] = entry['_id']
-            tesla_data['Title'] = entry['title']
-            tesla_data['Intent'] = entry['intent']
-
-            tesla_favorites_list.append(tesla_data)
-            tesla_data = OrderedDict()
-
-    # Add data from allapps table to tesla_data
-    if allapps_data:
-        for entry in allapps_data:
-            tesla_data['Database'] = tesla_database
-            tesla_data['Table'] = 'allapps'
-            tesla_data['Component Name'] = entry['componentName']
-            tesla_data['Title'] = entry['title']
-            try:
-                tesla_data['Last Update Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['lastUpdateTime'] / 1000.))
-            except TypeError:
-                tesla_data['Last Update Time'] = ''
-
-            tesla_allapps_list.append(tesla_data)
-            tesla_data = OrderedDict()
-
-    return tesla_allapps_list, tesla_favorites_list
+    return allapps_data, favorites_data

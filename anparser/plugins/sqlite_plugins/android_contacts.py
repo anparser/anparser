@@ -42,14 +42,14 @@ def android_contacts(file_list):
     for file_path in file_list:
         if file_path.endswith(u'contacts2.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
-            if u'raw_contacts' not in tables:
+            if u'raw_contacts' in tables:
                 raw_contacts_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'raw_contacts', [u'contact_id', u'display_name', u'modified_time'])
+                    file_path, u'raw_contacts', u'contact_id, display_name, modified_time')
             if u'accounts' in tables:
                 accounts_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'accounts', ['_id', 'account_name', 'account_type'])
-            if u'phone_lookup' not in tables:
+                    file_path, u'accounts', '_id, account_name, account_type')
+            if u'phone_lookup' in tables:
                 phone_lookup_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'phone_lookup', [u'raw_contact_id', u'normalized_number'])
+                    file_path, u'phone_lookup', u'raw_contact_id, normalized_number')
 
     return raw_contacts_data, accounts_data, phone_lookup_data

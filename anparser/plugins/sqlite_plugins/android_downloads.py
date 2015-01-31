@@ -41,9 +41,7 @@ def android_downloads(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'downloads' in tables:
                 download_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'downloads', [u'_id', u'title', u'description',
-                                             u'mimetype', u'lastmod', u'uid',
-                                             u'etag', 'uri', u'hint', u'_data',
-                                             u'total_bytes', u'mediaprovider_uri'])
+                    file_path, u'downloads', u'_id, title, description, mimetype, lastmod, uid, '
+                                             u'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
 
     return download_data

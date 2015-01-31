@@ -22,9 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
+import sqlite_processor
 
 
 def vlingo_midas(file_list):
@@ -36,46 +35,15 @@ def vlingo_midas(file_list):
     """
 
     # Initialize table variables: data
-    vlingo_database = None
     data_data = None
 
     for file_path in file_list:
-        if file_path.endswith('contactsManager.db'):
-            vlingo_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
+        if file_path.endswith(u'contactsManager.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'data' in tables:
+                data_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'data',
+                    u'_id, raw_contact_id, contact_id, times_contacted, starred, display_name, '
+                    u'lookup')
 
-            if 'data' in tables:
-                try:
-                    data_data = __init__.read_sqlite_table(
-                        file_path, 'data',
-                        columns='_id, raw_contact_id, contact_id, times_contacted, starred, display_name, '
-                                'lookup')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-
-    vlingo_contacts_list = []
-    vlingo_data = OrderedDict()
-
-    # Add tables from contactsManager.db to vlingo_contacts_list
-    # Add data from data table to vlingo_data
-    if data_data:
-        for entry in data_data:
-            vlingo_data['Database'] = vlingo_database
-            vlingo_data['Table'] = 'data'
-            vlingo_data['Data Id'] = entry['_id']
-            vlingo_data['Raw Contact Id'] = entry['raw_contact_id']
-            vlingo_data['Contact Id'] = entry['contact_id']
-            vlingo_data['Display Name'] = entry['display_name']
-            vlingo_data['Times Contacted'] = entry['times_contacted']
-            vlingo_data['Starred'] = entry['starred']
-            vlingo_data['Lookup'] = entry['lookup']
-
-            vlingo_contacts_list.append(vlingo_data)
-            vlingo_data = OrderedDict()
-
-    return vlingo_contacts_list
+    return data_data

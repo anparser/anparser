@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'cbryce'
-__license__ = 'GPLv3'
-__date__ = '20150113'
-__version__ = '0.00'
-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -22,7 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import __init__
+__author__ = 'cbryce'
+__license__ = 'GPLv3'
+__date__ = '20150113'
+__version__ = '0.00'
+
+import xml_processor
+import pandas as pd
 import collections
 import base64
 import os
@@ -39,46 +40,46 @@ def google_talk(file_listing):
     g_talk_data_list = []
 
     for file_entry in file_listing:
-        if os.path.basename(file_entry).startswith('account-') and file_entry.endswith('.xml'):
+        if os.path.basename(file_entry).startswith(u'account-') and file_entry.endswith(u'.xml'):
             g_talk_xml = file_entry
-            data = __init__.parse_xml_file_notree(file_entry)
+            data = xml_processor.parse_xml_file_notree(file_entry)
 
-            account_name = os.path.basename(file_entry).strip('account-').split('.xml', 1)[0]
+            account_name = os.path.basename(file_entry).strip(u'account-').split(u'.xml', 1)[0]
 
             g_talk_data = collections.OrderedDict()
-            g_talk_data['XML File'] = g_talk_xml
-            g_talk_data['Name'] = 'Account'
-            g_talk_data['Text Entry'] = account_name
-            g_talk_data['Value'] = ''
-            g_talk_data['Circle'] = ''
+            g_talk_data[u'XML File'] = g_talk_xml
+            g_talk_data[u'Name'] = u'Account'
+            g_talk_data[u'Text Entry'] = account_name
+            g_talk_data[u'Value'] = u''
+            g_talk_data[u'Circle'] = u''
             g_talk_data_list.append(g_talk_data)
             g_talk_data = collections.OrderedDict()
 
             for entry in data:
-                circle_name = ''
-                if entry['Name'].startswith('chat_acl_settings_circle'):
+                circle_name = u''
+                if entry[u'Name'].startswith(u'chat_acl_settings_circle'):
                     try:
-                        circle_name = entry['name'].split('==', 1)[1]
+                        circle_name = entry[u'name'].split('==', 1)[1]
                     except:
-                        circle_name = ''
+                        circle_name = u''
                 try:
-                    g_talk_data['Name'] = entry['name']
+                    g_talk_data[u'Name'] = entry[u'name']
                 except:
-                    g_talk_data['Name'] = ''
+                    g_talk_data[u'Name'] = u''
 
                 try:
-                    g_talk_data['Text Entry'] = entry['text_entry']
+                    g_talk_data[u'Text Entry'] = entry[u'text_entry']
                 except:
-                    g_talk_data['Text Entry'] = ''
+                    g_talk_data[u'Text Entry'] = u''
 
                 try:
-                    g_talk_data['Value'] = entry['value']
+                    g_talk_data[u'Value'] = entry[u'value']
                 except:
-                    g_talk_data['Value'] = ''
+                    g_talk_data[u'Value'] = u''
 
-                g_talk_data['Circle'] = base64.b64decode(circle_name)
+                g_talk_data[u'Circle'] = base64.b64decode(circle_name)
 
                 g_talk_data_list.append(g_talk_data)
                 g_talk_data = collections.OrderedDict()
 
-    return g_talk_data_list
+    return pd.DataFrame(g_talk_data_list)

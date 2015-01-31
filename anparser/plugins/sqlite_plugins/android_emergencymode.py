@@ -43,6 +43,6 @@ def android_emergencymode(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'prefsettings' in tables:
                 preference_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'prefsettings', [u'pref', u'value'])
+                    file_path, u'prefsettings', u'pref, value')
 
     return preference_data

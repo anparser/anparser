@@ -42,10 +42,10 @@ def android_mms(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'events' in tables:
                 events_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'events', [u'_id', u'address', u'deleted', u'eventDate'])
+                    file_path, u'events', u'_id, address, deleted, eventDate')
 
             if u'logs' in tables:
                 logs_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'logs', [u'_id', u'address', u'deleted', u'incoming', u'outgoing'])
+                    file_path, u'logs', u'_id, address, deleted, incoming, outgoing')
 
     return events_data, logs_data

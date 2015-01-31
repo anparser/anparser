@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150118'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def snapchat_android(file_list):
@@ -38,7 +36,6 @@ def snapchat_android(file_list):
 
     # Initialize table variables: Chat, Conversation, Friends, MyStoriesFiles, ReceivedSnaps, SentSnaps,
     # SnapImageFiles, SnapVideoFiles, ViewingSessions
-    tcspahn_database = None
     chat_data = None
     conversation_data = None
     friends_data = None
@@ -50,315 +47,57 @@ def snapchat_android(file_list):
     viewing_sessions_data = None
 
     for file_path in file_list:
-        if file_path.endswith('tcspahn.db'):
-            tcspahn_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
+        if file_path.endswith(u'tcspahn.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'Chat' in tables:
+                chat_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'Chat',
+                    u'_id, recipient, sender, is_saved_by_sender, is_saved_by_recipient, '
+                    u'send_receive_status, timestamp, text, conversation_id')
 
-            if 'Chat' in tables:
-                try:
-                    chat_data = __init__.read_sqlite_table(
-                        file_path, 'Chat',
-                        columns='_id, recipient, sender, is_saved_by_sender, is_saved_by_recipient, '
-                                'send_receive_status, timestamp, text, conversation_id')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'Conversation' in tables:
-                try:
-                    conversation_data = __init__.read_sqlite_table(
-                        file_path, 'Conversation',
-                        columns='_id, sender, recipient, timestamp, has_unviewed_snaps, '
-                                'has_unviewed_chats')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'Friends' in tables:
-                try:
-                    friends_data = __init__.read_sqlite_table(
-                        file_path, 'Friends',
-                        columns='_id, Username, DisplayName, PhoneNumber, AddedMeTimestamp, '
-                                'AddedThemTimestamp')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'MyStoriesFiles' in tables:
-                try:
-                    storyfiles_data = __init__.read_sqlite_table(
-                        file_path, 'MyStoriesFiles',
-                        columns='_id, SnapId, FilePath')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'ReceivedSnaps' in tables:
-                try:
-                    recvsnaps_data = __init__.read_sqlite_table(
-                        file_path, 'ReceivedSnaps',
-                        columns='_id, Timestamp, Status, Sender, IsViewed, IsScreenshotted, '
-                                'ViewedTimestamp, ConversationId, SentTimestamp')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'SentSnaps' in tables:
-                try:
-                    sentsnaps_data = __init__.read_sqlite_table(
-                        file_path, 'SentSnaps',
-                        columns='_id, Timestamp, Status, Recipient, '
-                                'ConversationId, SentTimestamp')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'SnapImageFiles' in tables:
-                try:
-                    image_files_data = __init__.read_sqlite_table(
-                        file_path, 'SnapImageFiles',
-                        columns='_id, SnapId, FilePath')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'SnapVideoFiles' in tables:
-                try:
-                    video_files_data = __init__.read_sqlite_table(
-                        file_path, 'SnapVideoFiles',
-                        columns='_id, SnapId, FilePath')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'ViewingSessions' in tables:
-                try:
-                    viewing_sessions_data = __init__.read_sqlite_table(
-                        file_path, 'ViewingSessions',
-                        columns='_id, Sender, StartTime, EndTime, Type, Extra')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+            if u'Conversation' in tables:
+                conversation_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'Conversation',
+                    u'_id, sender, recipient, timestamp, has_unviewed_snaps, '
+                    u'has_unviewed_chats')
 
-    snapchat_friends_list = []
-    snapchat_chat_list = []
-    snapchat_viewing_list = []
-    snapchat_files_list = []
-    snapchat_data = OrderedDict()
+            if u'Friends' in tables:
+                friends_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'Friends',
+                    u'_id, Username, DisplayName, PhoneNumber, AddedMeTimestamp, '
+                    u'AddedThemTimestamp')
 
-    # Add tables from tcspahn.db to snapchat_friends_list
-    # Add data from Friends table to snapchat_data
-    if friends_data:
-        for entry in friends_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'Friends'
-            snapchat_data['Id'] = entry['_id']
-            snapchat_data['Username'] = entry['Username']
-            snapchat_data['Display Name'] = entry['DisplayName']
-            snapchat_data['Phone Number'] = entry['PhoneNumber']
-            try:
-                snapchat_data['Added Me Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['AddedMeTimestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Added Me Timestamp'] = ''
-            try:
-                snapchat_data['Added Them Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['AddedThemTimestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Added Them Timestamp'] = ''
+            if u'MyStoriesFiles' in tables:
+                storyfiles_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'MyStoriesFiles',
+                    u'_id, SnapId, FilePath')
 
-            snapchat_friends_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
+            if u'ReceivedSnaps' in tables:
+                recvsnaps_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'ReceivedSnaps',
+                    u'_id, Timestamp, Status, Sender, IsViewed, IsScreenshotted, '
+                    u'ViewedTimestamp, ConversationId, SentTimestamp')
 
-    # Add data from tcspahn.db to snapchat_chat_list
-    # Add data from Chat table to snapchat_data
-    if chat_data:
-        for entry in chat_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'Chat'
-            snapchat_data['Chat Id'] = entry['_id']
-            snapchat_data['Conversation Id'] = entry['conversation_id']
-            snapchat_data['ReceivedSnaps Id'] = ''
-            snapchat_data['SentSnaps Id'] = ''
-            snapchat_data['Sender'] = entry['sender']
-            snapchat_data['Recipient'] = entry['recipient']
-            snapchat_data['Status'] = entry['send_receive_status']
-            snapchat_data['Text'] = entry['text']
-            try:
-                snapchat_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Timestamp'] = ''
-            snapchat_data['Viewed Timestamp'] = ''
-            snapchat_data['Sent Timestamp'] = ''
-            snapchat_data['Is Viewed'] = ''
-            snapchat_data['Is Screenshotted'] = ''
-            snapchat_data['Is Saved By Sender'] = entry['is_saved_by_sender']
-            snapchat_data['Is Saved By Recipient'] = entry['is_saved_by_recipient']
-            snapchat_data['Has Unviewed Snaps'] = ''
-            snapchat_data['Has Unviewed Chats'] = ''
+            if u'SentSnaps' in tables:
+                sentsnaps_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'SentSnaps',
+                    u'_id, Timestamp, Status, Recipient, '
+                    u'ConversationId, SentTimestamp')
 
-            snapchat_chat_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
+            if u'SnapImageFiles' in tables:
+                image_files_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'SnapImageFiles',
+                    u'_id, SnapId, FilePath')
 
-    # Add data from Conversation table to snapchat_data
-    if conversation_data:
-        for entry in conversation_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'Conversation'
-            snapchat_data['Chat Id'] = ''
-            snapchat_data['Conversation Id'] = entry['_id']
-            snapchat_data['ReceivedSnaps Id'] = ''
-            snapchat_data['SentSnaps Id'] = ''
-            snapchat_data['Sender'] = entry['sender']
-            snapchat_data['Recipient'] = entry['recipient']
-            snapchat_data['Status'] = ''
-            snapchat_data['Text'] = ''
-            try:
-                snapchat_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['timestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Timestamp'] = ''
-            snapchat_data['Viewed Timestamp'] = ''
-            snapchat_data['Sent Timestamp'] = ''
-            snapchat_data['Is Viewed'] = ''
-            snapchat_data['Is Screenshotted'] = ''
-            snapchat_data['Is Saved By Sender'] = ''
-            snapchat_data['Is Saved By Recipient'] = ''
-            snapchat_data['Has Unviewed Snaps'] = entry['has_unviewed_snaps']
-            snapchat_data['Has Unviewed Chats'] = entry['has_unviewed_chats']
+            if u'SnapVideoFiles' in tables:
+                video_files_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'SnapVideoFiles',
+                    u'_id, SnapId, FilePath')
 
-            snapchat_chat_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
+            if u'ViewingSessions' in tables:
+                viewing_sessions_data = sqlite_processor.read_sqlite_table(
+                    file_path, 'ViewingSessions',
+                    u'_id, Sender, StartTime, EndTime, Type, Extra')
 
-    # Add data from ReceivedSnaps table to snapchat_data
-    if recvsnaps_data:
-        for entry in recvsnaps_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'ReceivedSnaps'
-            snapchat_data['Chat Id'] = ''
-            snapchat_data['Conversation Id'] = entry['ConversationId']
-            snapchat_data['ReceivedSnaps Id'] = entry['_id']
-            snapchat_data['SentSnaps Id'] = ''
-            snapchat_data['Sender'] = entry['Sender']
-            snapchat_data['Recipient'] = ''
-            snapchat_data['Status'] = entry['Status']
-            snapchat_data['Text'] = ''
-            try:
-                snapchat_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['Timestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Timestamp'] = ''
-            try:
-                snapchat_data['Viewed Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['ViewedTimestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Viewed Timestamp'] = ''
-            try:
-                snapchat_data['Sent Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['SentTimestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Sent Timestamp'] = ''
-            snapchat_data['Is Viewed'] = entry['IsViewed']
-            snapchat_data['Is Screenshotted'] = entry['IsScreenshotted']
-            snapchat_data['Is Saved By Sender'] = ''
-            snapchat_data['Is Saved By Recipient'] = ''
-            snapchat_data['Has Unviewed Snaps'] = ''
-            snapchat_data['Has Unviewed Chats'] = ''
-
-            snapchat_chat_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
-
-    # Add data from SentSnaps table to snapchat_data
-    if sentsnaps_data:
-        for entry in sentsnaps_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'SentSnaps'
-            snapchat_data['Chat Id'] = ''
-            snapchat_data['Conversation Id'] = entry['ConversationId']
-            snapchat_data['ReceivedSnaps Id'] = ''
-            snapchat_data['SentSnaps Id'] = entry['_id']
-            snapchat_data['Sender'] = ''
-            snapchat_data['Recipient'] = entry['Recipient']
-            snapchat_data['Status'] = entry['Status']
-            snapchat_data['Text'] = ''
-            try:
-                snapchat_data['Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['Timestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Timestamp'] = ''
-            snapchat_data['Viewed Timestamp'] = ''
-            try:
-                snapchat_data['Sent Timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['SentTimestamp'] / 1000.))
-            except TypeError:
-                snapchat_data['Sent Timestamp'] = ''
-            snapchat_data['Is Viewed'] = ''
-            snapchat_data['Is Screenshotted'] = ''
-            snapchat_data['Is Saved By Sender'] = ''
-            snapchat_data['Is Saved By Recipient'] = ''
-            snapchat_data['Has Unviewed Snaps'] = ''
-            snapchat_data['Has Unviewed Chats'] = ''
-
-            snapchat_chat_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
-
-    # Add data from tcspahn.db to snapchat_viewing_list
-    # Add data from ViewingSessions table to snapchat_data
-    if viewing_sessions_data:
-        for entry in viewing_sessions_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'ViewingSessions'
-            snapchat_data['ViewingSessions Id'] = entry['_id']
-            snapchat_data['Sender'] = entry['Sender']
-            snapchat_data['Type'] = entry['Type']
-            snapchat_data['Extra'] = entry['Extra']
-            try:
-                snapchat_data['Start Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['StartTime'] / 1000.))
-            except TypeError:
-                snapchat_data['Start Time'] = ''
-            try:
-                snapchat_data['End Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['EndTime'] / 1000.))
-            except TypeError:
-                snapchat_data['End Time'] = ''
-
-            snapchat_viewing_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
-
-    # Add data from tcspahn.db to snapchat_files_list
-    # Add data from MyStoriesFiles table to snapchat_data
-    if storyfiles_data:
-        for entry in storyfiles_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'MyStoriesFiles'
-            snapchat_data['MyStoriesFiles Id'] = entry['_id']
-            snapchat_data['SnapImagesFiles Id'] = ''
-            snapchat_data['SnapVideoFiles Id'] = ''
-            snapchat_data['Snap Id'] = entry['SnapId']
-            snapchat_data['File Path'] = entry['FilePath']
-
-            snapchat_files_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
-
-    # Add data from SnapImageFiles table to snapchat_data
-    if image_files_data:
-        for entry in image_files_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'SnapImageFiles'
-            snapchat_data['MyStoriesFiles Id'] = ''
-            snapchat_data['SnapImagesFiles Id'] = entry['_id']
-            snapchat_data['SnapVideoFiles Id'] = ''
-            snapchat_data['Snap Id'] = entry['SnapId']
-            snapchat_data['File Path'] = entry['FilePath']
-
-            snapchat_files_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
-
-    # Add data from SnapVideoFiles table to snapchat_data
-    if video_files_data:
-        for entry in video_files_data:
-            snapchat_data['Database'] = tcspahn_database
-            snapchat_data['Table'] = 'SnapVideoFiles'
-            snapchat_data['MyStoriesFiles Id'] = ''
-            snapchat_data['SnapImagesFiles Id'] = ''
-            snapchat_data['SnapVideoFiles Id'] = entry['_id']
-            snapchat_data['Snap Id'] = entry['SnapId']
-            snapchat_data['File Path'] = entry['FilePath']
-
-            snapchat_files_list.append(snapchat_data)
-            snapchat_data = OrderedDict()
-
-    return snapchat_friends_list, snapchat_chat_list, snapchat_viewing_list, snapchat_files_list
+    return chat_data, conversation_data, friends_data, storyfiles_data, recvsnaps_data, sentsnaps_data,\
+           image_files_data, video_files_data, viewing_sessions_data

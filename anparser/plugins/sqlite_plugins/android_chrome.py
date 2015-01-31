@@ -46,29 +46,28 @@ def android_chrome(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'cookies' in tables:
                 cookies_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'cookies', [u'creation_utc', u'host_key', u'name', u'value',
-                                            u'path', u'expires_utc', u'last_access_utc'])
+                    file_path, u'cookies', u'creation_utc, host_key, name, value, '
+                                            u'path, expires_utc, last_access_utc')
 
         if file_path.endswith(u'History') and file_path.count(u'app_chrome/Default/History') > 0:
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'downloads' in tables:
                 downloads_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'downloads', [u'id', u'current_path', u'target_path', u'start_time',
-                                              u'received_bytes', u'total_bytes', u'interrupt_reason',
-                                              u'end_time', u'opened', u'referrer', u'last_modified',
-                                              u'mime_type', u'original_mime_type'])
+                    file_path, u'downloads', u'id, current_path, target_path, start_time, '
+                                              u'received_bytes, total_bytes, interrupt_reason, '
+                                              u'end_time, opened, referrer, last_modified, '
+                                              u'mime_type, original_mime_type')
 
             if u'keyword_search_terms' in tables:
                 keywords_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'keyword_search_terms', [u'keyword_id', u'url_id', u'lower_term', u'term'])
+                    file_path, u'keyword_search_terms', u'keyword_id, url_id, lower_term, term')
 
             if u'urls' in tables:
                 urls_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'urls', [u'id', u'url', u'title', u'visit_count', u'typed_count',
-                                         u'last_visit_time', u'hidden'])
+                    file_path, u'urls', u'id, url, title, visit_count, typed_count, last_visit_time, hidden')
 
             if u'visits' in tables:
                 visits_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'visits', [u'id', u'url', u'visit_time', u'visit_duration'])
+                    file_path, u'visits', u'id, url, visit_time, visit_duration')
 
     return cookies_data, downloads_data, keywords_data, urls_data, visits_data

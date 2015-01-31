@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150124'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def valvesoftware_android(file_list):
@@ -37,110 +35,30 @@ def valvesoftware_android(file_list):
     """
 
     # Initialize table variables: debug, message
-    debug_database = None
-    message_database = None
     debug_data = None
     message_data = None
     friends_data = None
 
     for file_path in file_list:
-        if file_path.endswith('dbgutil.db'):
-            debug_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
+        if file_path.endswith(u'dbgutil.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'dbgutil' in tables:
+                debug_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'dbgutil',
+                    u'_id, msgtime, key, value')
 
-            if 'dbgutil' in tables:
-                try:
-                    debug_data = __init__.read_sqlite_table(
-                        file_path, 'dbgutil',
-                        columns='_id, msgtime, key, value')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-        if file_path.endswith('umqcomm.db'):
-            message_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
-            if 'UmqInfo' in tables:
-                try:
-                    friends_data = __init__.read_sqlite_table(
-                        file_path, 'UmqInfo',
-                        columns='id1, id2, name')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'UmqMsg' in tables:
-                try:
-                    message_data = __init__.read_sqlite_table(
-                        file_path, 'UmqMsg',
-                        columns='_id, myuser1, myuser2, wuser1, wuser2, msgincoming, msgunread, '
-                                'msgtime, msgtype, bindata')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+        if file_path.endswith(u'umqcomm.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
 
-    valve_friends_list = []
-    valve_chat_list = []
-    valve_debug_list = []
-    valve_data = OrderedDict()
+            if u'UmqInfo' in tables:
+                friends_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'UmqInfo',
+                    u'id1, id2, name')
 
-    # Add tables from dbgutil.db to valve_debug_list
-    # Add data from dbgutil table to valve_data
-    if debug_data:
-        for entry in debug_data:
-            valve_data['Database'] = debug_database
-            valve_data['Table'] = 'dbgutil'
-            valve_data['Id'] = entry['_id']
-            try:
-                valve_data['Message Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['msgtime']))
-            except TypeError:
-                valve_data['Message Time'] = ''
-            valve_data['Key'] = entry['key']
-            valve_data['Value'] = entry['value']
+            if u'UmqMsg' in tables:
+                message_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'UmqMsg',
+                    u'_id, myuser1, myuser2, wuser1, wuser2, msgincoming, msgunread, '
+                    u'msgtime, msgtype, bindata')
 
-            valve_debug_list.append(valve_data)
-            valve_data = OrderedDict()
-
-    # Add data from umqcomm.db to valve_friends_list
-    # Add data from UmqInfo table to valve_data
-    if friends_data:
-        for entry in friends_data:
-            valve_data['Database'] = message_database
-            valve_data['Table'] = 'UmqInfo'
-            valve_data['Id 1'] = entry['id1']
-            valve_data['Id 2'] = entry['id2']
-            valve_data['Name'] = entry['name']
-
-            valve_friends_list.append(valve_data)
-            valve_data = OrderedDict()
-
-    # Add data from umqcomm.db to valve_message_list
-    # Add data from UmqMsg table to valve_data
-    if message_data:
-        for entry in message_data:
-            valve_data['Database'] = message_database
-            valve_data['Table'] = 'UmqMsg'
-            valve_data['Id'] = entry['_id']
-            valve_data['My User 1'] = entry['myuser1']
-            valve_data['My User 2'] = entry['myuser2']
-            valve_data['W User 1'] = entry['wuser1']
-            valve_data['W User 2'] = entry['wuser2']
-            valve_data['Message Incoming'] = entry['msgincoming']
-            valve_data['Message Unread'] = entry['msgunread']
-            try:
-                valve_data['Message Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['msgtime']))
-            except TypeError:
-                valve_data['Message Time'] = ''
-            valve_data['Message Type'] = entry['msgtype']
-            valve_data['Data'] = entry['bindata']
-
-            valve_chat_list.append(valve_data)
-            valve_data = OrderedDict()
-
-    return valve_friends_list, valve_chat_list, valve_debug_list,
+    return debug_data, friends_data, message_data

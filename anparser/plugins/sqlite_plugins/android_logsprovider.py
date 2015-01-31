@@ -42,9 +42,9 @@ def android_logsprovider(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'logs' in tables:
                 logsprovider_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'logs', [u'_id', u'number', u'address', u'date', u'duration', u'type', u'new',
-                                         u'name', u'is_read', u'countryiso', u'geocoded_location', u'normalized_number',
-                                         u'messageid', u'contactid', u'm_subject', u'm_content', u'account_name',
-                                         u'account_id', u'fname', u'lname', u'country_code', u'cityid'])
+                    file_path, u'logs', u'_id, number, address, date, duration, type, new, '
+                                         u'name, is_read, countryiso, geocoded_location, normalized_number, '
+                                         u'messageid, contactid, m_subject, m_content, account_name, '
+                                         u'account_id, fname, lname, country_code, cityid')
 
     return logsprovider_data

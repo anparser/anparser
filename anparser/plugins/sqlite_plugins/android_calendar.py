@@ -45,22 +45,22 @@ def android_calendar(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'Attendees' in tables:
                 attendees_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'Attendees', [u'_id', u'event_id', u'attendeeName', u'attendeeEmail'])
+                    file_path, u'Attendees', u'_id, event_id, attendeeName, attendeeEmail')
 
             if u'Events' in tables:
                 events_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'Events', [u'_id', u'title', u'eventLocation', u'description',
-                                           u'dtstart', u'dtend', u'eventTimezone', u'lastDate',
-                                           u'organizer', u'deleted', u'latitude', u'longitude'])
+                    file_path, u'Events', u'_id, title, eventLocation, description, '
+                                           u'dtstart, dtend, eventTimezone, lastDate, '
+                                           u'organizer, deleted, latitude, longitude')
 
             if u'Reminders' in tables:
                 reminders_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'Reminders', ['_id', 'event_id', 'minutes'])
+                    file_path, u'Reminders', u'_id, event_id, minutes')
 
             if u'Tasks' in tables:
                 tasks_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'Tasks', [u'_id', u'clientId', u'utc_due_date', u'recurrence_type',
-                                          u'recurrence_start', u'recurrence_until', u'reminder_set',
-                                          u'reminder_time', u'subject', u'body', u'deleted'])
+                    file_path, u'Tasks', u'_id, clientId, utc_due_date, recurrence_type, '
+                                          u'recurrence_start, recurrence_until, reminder_set, '
+                                          u'reminder_time, subject, body, deleted')
 
     return attendees_data, events_data, reminders_data, tasks_data

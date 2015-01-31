@@ -22,7 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150123'
 __version__ = '0.00'
 
-import __init__
+import xml_processor
+import pandas as pd
 from collections import OrderedDict
 import time
 
@@ -37,34 +38,34 @@ def google_plus(file_listing):
     plus_data = []
 
     for file_entry in file_listing:
-        if file_entry.endswith('accounts.xml') and file_entry.count('com.google.android.apps.plus') > 0:
+        if file_entry.endswith(u'accounts.xml') and file_entry.count(u'com.google.android.apps.plus') > 0:
             plus_accounts_xml = file_entry
-            plus_data = __init__.parse_xml_file_notree(file_entry)
+            plus_data = xml_processor.parse_xml_file_notree(file_entry)
 
     plus_data_list = []
     plus_dict_data = OrderedDict()
 
     # Add data from XML file to plus_data
     if plus_data:
-        plus_dict_data['XML File'] = plus_accounts_xml
+        plus_dict_data[u'XML File'] = plus_accounts_xml
         for entry in plus_data:
-            if entry['name'] == '0.stable_account_id':
-                plus_dict_data['Account Id'] = entry['text_entry']
-            elif entry['name'] == '0.account_name':
-                plus_dict_data['Account Name'] = entry['text_entry']
-            elif entry['name'] == '0.display_name':
-                plus_dict_data['Display Name'] = entry['text_entry']
-            elif entry['name'] == '0.LoginManager.build_version':
-                plus_dict_data['Build Version'] = entry['text_entry']
-            elif entry['name'] == '0.last_updated':
+            if entry[u'name'] == u'0.stable_account_id':
+                plus_dict_data[u'Account Id'] = entry[u'text_entry']
+            elif entry[u'name'] == u'0.account_name':
+                plus_dict_data[u'Account Name'] = entry[u'text_entry']
+            elif entry[u'name'] == u'0.display_name':
+                plus_dict_data[u'Display Name'] = entry[u'text_entry']
+            elif entry[u'name'] == u'0.LoginManager.build_version':
+                plus_dict_data[u'Build Version'] = entry[u'text_entry']
+            elif entry[u'name'] == u'0.last_updated':
                 try:
-                    plus_dict_data['Last Updated'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                    plus_dict_data[u'Last Updated'] = time.strftime('%Y-%m-%d %H:%M:%S',
                                                                                     time.gmtime(
-                                                                                        int(entry['value']) / 1000.))
+                                                                                        int(entry[u'value']) / 1000.))
                 except TypeError:
-                    plus_dict_data['Last Updated'] = ''
+                    plus_dict_data[u'Last Updated'] = ''
 
         plus_data_list.append(plus_dict_data)
         plus_dict_data = OrderedDict()
 
-    return plus_data_list
+    return pd.DataFrame(plus_data_list)

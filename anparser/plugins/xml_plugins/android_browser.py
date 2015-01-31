@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-
-__author__ = 'cbryce'
-__license__ = 'GPLv3'
-__date__ = '20150112'
-__version__ = '0.00'
-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -23,7 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import __init__
+__author__ = 'cbryce'
+__license__ = 'GPLv3'
+__date__ = '20150112'
+__version__ = '0.00'
+
+import xml_processor
+import pandas as pd
 
 
 def android_browser(file_listing):
@@ -37,9 +37,9 @@ def android_browser(file_listing):
     browser_prefs = []
 
     for file_path in file_listing:
-        if file_path.endswith('omadm_node.xml'):
-            user_defaults = __init__.parse_xml_file_notree(file_path)
-        elif file_path.endswith('com.android.browser_preferences.xml'):
-            browser_prefs = __init__.parse_xml_file_notree(file_path)
+        if file_path.endswith(u'omadm_node.xml'):
+            user_defaults = xml_processor.parse_xml_file_notree(file_path)
+        elif file_path.endswith(u'com.android.browser_preferences.xml'):
+            browser_prefs = xml_processor.parse_xml_file_notree(file_path)
 
-    return user_defaults, browser_prefs
+    return pd.DataFrame(user_defaults), pd.DataFrame(browser_prefs)

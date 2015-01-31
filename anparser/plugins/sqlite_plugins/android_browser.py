@@ -43,10 +43,10 @@ def android_browser(file_list):
             tables =  sqlite_processor.get_sqlite_table_names(file_path)
             if u'bookmarks' in tables:
                 bookmarks_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'bookmarks', [u'_id', u'title', u'url', u'deleted', u'created', u'modified'])
+                    file_path, u'bookmarks', u'_id, title, url, deleted, created, modified')
 
             if u'history' in tables:
                 history_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'history', [u'_id', u'title', u'url', u'date', u'visits'])
+                    file_path, u'history', u'_id, title, url, date, visits')
 
     return bookmarks_data, history_data

@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-__author__ = 'cbryce'
-__license__ = 'GPLv3'
-__date__ = '20140109'
-__version__ = '0.00'
-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -22,8 +17,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+__author__ = 'cbryce'
+__license__ = 'GPLv3'
+__date__ = '20140109'
+__version__ = '0.00'
 
-import __init__
+import xml_processor
+import pandas as pd
 import os
 import collections
 
@@ -36,23 +36,23 @@ def android_gmail_process(file_to_process):
     :return: list of dictionary to process
     """
 
-    xml_entries_notree = __init__.parse_xml_file_notree(FILE=file_to_process)
+    xml_entries_notree = xml_processor.parse_xml_file_notree(file_to_process)
 
     gmail_dict = collections.OrderedDict()
     gmail_dict_list = []
 
     if xml_entries_notree:
         for entry in xml_entries_notree:
-            gmail_dict['XML'] = file_to_process
+            gmail_dict[u'XML'] = file_to_process
             for item in entry.keys():
-                if item.__contains__('name') and entry['name'] == "active-account":
-                    gmail_dict['Active Account'] = entry["text_entry"]
-                elif item.__contains__('name') and entry['name'] == "cache-google-accounts-synced":
-                    gmail_dict['Cached Google Accounts Synced'] = entry['text_entry']
+                if item.__contains__(u'name') and entry[u'name'] == u'active-account':
+                    gmail_dict[u'Active Account'] = entry[u'text_entry']
+                elif item.__contains__(u'name') and entry[u'name'] == u'cache-google-accounts-synced':
+                    gmail_dict[u'Cached Google Accounts Synced'] = entry[u'text_entry']
         gmail_dict_list.append(gmail_dict)
         gmail_dict = collections.OrderedDict()
 
-    return gmail_dict_list
+    return pd.DataFrame(gmail_dict_list)
 
 
 def android_gmail(fileListing):
@@ -63,7 +63,7 @@ def android_gmail(fileListing):
     """
 
     for file_path in fileListing:
-        if file_path.endswith("Gmail.xml"):
+        if file_path.endswith(u'Gmail.xml'):
             return android_gmail_process(file_path)
 
     return None

@@ -22,7 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150119'
 __version__ = '0.00'
 
-import __init__
+import xml_processor
+import pandas as pd
 from collections import OrderedDict
 import time
 
@@ -39,48 +40,48 @@ def kik_android(file_listing):
     kik_persistance_data = []
 
     for file_entry in file_listing:
-        if file_entry.endswith('KikPreferences.xml'):
+        if file_entry.endswith(u'KikPreferences.xml'):
             kik_pref_xml = file_entry
-            kik_data = __init__.parse_xml_file_notree(file_entry)
-        if file_entry.endswith('KikUltraPersistence.xml'):
+            kik_data = xml_processor.parse_xml_file_notree(file_entry)
+        if file_entry.endswith(u'KikUltraPersistence.xml'):
             kik_per_xml = file_entry
-            kik_persistance_data = __init__.parse_xml_file_notree(file_entry)
+            kik_persistance_data = xml_processor.parse_xml_file_notree(file_entry)
 
     kik_data_list = []
     kik_dict_data = OrderedDict()
 
     # Add data from XML file to kik_data
     if kik_data:
-        kik_dict_data['XML Files'] = kik_pref_xml + ' & ' + kik_per_xml
+        kik_dict_data[u'XML Files'] = kik_pref_xml + u' & ' + kik_per_xml
         for entry in kik_data:
-            if entry['name'] == 'kik.version_number':
-                kik_dict_data['Kik Version'] = entry['text_entry']
-            if entry['name'] == 'CredentialData.jid':
-                kik_dict_data['Jid'] = entry['text_entry']
-            elif entry['name'] == 'user_profile_firstName':
-                kik_dict_data['First Name'] = entry['text_entry']
-            elif entry['name'] == 'user_profile_lastName':
-                kik_dict_data['Last Name'] = entry['text_entry']
-            elif entry['name'] == 'user_profile_email':
-                kik_dict_data['Email'] = entry['text_entry']
-            elif entry['name'] == 'user_profile_username':
-                kik_dict_data['Username'] = entry['text_entry']
-            elif entry['name'] == 'kik.registrationtime':
+            if entry[u'name'] == u'kik.version_number':
+                kik_dict_data[u'Kik Version'] = entry[u'text_entry']
+            if entry[u'name'] == u'CredentialData.jid':
+                kik_dict_data[u'Jid'] = entry[u'text_entry']
+            elif entry[u'name'] == u'user_profile_firstName':
+                kik_dict_data[u'First Name'] = entry[u'text_entry']
+            elif entry[u'name'] == u'user_profile_lastName':
+                kik_dict_data[u'Last Name'] = entry[u'text_entry']
+            elif entry[u'name'] == u'user_profile_email':
+                kik_dict_data[u'Email'] = entry[u'text_entry']
+            elif entry[u'name'] == u'user_profile_username':
+                kik_dict_data[u'Username'] = entry[u'text_entry']
+            elif entry[u'name'] == u'kik.registrationtime':
                 try:
-                    kik_dict_data['Registration Time'] = time.strftime('%Y-%m-%d %H:%M:%S',
+                    kik_dict_data[u'Registration Time'] = time.strftime('%Y-%m-%d %H:%M:%S',
                                                                        time.gmtime(
-                                                                           int(entry['value']) / 1000.))
+                                                                           int(entry[u'value']) / 1000.))
                 except TypeError:
-                    kik_dict_data['Registration Time'] = ''
+                    kik_dict_data[u'Registration Time'] = u''
 
     if kik_persistance_data:
         for entry in kik_persistance_data:
-            if entry['name'] == 'kik.deviceid':
-                kik_dict_data['Device Id'] = entry['text_entry']
-            elif entry['name'] == 'kik.has-kik-ever-run':
-                kik_dict_data['Has Kik Ever Run'] = entry['value']
+            if entry[u'name'] == u'kik.deviceid':
+                kik_dict_data[u'Device Id'] = entry[u'text_entry']
+            elif entry[u'name'] == u'kik.has-kik-ever-run':
+                kik_dict_data[u'Has Kik Ever Run'] = entry[u'value']
 
         kik_data_list.append(kik_dict_data)
         kik_dict_data = OrderedDict()
 
-    return kik_data_list
+    return pd.DataFrame(kik_data_list)

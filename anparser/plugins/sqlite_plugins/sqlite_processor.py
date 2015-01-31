@@ -38,7 +38,7 @@ def get_sqlite_table_names(db_path):
     return sqlalchemy.create_engine(('sqlite:///' + db_path)).table_names()
 
 
-'''def get_sqlite_view_info(db_path):
+def get_sqlite_view_names(db_path):
     """
     Read all SQLite table names
     :param db_path: String path to database
@@ -47,22 +47,8 @@ def get_sqlite_table_names(db_path):
 
     # TODO: Add ability to filter responsive table names
 
-    con = sqlite3.connect(db_path)
-    cur = con.cursor()
-
-    try:
-        cur.execute('Select name from sqlite_master where type = \'view\';')
-    except (sqlite3.DatabaseError, sqlite3.OperationalError) as message:
-        logging.error("SQLite DatabaseError: " + db_path + " > " + str(message))
-        return []
-    # convert tuples to lists
-
-    tmp = cur.fetchall()
-    tmp2 = []
-    for i in tmp:
-        tmp2.append(i[0])
-
-    return tmp2'''
+    engine = sqlalchemy.create_engine(('sqlite:///' + db_path))
+    return pd.read_sql_query('SELECT name from sqlite_master where type = \'view\';', engine)['name'].values
 
 
 def read_sqlite_table(db_path, table_name, sel_columns=None):
@@ -77,12 +63,15 @@ def read_sqlite_table(db_path, table_name, sel_columns=None):
     engine = sqlalchemy.create_engine(('sqlite:///' + db_path))
     if sel_columns:
         try:
-            return pd.read_sql_table(table_name, engine, columns=sel_columns)
-        except (KeyError, TypeError) as exception:
-            logging.error('Sqlite Error: {0:s}'.format(exception))
-            pass
+            return pd.read_sql_query('SELECT ' + sel_columns + ' from ' + table_name + ';', engine)
+        except sqlalchemy.exc.OperationalError:
+            try:
+                return pd.read_sql_table(table_name, engine, columns=sel_columns.split(','))
+            except (KeyError, TypeError) as exception:
+                logging.error('Sqlite Error: {0:s}'.format(exception))
+                pass
     else:
-        return pd.read_sql_table(table_name, engine)
+        return pd.read_sql_query('SELECT * from ' + table_name + ';', engine)
 
 
 def read_sqlite_tables(db_path):

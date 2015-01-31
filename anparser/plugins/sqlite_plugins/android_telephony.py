@@ -41,11 +41,10 @@ def android_telephony(file_listing):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'sms' in tables:
                 sms_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'sms', [u'_id', u'thread_id', u'address', u'person', u'date', u'date_sent', u'body',
-                                        u'read', u'seen'])
+                    file_path, u'sms', u'_id, thread_id, address, person, date, date_sent, body, read, seen')
 
             if u'threads' in tables:
                 threads_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'threads', [u'_id', u'date', u'message_count', u'snippet', u'read', u'has_attachment'])
+                    file_path, u'threads', u'_id, date, message_count, snippet, read, has_attachment')
 
     return sms_data, threads_data

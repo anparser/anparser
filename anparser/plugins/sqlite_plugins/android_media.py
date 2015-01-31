@@ -42,20 +42,20 @@ def android_media(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'files' in tables:
                 external_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'files', [u'_id', u'_data', u'_size', u'date_added', u'date_modified', u'mime_type',
-                                          u'title', u'description', u'_display_name', u'latitude', u'longitude',
-                                          u'datetaken', u'is_ringtone', u'is_music', u'is_alarm', u'is_notification',
-                                          u'is_podcast', u'date_played', u'count_played', u'width', u'height',
-                                          u'video_filetype', u'video_iswatched'])
+                    file_path, u'files', u'_id, _data, _size, date_added, date_modified, mime_type, '
+                                          u'title, description, _display_name, latitude, longitude, '
+                                          u'datetaken, is_ringtone, is_music, is_alarm, is_notification, '
+                                          u'is_podcast, date_played, count_played, width, height, '
+                                          u'video_filetype, video_iswatched')
 
         if file_path.endswith(u'internal.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'files' in tables:
                 internal_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'files', [u'_id', u'_data', u'_size', u'date_added', u'date_modified', u'mime_type',
-                                          u'title', u'description', u'_display_name', u'latitude', u'longitude',
-                                          u'datetaken', u'is_ringtone', u'is_music', u'is_alarm', u'is_notification',
-                                          u'is_podcast', u'date_played', u'count_played', u'width', u'height',
-                                          u'video_filetype', u'video_iswatched'])
+                    file_path, u'files', u'_id, _data, _size, date_added, date_modified, mime_type, '
+                                          u'title, description, _display_name, latitude, longitude, '
+                                          u'datetaken, is_ringtone, is_music, is_alarm, is_notification, '
+                                          u'is_podcast, date_played, count_played, width, height, '
+                                          u'video_filetype, video_iswatched')
 
     return external_data, internal_data

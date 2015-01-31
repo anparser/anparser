@@ -22,7 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150124'
 __version__ = '0.00'
 
-import __init__
+import xml_processor
+import pandas as pd
 from collections import OrderedDict
 import time
 
@@ -37,22 +38,22 @@ def valvesoftware_android(file_listing):
     valve_data = []
 
     for file_entry in file_listing:
-        if file_entry.endswith('steamumqcommunication.xml'):
+        if file_entry.endswith(u'steamumqcommunication.xml'):
             valve_pref_xml = file_entry
-            valve_data = __init__.parse_xml_file_notree(file_entry)
+            valve_data = xml_processor.parse_xml_file_notree(file_entry)
 
     valve_data_list = []
     valve_dict_data = OrderedDict()
 
     # Add data from XML file to valve_data
     if valve_data:
-        valve_dict_data['XML File'] = valve_pref_xml
+        valve_dict_data[u'XML File'] = valve_pref_xml
         for entry in valve_data:
-            if entry['name'] == 'umqid':
-                valve_dict_data['Umq Id'] = entry['text_entry']
+            if entry[u'name'] == u'umqid':
+                valve_dict_data[u'Umq Id'] = entry[u'text_entry']
 
 
         valve_data_list.append(valve_dict_data)
         valve_dict_data = OrderedDict()
 
-    return valve_data_list
+    return pd.DataFrame(valve_data_list)
