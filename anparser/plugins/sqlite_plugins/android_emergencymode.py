@@ -24,7 +24,7 @@ __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
-import __init__
+import sqlite_processor
 
 
 def android_emergencymode(file_list):
@@ -36,35 +36,13 @@ def android_emergencymode(file_list):
     """
 
     # Initialize table variable: ecc
-    emergency_database = None
     preference_data = None
 
     for file_path in file_list:
-        if file_path.endswith('emergency.db'):
-            emergency_database = file_path
-            tables = __init__.get_sqlite_table_names(file_path)
-            if 'prefsettings' in tables:
-                try:
-                    preference_data = __init__.read_sqlite_table(
-                        file_path, 'prefsettings',
-                        columns='pref, value')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+        if file_path.endswith(u'emergency.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'prefsettings' in tables:
+                preference_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'prefsettings', [u'pref', u'value'])
 
-    emergency_data_list = []
-    emergency_data = OrderedDict()
-
-    # Add data from prefsettings table to emergency_data
-    if preference_data:
-        for entry in preference_data:
-            emergency_data['Database'] = emergency_database
-            emergency_data['Table'] = 'prefsettings'
-            emergency_data['Preference'] = entry['pref']
-            emergency_data['Value'] = entry['value']
-
-            emergency_data_list.append(emergency_data)
-            emergency_data = OrderedDict()
-
-
-    return emergency_data_list
+    return preference_data

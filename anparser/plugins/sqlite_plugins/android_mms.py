@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150113'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def android_mms(file_list):
@@ -36,68 +34,18 @@ def android_mms(file_list):
     :return: Dictionary of parsed data from database
     """
     # Initialize table variables: events, logs
-    message_database = None
     events_data = None
     logs_data = None
 
     for file_path in file_list:
-        if file_path.endswith('message_glance.db'):
-            message_database = file_path
-            tables = __init__.get_sqlite_table_names(file_path)
-            if 'events' in tables:
-                try:
-                    events_data = __init__.read_sqlite_table(
-                        file_path, 'events',
-                        columns='_id, address, deleted, eventDate')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'logs' in tables:
-                try:
-                    logs_data = __init__.read_sqlite_table(
-                        file_path, 'logs',
-                        columns='_id, address, deleted, incoming, outgoing')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+        if file_path.endswith(u'message_glance.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'events' in tables:
+                events_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'events', [u'_id', u'address', u'deleted', u'eventDate'])
 
-    mms_data_list = []
-    mms_data = OrderedDict()
+            if u'logs' in tables:
+                logs_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'logs', [u'_id', u'address', u'deleted', u'incoming', u'outgoing'])
 
-    # Add data from message_glance.db to mms_data_list
-    # Add data from events table to mms_data
-    if events_data:
-        for entry in events_data:
-            mms_data['Database'] = message_database
-            mms_data['Table'] = 'events'
-            mms_data['Event Id'] = entry['_id']
-            mms_data['Log Id'] = ''
-            mms_data['Address'] = entry['address']
-            mms_data['Deleted'] = entry['deleted']
-            try:
-                mms_data['Event Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['eventDate'] / 1000.))
-            except (TypeError, ValueError):
-                mms_data['Event Date'] = ''
-            mms_data['Incoming'] = ''
-            mms_data['Outgoing'] = ''
-
-            mms_data_list.append(mms_data)
-            mms_data = OrderedDict()
-
-    # Add data from logs table to mms_data
-    if logs_data:
-        for entry in logs_data:
-            mms_data['Database'] = message_database
-            mms_data['Table'] = 'logs'
-            mms_data['Event Id'] = ''
-            mms_data['Log Id'] = entry['_id']
-            mms_data['Address'] = entry['address']
-            mms_data['Deleted'] = entry['deleted']
-            mms_data['Event Date'] = ''
-            mms_data['Incoming'] = entry['incoming']
-            mms_data['Outgoing'] = entry['outgoing']
-
-            mms_data_list.append(mms_data)
-            mms_data = OrderedDict()
-
-    return mms_data_list
+    return events_data, logs_data

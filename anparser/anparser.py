@@ -93,80 +93,35 @@ if __name__ == "__main__":
     #
 
     # Run plugins
+    # TODO: Complete process of switching parsers to pandas
 
     # Android Browser Parser
     msg = 'Processing Android Browser'
     logging.info(msg)
     print(msg)
-    browser_data = plugins.sqlite_plugins.android_browser.android_browser(files_to_process)
+    browser_bookmarks, browser_history = plugins.sqlite_plugins.android_browser.android_browser(files_to_process)
     browser_user_defaults, browser_preferences = plugins.xml_plugins.android_browser.android_browser(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        android_dict = OrderedDict()
-        try:
-            android_dict['android_browser_history'] = pd.DataFrame(browser_data,
-                                                                   columns=browser_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_browser_preferences'] = pd.DataFrame(browser_preferences,
-                                                                       columns=browser_preferences[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_browser_users'] = pd.DataFrame(browser_user_defaults,
-                                                                 columns=browser_user_defaults[0].keys())
-        except IndexError:
-            pass
 
     # Android Calendar Parser
     msg = 'Processing Android Calendar'
     logging.info(msg)
     print(msg)
-    calendar_data = plugins.sqlite_plugins.android_calendar.android_calendar(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_calendar'] = pd.DataFrame(calendar_data,
-                                                            columns=calendar_data[0].keys())
-        except IndexError:
-            pass
+    calendar_attendees, calendar_events, calendar_reminders, calendar_tasks = \
+        plugins.sqlite_plugins.android_calendar.android_calendar(files_to_process)
 
     # Android Chrome Parser
     msg = 'Processing Android Chrome'
     logging.info(msg)
     print(msg)
-    chrome_cookies_data, chrome_downloads_data, chrome_history_data = plugins.sqlite_plugins.android_chrome.android_chrome(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_chrome_cookies'] = pd.DataFrame(chrome_cookies_data,
-                                                                  columns=chrome_cookies_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_chrome_downloads'] = pd.DataFrame(chrome_downloads_data,
-                                                                    columns=chrome_downloads_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_chrome_history'] = pd.DataFrame(chrome_history_data,
-                                                                  columns=chrome_history_data[0].keys())
-        except IndexError:
-            pass
+    chrome_cookies, chrome_downloads, chrome_keywords, chrome_urls, chrome_visits = \
+        plugins.sqlite_plugins.android_chrome.android_chrome(files_to_process)
 
     # Android Contact Parser
     msg = 'Processing Android Contacts'
     logging.info(msg)
     print(msg)
-    contacts_data = plugins.sqlite_plugins.android_contacts.android_contacts(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_contacts'] = pd.DataFrame(contacts_data,
-                                                            columns=contacts_data[0].keys())
-        except IndexError:
-            pass
+    contacts_raw, contacts_accounts, contacts_phone = \
+        plugins.sqlite_plugins.android_contacts.android_contacts(files_to_process)
 
     # Android Downloads Parser
     msg = 'Processing Android Downloads'
@@ -174,43 +129,18 @@ if __name__ == "__main__":
     print(msg)
     downloads_data = plugins.sqlite_plugins.android_downloads.android_downloads(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_downloads'] = pd.DataFrame(downloads_data,
-                                                             columns=downloads_data[0].keys())
-        except IndexError:
-            pass
-
     # Android Emergencymode Parser
     msg = 'Processing Android EmergencyMode'
     logging.info(msg)
     print(msg)
     emergency_data = plugins.sqlite_plugins.android_emergencymode.android_emergencymode(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_emergencymode'] = pd.DataFrame(emergency_data,
-                                                                 columns=emergency_data[0].keys())
-        except IndexError:
-            pass
-
     # Android Gallery3d Parser
     msg = 'Processing Android Gallery3d'
     logging.info(msg)
     print(msg)
-    photo_file_data, picasa_data = plugins.sqlite_plugins.android_gallery3d.android_gallery3d(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_gallery3d_files'] = pd.DataFrame(photo_file_data,
-                                                                   columns=photo_file_data[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_gallery3d_picasa'] = pd.DataFrame(picasa_data,
-                                                                    columns=picasa_data[0].keys())
-        except IndexError:
-            pass
+    file_info, gallery_download, gallery_albums, gallery_photos, gallery_users = \
+        plugins.sqlite_plugins.android_gallery3d.android_gallery3d(files_to_process)
 
     # Android Gmail Parser
     msg = 'Processing Android GMail'
@@ -218,54 +148,24 @@ if __name__ == "__main__":
     print(msg)
     gmail_accounts_data = plugins.xml_plugins.android_gmail.android_gmail(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_gmail_accounts'] = pd.DataFrame(gmail_accounts_data,
-                                                                  columns=gmail_accounts_data[0].keys())
-        except IndexError:
-            pass
-
-    plugins.other_plugins.android_gmail_message_parser.android_gmail_message_parser(files_to_process, os.path.join(
-        args.destination, "Android/Gmail_Messages/"))
-
     # Android Logsprovider Parser
     msg = 'Processing Android Logsprovider'
     logging.info(msg)
     print(msg)
     android_logsprovider_data = plugins.sqlite_plugins.android_logsprovider.android_logsprovider(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_logsprovider'] = pd.DataFrame(android_logsprovider_data,
-                                                                columns=android_logsprovider_data[0].keys())
-        except IndexError:
-            pass
-
     # Android Media Parser
     msg = 'Processing Android Media'
     logging.info(msg)
     print(msg)
-    android_media_data = plugins.sqlite_plugins.android_media.android_media(files_to_process)
+    external_media, internal_media = plugins.sqlite_plugins.android_media.android_media(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_media'] = pd.DataFrame(android_media_data,
-                                                         columns=android_media_data[0].keys())
-        except IndexError:
-            pass
 
     # Android MMS Parser
     msg = 'Processing Android MMS'
     logging.info(msg)
     print(msg)
-    android_mms_data = plugins.sqlite_plugins.android_mms.android_mms(files_to_process)
-
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_mms_glance'] = pd.DataFrame(android_mms_data,
-                                                              columns=android_mms_data[0].keys())
-        except IndexError:
-            pass
+    android_mms_events, android_mms_logs = plugins.sqlite_plugins.android_mms.android_mms(files_to_process)
 
     # Android Telephony Parser
     msg = 'Processing Android SMS'
@@ -274,47 +174,14 @@ if __name__ == "__main__":
     telephony_data_sms, telephony_data_threads = \
         plugins.sqlite_plugins.android_telephony.android_telephony(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_telephony_sms'] = pd.DataFrame(telephony_data_sms,
-                                                                 columns=telephony_data_sms[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_telephony_threads'] = pd.DataFrame(telephony_data_threads,
-                                                                     columns=telephony_data_threads[0].keys())
-        except IndexError:
-            pass
-
     # Android Vending Parser
     msg = 'Processing Android Vending'
     logging.info(msg)
     print(msg)
-    vending_library_list, vending_localapp_list, vending_suggestions_list = \
+    vending_library, vending_localapp, vending_suggestions = \
         plugins.sqlite_plugins.android_vending.android_vending(files_to_process)
     vending_data = plugins.xml_plugins.android_vending.android_vending(files_to_process)
 
-    if args.o.lower() == 'xlsx':
-        try:
-            android_dict['android_vending_library'] = pd.DataFrame(vending_library_list,
-                                                                   columns=vending_library_list[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_vending_local_apps'] = pd.DataFrame(vending_localapp_list,
-                                                                      columns=vending_localapp_list[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_vending_suggestions'] = pd.DataFrame(vending_suggestions_list,
-                                                                       columns=vending_suggestions_list[0].keys())
-        except IndexError:
-            pass
-        try:
-            android_dict['android_vending_accounts'] = pd.DataFrame(vending_data,
-                                                                    columns=vending_data[0].keys())
-        except IndexError:
-            pass
 
     # Google Docs Parser
     msg = 'Processing Google Docs'
@@ -607,32 +474,73 @@ if __name__ == "__main__":
     print(msg)
 
     # Write Contact Data
+    # TODO: Recreate CSV writer instead of calling .to_csv manually.
+    # TODO: Check the None type errors from the try/except items below.
+    # TODO: Add back in xlsx support w/ pandas.
+    # TODO: Add database path to pandas dataset.
+    # TODO: Convert timestamps in pandas dataset.
 
     if args.o.lower() == 'csv':
         path = args.destination + '//Android'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
-        writers.csv_writer.csv_writer(browser_data, os.path.join(path, 'android_browser.csv'))
+        browser_bookmarks.to_csv(os.path.join(path, 'android_browser_bookmarks.csv'), '|')
+        browser_history.to_csv(os.path.join(path, 'android_browser_history.csv'), '|')
+
         writers.csv_writer.csv_writer(browser_preferences, os.path.join(path, 'android_browser_preferences.csv'))
         writers.csv_writer.csv_writer(browser_user_defaults, os.path.join(path, 'android_browser_user_defaults.csv'))
-        writers.csv_writer.csv_writer(calendar_data, os.path.join(path, 'android_calendar.csv'))
-        writers.csv_writer.csv_writer(chrome_cookies_data, os.path.join(path, 'android_chrome_cookies.csv'))
-        writers.csv_writer.csv_writer(chrome_downloads_data, os.path.join(path, 'android_chrome_downloads.csv'))
-        writers.csv_writer.csv_writer(chrome_history_data, os.path.join(path, 'android_chrome_history.csv'))
-        writers.csv_writer.csv_writer(contacts_data, os.path.join(path, 'android_contacts.csv'))
-        writers.csv_writer.csv_writer(downloads_data, os.path.join(path, 'android_downloads.csv'))
-        writers.csv_writer.csv_writer(emergency_data, os.path.join(path, 'android_emergencymode.csv'))
-        writers.csv_writer.csv_writer(photo_file_data, os.path.join(path, 'android_gallery3d_files.csv'))
-        writers.csv_writer.csv_writer(picasa_data, os.path.join(path, 'android_gallery3d_picasa.csv'))
+
+        calendar_attendees.to_csv(os.path.join(path, 'android_calendar_attendees.csv'), '|')
+        try:
+            calendar_events.to_csv(os.path.join(path, 'android_calendar_events.csv'), '|')
+        except AttributeError:
+            pass
+        calendar_reminders.to_csv(os.path.join(path, 'android_calendar_reminders.csv'), '|')
+        calendar_tasks.to_csv(os.path.join(path, 'android_calendar_tasks.csv'), '|')
+        chrome_cookies.to_csv(os.path.join(path, 'android_chrome_cookies.csv'), '|')
+        try:
+            chrome_downloads.to_csv(os.path.join(path, 'android_chrome_downloads.csv'), '|')
+        except AttributeError:
+            pass
+        chrome_keywords.to_csv(os.path.join(path, 'android_chrome_keywords.csv'), '|')
+        chrome_urls.to_csv(os.path.join(path, 'android_chrome_urls.csv'), '|', encoding='utf-8')
+        chrome_visits.to_csv(os.path.join(path, 'android_chrome_visits.csv'), '|')
+        try:
+            contacts_raw.to_csv(os.path.join(path, 'android_contacts_rawcontacts.csv'), '|')
+        except AttributeError:
+            pass
+        contacts_accounts.to_csv(os.path.join(path, 'android_contacts_accounts.csv'), '|')
+        try:
+            contacts_phone.to_csv(os.path.join(path, 'android_contacts_phonelookup.csv'), '|')
+        except AttributeError:
+            pass
+        downloads_data.to_csv(os.path.join(path, 'android_downloads.csv'), '|')
+        emergency_data.to_csv(os.path.join(path, 'android_emergencymode.csv'), '|')
+        file_info.to_csv(os.path.join(path, 'android_gallery3d_fileinfo.csv'), '|')
+        gallery_download.to_csv(os.path.join(path, 'android_gallery3d_downloads.csv'), '|')
+        gallery_albums.to_csv(os.path.join(path, 'android_gallery3d_albums.csv'), '|')
+        gallery_photos.to_csv(os.path.join(path, 'android_gallery3d_photos.csv'), '|')
+        gallery_users.to_csv(os.path.join(path, 'android_gallery3d_users.csv'), '|')
+
         writers.csv_writer.csv_writer(gmail_accounts_data, os.path.join(path, 'android_gmail_accounts.csv'))
-        writers.csv_writer.csv_writer(android_logsprovider_data, os.path.join(path, 'android_logsprovider.csv'))
-        writers.csv_writer.csv_writer(android_media_data, os.path.join(path, 'android_media.csv'))
-        writers.csv_writer.csv_writer(android_mms_data, os.path.join(path, 'android_mms_glance.csv'))
-        writers.csv_writer.csv_writer(telephony_data_sms, os.path.join(path, 'android_telephony_sms.csv'))
-        writers.csv_writer.csv_writer(telephony_data_threads, os.path.join(path, 'android_telephony_threads.csv'))
-        writers.csv_writer.csv_writer(vending_library_list, os.path.join(path, 'android_vending_library.csv'))
-        writers.csv_writer.csv_writer(vending_localapp_list, os.path.join(path, 'android_vending_local_apps.csv'))
-        writers.csv_writer.csv_writer(vending_suggestions_list, os.path.join(path, 'android_vending_suggestions.csv'))
+
+        android_logsprovider_data.to_csv(os.path.join(path, 'android_logsprovider.csv'), '|', encoding='utf-8')
+        external_media.to_csv(os.path.join(path, 'android_media_external.csv'), '|')
+        internal_media.to_csv(os.path.join(path, 'android_media_internal.csv'), '|')
+        android_mms_events.to_csv(os.path.join(path, 'android_mms_events.csv'), '|')
+        android_mms_logs.to_csv(os.path.join(path, 'android_mms_logs.csv'), '|')
+        telephony_data_sms.to_csv(os.path.join(path, 'android_telephony_sms.csv'), '|')
+        telephony_data_threads.to_csv(os.path.join(path, 'android_telephony_threads.csv'), '|')
+        try:
+            vending_library.to_csv(os.path.join(path, 'android_vending_library.csv'), '|')
+        except AttributeError:
+            pass
+        try:
+            vending_localapp.to_csv(os.path.join(path, 'android_vending_localapps.csv'), '|')
+        except AttributeError:
+            pass
+        vending_suggestions.to_csv(os.path.join(path, 'android_vending_suggestions.csv'), '|')
+
         writers.csv_writer.csv_writer(vending_data, os.path.join(path, 'android_vending_account_data.csv'))
 
         path = args.destination + '//Google'
@@ -704,12 +612,7 @@ if __name__ == "__main__":
                 os.mkdir(path, 0777)
             writers.csv_writer.csv_writer(yara_data, os.path.join(path, 'yara_matches.csv'))
 
-    if args.o.lower() == 'xlsx':
-        path = args.destination + '//Android'
-        if not os.path.exists(path):
-            os.mkdir(path, 0777)
-        writers.xlsx_writer.xlsx_writer(android_dict, os.path.join(path, 'android.xlsx'))
-
+        '''
         path = args.destination + '//Google'
         if not os.path.exists(path):
             os.mkdir(path, 0777)
@@ -754,7 +657,7 @@ if __name__ == "__main__":
             path = args.destination + '//Yara'
             if not os.path.exists(path):
                 os.mkdir(path, 0777)
-            writers.xlsx_writer.xlsx_writer(yara_dict, os.path.join(path, 'yara.xlsx'))
+            writers.xlsx_writer.xlsx_writer(yara_dict, os.path.join(path, 'yara.xlsx'))'''
     msg = 'Completed'
     logging.info(msg)
     print(msg)

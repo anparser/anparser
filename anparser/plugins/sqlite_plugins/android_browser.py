@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150107'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def android_browser(file_list):
@@ -37,118 +35,18 @@ def android_browser(file_list):
     """
     # TODO: Add in support for other tables (images, thumbnails).
     # Initialize table variables: bookmarks, history, v_accounts
-    browser_database = None
     bookmarks_data = None
     history_data = None
-    accounts_data = None
 
     for file_path in file_list:
-        if file_path.endswith('browser2.db'):
-            browser_database = file_path
-            try:
-                tables = __init__.get_sqlite_table_names(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                tables = []
+        if file_path.endswith(u'browser2.db'):
+            tables =  sqlite_processor.get_sqlite_table_names(file_path)
+            if u'bookmarks' in tables:
+                bookmarks_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'bookmarks', [u'_id', u'title', u'url', u'deleted', u'created', u'modified'])
 
-            try:
-                views = __init__.get_sqlite_veiw_info(file_path)
-            except (IndexError, TypeError) as exception:
-                logging.error('SQLite Read Error: {0:s}'.format(file_path + " > " + str(exception)))
-                views = []
+            if u'history' in tables:
+                history_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'history', [u'_id', u'title', u'url', u'date', u'visits'])
 
-            if 'bookmarks' in tables:
-                try:
-                    bookmarks_data = __init__.read_sqlite_table(
-                        file_path, 'bookmarks',
-                        columns='_id, title, url, deleted, created, modified')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'history' in tables:
-                try:
-                    history_data = __init__.read_sqlite_table(
-                        file_path, 'history',
-                        columns='_id, title, url, date, visits')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'v_accounts' in views:
-                try:
-                    accounts_data = __init__.read_sqlite_table(
-                        file_path, 'v_accounts',
-                        columns='account_name, account_type, root_id')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-
-    browser_data_list = []
-    browser_data = OrderedDict()
-
-    # Add data from bookmarks table to browser_data
-    if bookmarks_data:
-        for entry in bookmarks_data:
-            browser_data['Database'] = browser_database
-            browser_data['Table'] = 'bookmarks'
-            browser_data['Id'] = entry['_id']
-            browser_data['Title'] = entry['title']
-            browser_data['Url'] = entry['url']
-            browser_data['Deleted'] = entry['deleted']
-            try:
-                browser_data['Created'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['created'] / 1000.))
-            except TypeError:
-                browser_data['Created'] = ''
-            try:
-                browser_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['modified'] / 1000.))
-            except TypeError:
-                browser_data['Modified'] = ''
-            browser_data['Date'] = ''
-            browser_data['Visits'] = ''
-            browser_data['Account Name'] = ''
-            browser_data['Account Type'] = ''
-
-            browser_data_list.append(browser_data)
-            browser_data = OrderedDict()
-
-    # Add data from history table to browser_data
-    if history_data:
-        for entry in history_data:
-            browser_data['Database'] = browser_database
-            browser_data['Table'] = 'history'
-            browser_data['Id'] = entry['_id']
-            browser_data['Title'] = entry['title']
-            browser_data['Url'] = entry['url']
-            browser_data['Deleted'] = ''
-            browser_data['Created'] = ''
-            browser_data['Modified'] = ''
-            try:
-                browser_data['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.))
-            except TypeError:
-                browser_data['Date'] = ''
-            browser_data['Visits'] = entry['visits']
-            browser_data['Account Name'] = ''
-            browser_data['Account Type'] = ''
-
-            browser_data_list.append(browser_data)
-            browser_data = OrderedDict()
-
-    # Add data from v_accounts table to browser_data
-    if accounts_data:
-        for entry in accounts_data:
-            browser_data['Database'] = browser_database
-            browser_data['Table'] = 'v_accounts'
-            browser_data['Id'] = entry['root_id']
-            browser_data['Title'] = ''
-            browser_data['Url'] = ''
-            browser_data['Deleted'] = ''
-            browser_data['Created'] = ''
-            browser_data['Modified'] = ''
-            browser_data['Date'] = ''
-            browser_data['Visits'] = ''
-            browser_data['Account Name'] = entry['account_name']
-            browser_data['Account Type'] = entry['account_type']
-
-            browser_data_list.append(browser_data)
-            browser_data = OrderedDict()
-
-    return browser_data_list
+    return bookmarks_data, history_data

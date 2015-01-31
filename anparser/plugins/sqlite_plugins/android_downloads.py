@@ -22,10 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150108'
 __version__ = '0.00'
 
-from collections import OrderedDict
-import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def android_downloads(file_list):
@@ -37,49 +34,16 @@ def android_downloads(file_list):
     """
 
     # Initialize table variable: downloads
-    downloads_database = None
     download_data = None
 
     for file_path in file_list:
-        if file_path.endswith('downloads.db'):
-            downloads_database = file_path
-            tables = __init__.get_sqlite_table_names(file_path)
-            if 'downloads' in tables:
-                try:
-                    download_data = __init__.read_sqlite_table(
-                        file_path, 'downloads',
-                        columns='_id, title, description, mimetype, lastmod, uid, '
-                                'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
+        if file_path.endswith(u'downloads.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'downloads' in tables:
+                download_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'downloads', [u'_id', u'title', u'description',
+                                             u'mimetype', u'lastmod', u'uid',
+                                             u'etag', 'uri', u'hint', u'_data',
+                                             u'total_bytes', u'mediaprovider_uri'])
 
-    downloads_data_list = []
-    downloads_data = OrderedDict()
-
-    # Add data from downloads table to downloads_data
-    if download_data:
-        for entry in download_data:
-            downloads_data['Database'] = downloads_database
-            downloads_data['Table'] = 'downloads'
-            downloads_data['Id'] = entry['_id']
-            downloads_data['Title'] = entry['title']
-            downloads_data['Description'] = entry['description']
-            downloads_data['Mime Type'] = entry['mimetype']
-            try:
-                downloads_data['Modified'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['lastmod'] / 1000.))
-            except TypeError:
-                downloads_data['Modified'] = ''
-            downloads_data['Uid'] = entry['uid']
-            downloads_data['Etag'] = entry['etag']
-            downloads_data['Uri'] = entry['uri']
-            downloads_data['Hint'] = entry['hint']
-            downloads_data['Data'] = entry['_data']
-            downloads_data['Total Bytes'] = entry['total_bytes']
-            downloads_data['Media Provider Uri'] = entry['mediaprovider_uri']
-
-            downloads_data_list.append(downloads_data)
-            downloads_data = OrderedDict()
-
-
-    return downloads_data_list
+    return download_data

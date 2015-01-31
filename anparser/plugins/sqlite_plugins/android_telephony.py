@@ -22,97 +22,30 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
-
-
-def read_sms(db_data, db_path):
-
-    data_dict_list = []
-    data_dict = OrderedDict()
-
-    for entry in db_data:
-        data_dict['Database'] = db_path
-        data_dict['Table'] = 'sms'
-        data_dict['Id'] = entry['_id']
-        data_dict['Thread Id'] = entry['thread_id']
-        data_dict['Address'] = entry['address']
-        data_dict['Person'] = entry['person']
-        try:
-            data_dict['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.0))
-        except TypeError:
-            data_dict['Date'] = ''
-        try:
-            data_dict['Date_Sent'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date_sent'] / 1000.0))
-        except TypeError:
-            data_dict['Date_Sent'] = ''
-        data_dict['Body'] = entry['body']
-        data_dict['Read'] = entry['read']
-        data_dict['Seen'] = entry['seen']
-        data_dict_list.append(data_dict)
-        data_dict = OrderedDict()
-
-    return data_dict_list
-
-
-def read_sms_threads(db_data, db_path):
-
-    data_dict_list = []
-    data_dict = OrderedDict()
-
-    for entry in db_data:
-        data_dict['Database'] = db_path
-        data_dict['Table'] = 'threads'
-        data_dict['Id'] = entry['_id']
-        try:
-            data_dict['Date'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(entry['date'] / 1000.0))
-        except TypeError:
-            data_dict['Date'] = ''
-        data_dict['Message Count'] = entry['message_count']
-        data_dict['Snippet'] = entry['snippet']
-        data_dict['Read'] = entry['read']
-        data_dict['Has Attachment'] = entry['has_attachment']
-        data_dict_list.append(data_dict)
-        data_dict = OrderedDict()
-
-    return data_dict_list
-
+import sqlite_processor
 
 def android_telephony(file_listing):
+    """
 
-    mmssms_database = None
+    :param file_listing:
+    :return:
+    """
+
     sms_data = None
     threads_data = None
-    parsed_sms_data = None
-    parsed_threads_data = None
+
 
     for file_path in file_listing:
-        if file_path.endswith('mmssms.db'):
-            mmssms_database = file_path
-            tables = __init__.get_sqlite_table_names(file_path)
-            if 'sms' in tables:
-                try:
-                    sms_data = __init__.read_sqlite_table(file_path, 'sms',
-                                                                columns='_id, thread_id, address, person, date, '
-                                                                        'date_sent, body, read, seen')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-                if sms_data:
-                    parsed_sms_data = read_sms(sms_data, mmssms_database)
+        if file_path.endswith(u'mmssms.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'sms' in tables:
+                sms_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'sms', [u'_id', u'thread_id', u'address', u'person', u'date', u'date_sent', u'body',
+                                        u'read', u'seen'])
 
-            if 'threads' in tables:
-                try:
-                    threads_data = __init__.read_sqlite_table(file_path, 'threads',
-                                                                    columns='_id, date, message_count, snippet, read, '
-                                                                            'has_attachment')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-                if threads_data:
-                    parsed_threads_data = read_sms_threads(threads_data, mmssms_database)
+            if u'threads' in tables:
+                threads_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'threads', [u'_id', u'date', u'message_count', u'snippet', u'read', u'has_attachment'])
 
-
-    return parsed_sms_data, parsed_threads_data
+    return sms_data, threads_data

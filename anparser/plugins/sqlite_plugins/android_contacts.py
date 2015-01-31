@@ -22,10 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
-from collections import OrderedDict
 import logging
-import __init__
-import time
+import sqlite_processor
 
 
 def android_contacts(file_list):
@@ -37,53 +35,21 @@ def android_contacts(file_list):
     """
 
     # Initialize Variable
-    contacts_database = None
     raw_contacts_data = None
     accounts_data = None
     phone_lookup_data = None
 
     for file_path in file_list:
-        if file_path.endswith('contacts2.db'):
-            contacts_database = file_path
-            tables = __init__.get_sqlite_table_names(file_path)
-            if 'raw_contacts' in tables:
-                try:
-                    raw_contacts_data = __init__.read_sqlite_table(
-                        file_path, 'raw_contacts', columns='contact_id, display_name, modified_time')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'accounts' in tables:
-                try:
-                    accounts_data = __init__.read_sqlite_table(file_path, 'accounts',
-                                                                     columns='_id, account_name, account_type')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
-                    pass
-            if 'phone_lookup' in tables:
-                try:
-                    phone_lookup_data = __init__.read_sqlite_table(file_path, 'phone_lookup',
-                                                                         columns='raw_contact_id, normalized_number')
-                except __init__.sqlite3.OperationalError as exception:
-                    logging.error('Sqlite3 Operational Error: {0:s}'.format(exception))
+        if file_path.endswith(u'contacts2.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'raw_contacts' not in tables:
+                raw_contacts_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'raw_contacts', [u'contact_id', u'display_name', u'modified_time'])
+            if u'accounts' in tables:
+                accounts_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'accounts', ['_id', 'account_name', 'account_type'])
+            if u'phone_lookup' not in tables:
+                phone_lookup_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'phone_lookup', [u'raw_contact_id', u'normalized_number'])
 
-    contact_data_list = []
-    contact_data = OrderedDict()
-
-    if raw_contacts_data:
-        for entry in raw_contacts_data:
-            contact_data['Database'] = contacts_database
-            contact_data['Contact Id'] = entry['contact_id']
-            contact_data['Display Name'] = entry['display_name']
-            try:
-                contact_data['Modified Time'] = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(
-                    entry['modified_time'] / 1000.0))
-            except TypeError:
-                contact_data['Modified Time'] = ''
-            for item in phone_lookup_data:
-                if item['raw_contact_id'] == entry['contact_id']:
-                    contact_data['Normalized Number'] = item['raw_contact_id']
-            contact_data_list.append(contact_data)
-            contact_data = OrderedDict()
-
-    return contact_data_list
+    return raw_contacts_data, accounts_data, phone_lookup_data
