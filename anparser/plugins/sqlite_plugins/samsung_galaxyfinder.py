@@ -22,7 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-from processors import sqlite_processor, time_processor
+from ingest import sqlite_processor  # , time_processor
 
 
 def samsung_galaxyfinder(file_list):

@@ -26,7 +26,7 @@ import collections
 
 import pandas as pd
 
-from processors import xml_processor
+from ingest import xml_processor
 
 
 def android_gmail_process(file_to_process):

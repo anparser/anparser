@@ -22,7 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150114'
 __version__ = '0.00'
 
-from processors import sqlite_processor, time_processor
+from ingest import sqlite_processor  # , time_processor
 
 
 def android_gallery3d(file_list):

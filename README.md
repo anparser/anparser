@@ -18,6 +18,9 @@ Preston Miller @pmiller91
 
 * Python 2.7
 * Pandas 0.15.2
+* Sleuthkit (http://sourceforge.net/projects/sleuthkit/files/sleuthkit/4.1.3/ )
+* Pytsk3
+* LibEWF
 
 **On Windows, Anaconda-2.1.0 was used to install the Pandas Library**
 **You may need to update the SQLite DLL as seen in https://github.com/chapinb/anparser/issues/5 **

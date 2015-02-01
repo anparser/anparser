@@ -26,7 +26,7 @@ from collections import OrderedDict
 
 import pandas as pd
 
-from processors import xml_processor
+from ingest import xml_processor
 
 
 def valvesoftware_android(file_listing):

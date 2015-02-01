@@ -22,28 +22,29 @@ __license__ = 'GPLv3'
 __date__ = '20140109'
 __version__ = '0.00'
 
-import pandas as pd
+import xml.etree.ElementTree as ET
+from collections import OrderedDict
 
-from ingest import xml_processor
 
-
-def android_vending(file_listing):
+def parse_xml_file_notree(FILE):
     """
-    Reads and processes xml data from android_vending
-
-    :param file_listing: list of files
-    :return: list of dictionaries containing XML values
+    :param FILE: string path to file
+    :return: List of dictionaries
     """
-    vending_data = []
-    for file_entry in file_listing:
-        if file_entry.endswith(u'finsky.xml') and file_entry.count(u'com.android.vending') > 0:
-            vending_data = xml_processor.parse_xml_file_notree(file_entry)
 
-    # add all columns to first entry for CSV Writing
-    try:
-        vending_data[0][u'value'] = ''
-        vending_data[0] = vending_data[0]
-    except IndexError:
-        pass
+    context = ET.iterparse(FILE, events=['start'])
+    context = iter(context)
+    event, root = context.next()
 
-    return pd.DataFrame(vending_data)
+    # Setup Variables
+    elem_array = []
+    ordered_array = OrderedDict()
+
+    for event, elem in context:
+        ordered_array = elem.attrib
+        ordered_array['text_entry'] = str(elem.text).strip()
+
+        elem_array.append(ordered_array)
+        ordered_array = OrderedDict()
+
+    return elem_array
