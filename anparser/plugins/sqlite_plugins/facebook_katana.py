@@ -22,7 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150113'
 __version__ = '0.00'
 
-from ingest import sqlite_processor  # , time_processor
+from ingest import sqlite_processor, time_processor
 
 
 def facebook_katana(file_list):

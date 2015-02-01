@@ -24,7 +24,7 @@ __version__ = '0.00'
 
 import time
 
-from ingest import sqlite_processor  # , time_processor
+from ingest import sqlite_processor, time_processor
 
 
 def android_downloads(file_list):

@@ -22,7 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150109'
 __version__ = '0.00'
 
-from ingest import sqlite_processor  # , time_processor
+from ingest import sqlite_processor, time_processor
 
 
 def google_docs(file_list):
