@@ -4,3 +4,4 @@ xlsxwriter>=0.6.6
 six>=1.9.0
 simplejson>=3.6.5
 sqlalchemy>=0.9.8
+yara>=1.7.7

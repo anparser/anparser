@@ -67,8 +67,10 @@ def read_sqlite_table(db_path, table_name, sel_columns=None):
         except sqlalchemy.exc.OperationalError:
             try:
                 return pd.read_sql_table(table_name, engine, columns=sel_columns.split(', '))
-            except KeyError:
-                pass
+            except KeyError as e:
+                logging.error(KeyError(e))
+            except ValueError as e:
+                logging.error(ValueError(e))
     else:
         return pd.read_sql_table(table_name, engine)
 

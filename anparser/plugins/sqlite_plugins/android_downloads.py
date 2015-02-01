@@ -25,7 +25,7 @@ __version__ = '0.00'
 import time
 
 from ingest import sqlite_processor, time_processor
-
+import logging
 
 def android_downloads(file_list):
     """
@@ -45,6 +45,9 @@ def android_downloads(file_list):
                 download_data = sqlite_processor.read_sqlite_table(
                     file_path, u'downloads', u'_id, title, description, mimetype, lastmod, uid, '
                                              u'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
-                download_data.lastmod = time_processor.unix_time(download_data.lastmod)
+                try:
+                    download_data.lastmod = time_processor.unix_time(download_data.lastmod)
+                except AttributeError as e:
+                    logging.error(AttributeError(e))
 
     return download_data

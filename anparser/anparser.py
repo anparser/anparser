@@ -53,6 +53,7 @@ def scan_for_files(input_dir):
     for root, subdir, files in os.walk(input_dir, topdown=True):
         for file_name in files:
             current_file = os.path.join(root, file_name)
+            current_file = current_file.decode('utf-8')
             file_list.append(current_file)
 
     return file_list
