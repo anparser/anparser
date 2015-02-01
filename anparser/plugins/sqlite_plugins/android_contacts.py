@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def android_contacts(file_list):
@@ -35,21 +34,24 @@ def android_contacts(file_list):
     """
 
     # Initialize Variable
-    raw_contacts_data = None
-    accounts_data = None
-    phone_lookup_data = None
+    raw_contacts = None
+    accounts = None
+    phone_lookup = None
 
     for file_path in file_list:
         if file_path.endswith(u'contacts2.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'raw_contacts' in tables:
-                raw_contacts_data = sqlite_processor.read_sqlite_table(
+                raw_contacts = sqlite_processor.read_sqlite_table(
                     file_path, u'raw_contacts', u'contact_id, display_name, modified_time')
+                if raw_contacts is not None:
+                    raw_contacts.modified_time = time_processor.unix_time(raw_contacts.modified_time)
+
             if u'accounts' in tables:
-                accounts_data = sqlite_processor.read_sqlite_table(
+                accounts = sqlite_processor.read_sqlite_table(
                     file_path, u'accounts', '_id, account_name, account_type')
             if u'phone_lookup' in tables:
-                phone_lookup_data = sqlite_processor.read_sqlite_table(
+                phone_lookup = sqlite_processor.read_sqlite_table(
                     file_path, u'phone_lookup', u'raw_contact_id, normalized_number')
 
-    return raw_contacts_data, accounts_data, phone_lookup_data
+    return raw_contacts, accounts, phone_lookup

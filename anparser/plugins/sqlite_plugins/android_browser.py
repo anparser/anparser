@@ -22,9 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150107'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
-
+from processors import sqlite_processor, time_processor
 
 def android_browser(file_list):
     """
@@ -44,9 +42,14 @@ def android_browser(file_list):
             if u'bookmarks' in tables:
                 bookmarks_data = sqlite_processor.read_sqlite_table(
                     file_path, u'bookmarks', u'_id, title, url, deleted, created, modified')
+                if bookmarks_data is not None:
+                    bookmarks_data.created = time_processor.unix_time(bookmarks_data.created)
+                    bookmarks_data.modified = time_processor.unix_time(bookmarks_data.modified)
 
             if u'history' in tables:
                 history_data = sqlite_processor.read_sqlite_table(
                     file_path, u'history', u'_id, title, url, date, visits')
+                if history_data is not None:
+                    history_data.date = time_processor.unix_time(history_data.date)
 
     return bookmarks_data, history_data

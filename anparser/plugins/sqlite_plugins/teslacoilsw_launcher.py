@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def teslacoilsw_launcher(file_list):
@@ -46,6 +45,8 @@ def teslacoilsw_launcher(file_list):
                 allapps_data = sqlite_processor.read_sqlite_table(
                     file_path, u'allapps',
                     u'componentName, title, lastUpdateTime')
+                if allapps_data is not None:
+                    allapps_data.lastUpdateTime = time_processor.unix_time(allapps_data.lastUpdateTime)
 
             if u'favorites' in tables:
                 favorites_data = sqlite_processor.read_sqlite_table(

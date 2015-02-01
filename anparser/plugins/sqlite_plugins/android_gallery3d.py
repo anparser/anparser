@@ -22,9 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150114'
 __version__ = '0.00'
 
-from collections import OrderedDict
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def android_gallery3d(file_list):
@@ -35,9 +33,6 @@ def android_gallery3d(file_list):
     :return: Dictionary of parsed data from database
     """
     # Initialize table variables: file_info, download, albums, photos, users
-    file_database = None
-    download_database = None
-    picasa_database = None
     file_info_data = None
     download_data = None
     albums_data = None
@@ -57,6 +52,9 @@ def android_gallery3d(file_list):
                 download_data = sqlite_processor.read_sqlite_table(
                     file_path, u'download', u'_id, _data, content_url, hash_code, last_access, '
                                              u'last_updated, _size')
+                if download_data is not None:
+                    download_data.last_access = time_processor.unix_time(download_data.last_access)
+                    download_data.last_updated = time_processor.unix_time(download_data.last_updated)
 
         if file_path.endswith(u'picasa.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -65,6 +63,10 @@ def android_gallery3d(file_list):
                     file_path, u'albums', u'_id, bytes_used, date_edited, date_published, date_updated, '
                                            u'html_page_url, location_string, num_photos, summary, '
                                            u'sync_account, title, user')
+                if albums_data is not None:
+                    albums_data.date_edited = time_processor.unix_time(albums_data.date_edited)
+                    albums_data.date_published = time_processor.unix_time(albums_data.date_published)
+                    albums_data.date_updated = time_processor.unix_time(albums_data.date_updated)
 
             if u'photos' in tables:
                 photos_data = sqlite_processor.read_sqlite_table(
@@ -72,6 +74,11 @@ def android_gallery3d(file_list):
                                            u'date_edited, date_published, date_taken, date_updated, '
                                            u'html_page_url, latitude, longitude, size, sync_account, '
                                            u'title')
+                if photos_data is not None:
+                    photos_data.date_edited = time_processor.unix_time(photos_data.date_edited)
+                    photos_data.date_published = time_processor.unix_time(photos_data.date_published)
+                    photos_data.date_taken = time_processor.unix_time(photos_data.date_taken)
+                    photos_data.date_updated = time_processor.unix_time(photos_data.date_updated)
 
             if u'users' in tables:
                 users_data = sqlite_processor.read_sqlite_table(

@@ -22,11 +22,13 @@ __license__ = 'GPLv3'
 __date__ = '20150113'
 __version__ = '0.00'
 
-import xml_processor
-import pandas as pd
 import collections
 import base64
 import os
+
+import pandas as pd
+
+from processors import xml_processor
 
 
 def google_talk(file_listing):

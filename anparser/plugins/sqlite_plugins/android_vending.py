@@ -22,9 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150109'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
-
+from processors import sqlite_processor, time_processor
 
 
 def android_vending(file_list):
@@ -53,11 +51,17 @@ def android_vending(file_list):
                     file_path, u'appstate', u'package_name, auto_update, desired_version, download_uri, '
                                              u'first_download_ms, account, title, last_notified_version, '
                                              u'last_update_timestamp_ms')
+                if localapp_data is not None:
+                    localapp_data.first_download_ms = time_processor.unix_time(localapp_data.first_download_ms)
+                    localapp_data.last_update_timestamp_ms = time_processor.unix_time(
+                        localapp_data.last_update_timestamp_ms)
 
         if file_path.endswith(u'suggestions.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'suggestions' in tables:
                 suggestions_data = sqlite_processor.read_sqlite_table(
                     file_path, u'suggestions', u'_id, display1, query, date')
+                if suggestions_data is not None:
+                    suggestions_data.date = time_processor.unix_time(suggestions_data.date)
 
     return library_data, localapp_data, suggestions_data

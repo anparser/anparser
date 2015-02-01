@@ -22,10 +22,9 @@ __license__ = 'GPLv3'
 __date__ = '20140109'
 __version__ = '0.00'
 
-import xml_processor
 import pandas as pd
-import collections
-import logging
+
+from processors import xml_processor
 
 
 def android_vending(file_listing):

@@ -2,7 +2,7 @@
 
 """
 anparser - an Open Source Android Artifact Parser
-Copyright (C) 2015  Chapin Bryce
+Copyright (C) 2015  Preston Miller
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,65 +18,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-__author__ = 'cbryce'
+__author__ = 'prmiller91'
 __license__ = 'GPLv3'
-__date__ = '20150102'
+__date__ = '20150131'
 __version__ = '0.00'
 
-import csv
-import cStringIO
-import codecs
+import pandas as pd
+import os
 import logging
 
-class DictUnicodeWriter(object):
-
-    def __init__(self, f, fieldnames, dialect=csv.excel, encoding="utf-8", **kwds):
-        # Redirect output to a queue
-        self.queue = cStringIO.StringIO()
-        self.writer = csv.DictWriter(self.queue, fieldnames, dialect=dialect, **kwds)
-        self.stream = f
-        self.encoder = codecs.getincrementalencoder(encoding)()
-
-    def writerow(self, D):
-        self.writer.writerow({k:v.encode("utf-8") if isinstance(v, unicode) else v for k,v in D.items()})
-        # Fetch UTF-8 output from the queue ...
-        data = self.queue.getvalue()
-        data = data.decode("utf-8")
-        # ... and reencode it into the target encoding
-        data = self.encoder.encode(data)
-        # write to the target stream
-        self.stream.write(data)
-        # empty queue
-        self.queue.truncate(0)
-
-    def writerows(self, rows):
-        for D in rows:
-            self.writerow(D)
-
-    def writeheader(self):
-        self.writer.writeheader()
-
-
-def csv_writer(data, file_name):
+def csv_writer(data_dict, folder_name):
     """
-    Write list of dictionaries of data to a file
+    Write pandas DataFrame objects to CSV
 
-    :param data: list of dictionaries
+    :param data: pandas DataFrame
     :param file_name: file name to write to
-    :return: Completion State
+    :return: Nothing
     """
-    if data != []:
-        fout = open(file_name, mode='wb')
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name, 0777)
+    for df in data_dict.keys():
         try:
-            writer = DictUnicodeWriter(fout, data[0].keys(), delimiter='|')
-            writer.writeheader()
-            writer.writerows(data)
-        except (IndexError, TypeError) as exception:
-            logging.error('CSV Writer Error: {0:s}'.format(file_name + " > " + str(exception)))
+            data_dict[df].to_csv((folder_name + '//' + df + '.csv'), '|', encoding='utf-8')
+        except AttributeError as exception:
             pass
-
-        fout.flush()
-        fout.close()
-
-        return True
-

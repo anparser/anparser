@@ -93,7 +93,6 @@ if __name__ == "__main__":
     #
 
     # Run plugins
-    # TODO: Complete process of switching parsers to pandas
 
     # Android Browser Parser
     msg = 'Processing Android Browser'
@@ -143,6 +142,7 @@ if __name__ == "__main__":
         plugins.sqlite_plugins.android_gallery3d.android_gallery3d(files_to_process)
 
     # Android Gmail Parser
+    # TODO: Add in the android_gmail_message_extractor & parser
     msg = 'Processing Android GMail'
     logging.info(msg)
     print(msg)
@@ -271,14 +271,6 @@ if __name__ == "__main__":
         else:
             yara_data = plugins.other_plugins.yara_parser.yara_parser(files_to_process)
 
-        if args.o.lower() == 'xlsx':
-            yara_dict = OrderedDict()
-            try:
-                yara_dict['yara_matches'] = pd.DataFrame(yara_data,
-                                                         columns=yara_data[0].keys())
-            except IndexError:
-                pass
-
     msg = 'Processors Complete'
     logging.info(msg)
     print(msg)
@@ -296,7 +288,6 @@ if __name__ == "__main__":
 
     # Write Contact Data
     # TODO: Add database path to pandas dataset.
-    # TODO: Convert timestamps in pandas dataset.
 
     android_dict = {}
     facebook_dict = {}
@@ -307,6 +298,7 @@ if __name__ == "__main__":
     tesla_dict = {}
     valve_dict = {}
     vlingo_dict = {}
+    yara_dict = {}
 
     android_path = args.destination + '//Android'
     android_dict['android_browser_bookmarks'] = browser_bookmarks
@@ -416,32 +408,35 @@ if __name__ == "__main__":
 
     vlingo_dict['vlingo_midas_contacts.csv'] = vlingo_contacts
 
-    if args.o.lower() == 'csv':
-        writers.pandas_csv_writer.csv_writer(android_dict, android_path)
-        writers.pandas_csv_writer.csv_writer(facebook_dict, facebook_path)
-        writers.pandas_csv_writer.csv_writer(google_dict, google_path)
-        writers.pandas_csv_writer.csv_writer(kik_dict, kik_path)
-        writers.pandas_csv_writer.csv_writer(samsung_dict, samsung_path)
-        writers.pandas_csv_writer.csv_writer(snapchat_dict, snapchat_path)
-        writers.pandas_csv_writer.csv_writer(tesla_dict, tesla_path)
-        writers.pandas_csv_writer.csv_writer(valve_dict, valve_path)
-        writers.pandas_csv_writer.csv_writer(vlingo_dict, vlingo_path)
-    else:
-        writers.pandas_xlsx_writer.xlsx_writer(android_dict, android_path, 'android.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(facebook_dict, facebook_path, 'facebook.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(google_dict, google_path, 'google.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(kik_dict, kik_path, 'kik.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(samsung_dict, samsung_path, 'samsung.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(snapchat_dict, snapchat_path, 'snapchat.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(tesla_dict, tesla_path, 'teslacoilsw.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
-        writers.pandas_xlsx_writer.xlsx_writer(vlingo_dict, vlingo_path, 'vlingo.xlsx')
+    if args.y:
+        yara_path = args.destination + '//Yara'
 
-        if args.y:
-            path = args.destination + '//Yara'
-            if not os.path.exists(path):
-                os.mkdir(path, 0777)
-            writers.csv_writer.csv_writer(yara_data, os.path.join(path, 'yara_matches.csv'))
+        yara_dict['yara_matches'] = yara_data
+
+    if args.o.lower() == 'csv':
+        writers.csv_writer.csv_writer(android_dict, android_path)
+        writers.csv_writer.csv_writer(facebook_dict, facebook_path)
+        writers.csv_writer.csv_writer(google_dict, google_path)
+        writers.csv_writer.csv_writer(kik_dict, kik_path)
+        writers.csv_writer.csv_writer(samsung_dict, samsung_path)
+        writers.csv_writer.csv_writer(snapchat_dict, snapchat_path)
+        writers.csv_writer.csv_writer(tesla_dict, tesla_path)
+        writers.csv_writer.csv_writer(valve_dict, valve_path)
+        writers.csv_writer.csv_writer(vlingo_dict, vlingo_path)
+        if yara_dict:
+            writers.csv_writer.csv_writer(yara_dict, yara_path)
+    else:
+        writers.xlsx_writer.xlsx_writer(android_dict, android_path, 'android.xlsx')
+        writers.xlsx_writer.xlsx_writer(facebook_dict, facebook_path, 'facebook.xlsx')
+        writers.xlsx_writer.xlsx_writer(google_dict, google_path, 'google.xlsx')
+        writers.xlsx_writer.xlsx_writer(kik_dict, kik_path, 'kik.xlsx')
+        writers.xlsx_writer.xlsx_writer(samsung_dict, samsung_path, 'samsung.xlsx')
+        writers.xlsx_writer.xlsx_writer(snapchat_dict, snapchat_path, 'snapchat.xlsx')
+        writers.xlsx_writer.xlsx_writer(tesla_dict, tesla_path, 'teslacoilsw.xlsx')
+        writers.xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
+        writers.xlsx_writer.xlsx_writer(vlingo_dict, vlingo_path, 'vlingo.xlsx')
+        if yara_dict:
+            writers.xlsx_writer.xlsx_writer(yara_dict, yara_path, 'yara.xlsx')
 
     msg = 'Completed'
     logging.info(msg)

@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor
 
 
 def vlingo_midas(file_list):

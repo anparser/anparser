@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150109'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def android_media(file_list):
@@ -47,6 +46,11 @@ def android_media(file_list):
                                           u'datetaken, is_ringtone, is_music, is_alarm, is_notification, '
                                           u'is_podcast, date_played, count_played, width, height, '
                                           u'video_filetype, video_iswatched')
+                if external_data is not None:
+                    external_data.date_added = time_processor.unix_time(external_data.date_added)
+                    external_data.date_modified = time_processor.unix_time(external_data.date_modified)
+                    external_data.datetaken = time_processor.unix_time(external_data.datetaken)
+                    external_data.date_played = time_processor.unix_time(external_data.date_played)
 
         if file_path.endswith(u'internal.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -57,5 +61,10 @@ def android_media(file_list):
                                           u'datetaken, is_ringtone, is_music, is_alarm, is_notification, '
                                           u'is_podcast, date_played, count_played, width, height, '
                                           u'video_filetype, video_iswatched')
+                if internal_data is not None:
+                    internal_data.date_added = time_processor.unix_time(internal_data.date_added)
+                    internal_data.date_modified = time_processor.unix_time(internal_data.date_modified)
+                    internal_data.datetaken = time_processor.unix_time(internal_data.datetaken)
+                    internal_data.date_played = time_processor.unix_time(internal_data.date_played)
 
     return external_data, internal_data

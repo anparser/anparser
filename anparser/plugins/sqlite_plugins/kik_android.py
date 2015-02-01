@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150119'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def kik_android(file_list):
@@ -57,5 +56,7 @@ def kik_android(file_list):
                 messages_data = sqlite_processor.read_sqlite_table(
                     file_path, u'messagesTable',
                     u'_id, body, partner_jid, was_me, read_state, uid, length, timestamp, content_id, app_id')
+                if messages_data is not None:
+                    messages_data.timestamp = time_processor.unix_time(messages_data.timestamp)
 
     return content_data, contacts_data, messages_data

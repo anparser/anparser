@@ -22,8 +22,9 @@ __license__ = 'GPLv3'
 __date__ = '20150112'
 __version__ = '0.00'
 
-import xml_processor
 import pandas as pd
+
+from processors import xml_processor
 
 
 def android_browser(file_listing):

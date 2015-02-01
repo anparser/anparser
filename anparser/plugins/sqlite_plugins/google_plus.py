@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150123'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def google_plus(file_list):
@@ -46,6 +45,8 @@ def google_plus(file_list):
                 photos_data = sqlite_processor.read_sqlite_table(
                     file_path, u'all_photos',
                     u'_id, photo_id, image_url, local_file_path, fingerprint, timestamp')
+                if photos_data is not None:
+                    photos_data.timestamp = time_processor.unix_time(photos_data.timestamp)
 
             if u'contact_search' in tables:
                 contact_search_data = sqlite_processor.read_sqlite_table(
@@ -57,6 +58,8 @@ def google_plus(file_list):
                     file_path, u'contacts',
                     u'person_id, gaia_id, name, last_updated_time, profile_type, '
                     u'profile_state, in_my_circles, blocked')
+                if contacts_data is not None:
+                    contacts_data.last_updated_time = time_processor.unix_time(contacts_data.last_updated_time)
 
             if u'guns' in tables:
                 gun_data = sqlite_processor.read_sqlite_table(
@@ -64,5 +67,8 @@ def google_plus(file_list):
                     u'_id, creation_time, collapsed_description, collapsed_destination, '
                     u'collapsed_heading, read_state, seen, activity_id, event_id, album_id, '
                     u'community_id, updated_version, PHOTOS')
+                if gun_data is not None:
+                    gun_data.creation_time = time_processor.prt_time(gun_data.creation_time)
+                    gun_data.updated_version = time_processor.prt_time(gun_data.updated_version)
 
     return photos_data, contact_search_data, contacts_data, gun_data

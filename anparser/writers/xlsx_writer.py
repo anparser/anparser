@@ -20,24 +20,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'prmiller91'
 __license__ = 'GPLv3'
-__date__ = '20150117'
+__date__ = '20150131'
 __version__ = '0.00'
 
 import pandas as pd
+import os
 import logging
 
-#TODO: Add try & except
-
-def xlsx_writer(data, file_name):
+def xlsx_writer(data_dict, folder_name, xlsx_name):
     """
-    Write list of dictionaries of data to a file
+    Write pandas DataFrame objects to XLSX
 
-    :param data: list of dictionaries
+    :param data: pandas DataFrame
     :param file_name: file name to write to
-    :return: Completion State
+    :return: Nothing
     """
-
-    writer = pd.ExcelWriter(file_name, engine='xlsxwriter')
-    for key in data.keys():
-        data[key].to_excel(writer, '{0:s}'.format(key), index=False)
-    writer.close()
+    if not os.path.exists(folder_name):
+        os.mkdir(folder_name, 0777)
+    with pd.ExcelWriter((folder_name + '//' + xlsx_name)) as writer:
+        for df in data_dict.keys():
+            try:
+                data_dict[df].to_excel(writer, sheet_name=df, encoding='utf-8')
+            except AttributeError as exception:
+                pass

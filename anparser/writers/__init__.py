@@ -23,8 +23,6 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
-import pandas_csv_writer
-import pandas_xlsx_writer
 import csv_writer
 import xlsx_writer
 

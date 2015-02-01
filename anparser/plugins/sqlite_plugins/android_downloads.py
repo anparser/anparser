@@ -22,7 +22,9 @@ __license__ = 'GPLv3'
 __date__ = '20150108'
 __version__ = '0.00'
 
-import sqlite_processor
+import time
+
+from processors import sqlite_processor, time_processor
 
 
 def android_downloads(file_list):
@@ -43,5 +45,6 @@ def android_downloads(file_list):
                 download_data = sqlite_processor.read_sqlite_table(
                     file_path, u'downloads', u'_id, title, description, mimetype, lastmod, uid, '
                                              u'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
+                download_data.lastmod = time_processor.unix_time(download_data.lastmod)
 
     return download_data

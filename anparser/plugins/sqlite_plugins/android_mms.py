@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150113'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def android_mms(file_list):
@@ -43,6 +42,8 @@ def android_mms(file_list):
             if u'events' in tables:
                 events_data = sqlite_processor.read_sqlite_table(
                     file_path, u'events', u'_id, address, deleted, eventDate')
+                if events_data is not None:
+                    events_data.eventDate = time_processor.unix_time(events_data.eventDate)
 
             if u'logs' in tables:
                 logs_data = sqlite_processor.read_sqlite_table(

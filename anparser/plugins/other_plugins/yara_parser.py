@@ -25,6 +25,7 @@ __version__ = '0.00'
 from collections import OrderedDict
 import logging
 import yara
+import pandas as pd
 
 path = None
 match = None
@@ -53,7 +54,7 @@ def yara_parser(file_list, custom_rule=None):
         if match:
             yara_processor(match, file_path)
 
-    return yara_list
+    return pd.DataFrame(yara_list)
 
 def yara_processor(match, path):
     """

@@ -22,8 +22,8 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
+
 
 def android_telephony(file_listing):
     """
@@ -42,9 +42,14 @@ def android_telephony(file_listing):
             if u'sms' in tables:
                 sms_data = sqlite_processor.read_sqlite_table(
                     file_path, u'sms', u'_id, thread_id, address, person, date, date_sent, body, read, seen')
+                if sms_data is not None:
+                    sms_data.date = time_processor.unix_time(sms_data.date)
+                    sms_data.date_sent = time_processor.unix_time(sms_data.date_sent)
 
             if u'threads' in tables:
                 threads_data = sqlite_processor.read_sqlite_table(
                     file_path, u'threads', u'_id, date, message_count, snippet, read, has_attachment')
+                if threads_data is not None:
+                    threads_data.date = time_processor.unix_time(threads_data.date)
 
     return sms_data, threads_data

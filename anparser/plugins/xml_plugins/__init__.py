@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-
-__author__ = 'cbryce'
-__license__ = 'GPLv3'
-__date__ = '20140109'
-__version__ = '0.00'
-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -23,6 +17,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+__author__ = 'cbryce'
+__license__ = 'GPLv3'
+__date__ = '20140109'
+__version__ = '0.00'
+
 import android_browser
 import android_gmail
 import android_vending
@@ -31,30 +30,3 @@ import google_talk
 import kik_android
 import snapchat_android
 import valvesoftware_android
-
-import xml.etree.ElementTree as ET
-import collections
-
-
-def parse_xml_file_notree(FILE):
-    """
-    :param FILE: string path to file
-    :return: List of dictionaries
-    """
-
-    context = ET.iterparse(FILE, events=['start'])
-    context = iter(context)
-    event, root = context.next()
-
-    # Setup Variables
-    elem_array = []
-    ordered_array = collections.OrderedDict()
-
-    for event, elem in context:
-        ordered_array = elem.attrib
-        ordered_array['text_entry'] = str(elem.text).strip()
-
-        elem_array.append(ordered_array)
-        ordered_array = collections.OrderedDict()
-
-    return elem_array

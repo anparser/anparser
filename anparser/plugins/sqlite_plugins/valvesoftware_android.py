@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150124'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def valvesoftware_android(file_list):
@@ -46,6 +45,9 @@ def valvesoftware_android(file_list):
                 debug_data = sqlite_processor.read_sqlite_table(
                     file_path, u'dbgutil',
                     u'_id, msgtime, key, value')
+                # TODO: Configure timestamp processor for this (don't divide by 1000)
+                if debug_data is not None:
+                    debug_data.msgtime = time_processor.unix_time(debug_data.msgtime)
 
         if file_path.endswith(u'umqcomm.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)

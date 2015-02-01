@@ -22,9 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150115'
 __version__ = '0.00'
 
-from collections import OrderedDict
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def android_calendar(file_list):
@@ -52,6 +50,10 @@ def android_calendar(file_list):
                     file_path, u'Events', u'_id, title, eventLocation, description, '
                                            u'dtstart, dtend, eventTimezone, lastDate, '
                                            u'organizer, deleted, latitude, longitude')
+                if events_data is not None:
+                    events_data.dtstart = time_processor.unix_time(events_data.dtstart)
+                    events_data.dtend = time_processor.unix_time(events_data.dtend)
+                    events_data.lastDate = time_processor.unix_time(events_data.lastDate)
 
             if u'Reminders' in tables:
                 reminders_data = sqlite_processor.read_sqlite_table(
@@ -62,5 +64,8 @@ def android_calendar(file_list):
                     file_path, u'Tasks', u'_id, clientId, utc_due_date, recurrence_type, '
                                           u'recurrence_start, recurrence_until, reminder_set, '
                                           u'reminder_time, subject, body, deleted')
+                if tasks_data is not None:
+                    tasks_data.utc_due_date = time_processor.unix_time(tasks_data.utc_due_date)
+                    tasks_data.reminder_time = time_processor.unix_time(tasks_data.reminder_time)
 
     return attendees_data, events_data, reminders_data, tasks_data

@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def samsung_galaxyfinder(file_list):
@@ -46,6 +45,8 @@ def samsung_galaxyfinder(file_list):
                 contents_data = sqlite_processor.read_sqlite_table(
                     file_path, u'contents',
                     u'_id, timestamp, contenturi, appname, filepath')
+                if contents_data is not None:
+                    contents_data.timestamp = time_processor.unix_time(contents_data.timestamp)
 
             if u'tagging' in tables:
                 tagging_data = sqlite_processor.read_sqlite_table(

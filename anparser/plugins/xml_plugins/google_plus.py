@@ -22,10 +22,13 @@ __license__ = 'GPLv3'
 __date__ = '20150123'
 __version__ = '0.00'
 
-import xml_processor
-import pandas as pd
 from collections import OrderedDict
 import time
+
+import pandas as pd
+
+from processors import xml_processor
+
 
 def google_plus(file_listing):
     """

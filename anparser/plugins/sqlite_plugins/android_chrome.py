@@ -22,9 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150112'
 __version__ = '0.00'
 
-from collections import OrderedDict
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def android_chrome(file_list):
@@ -42,12 +40,16 @@ def android_chrome(file_list):
     visits_data = None
 
     for file_path in file_list:
-        if file_path.endswith(u'Cookies'):
+        if file_path.endswith(u'Cookies') and file_path.count(u'com.android.chrome') > 0:
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'cookies' in tables:
                 cookies_data = sqlite_processor.read_sqlite_table(
                     file_path, u'cookies', u'creation_utc, host_key, name, value, '
                                             u'path, expires_utc, last_access_utc')
+                if cookies_data is not None:
+                    cookies_data.creation_utc = time_processor.chrome_time(cookies_data.creation_utc)
+                    cookies_data.expires_utc = time_processor.chrome_time(cookies_data.expires_utc)
+                    cookies_data.last_access_utc = time_processor.chrome_time(cookies_data.last_access_utc)
 
         if file_path.endswith(u'History') and file_path.count(u'app_chrome/Default/History') > 0:
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -57,6 +59,9 @@ def android_chrome(file_list):
                                               u'received_bytes, total_bytes, interrupt_reason, '
                                               u'end_time, opened, referrer, last_modified, '
                                               u'mime_type, original_mime_type')
+                if downloads_data is not None:
+                    downloads_data.start_time = time_processor.chrome_time(downloads_data.start_time)
+                    downloads_data.end_time = time_processor.chrome_time(downloads_data.end_time)
 
             if u'keyword_search_terms' in tables:
                 keywords_data = sqlite_processor.read_sqlite_table(
@@ -65,9 +70,13 @@ def android_chrome(file_list):
             if u'urls' in tables:
                 urls_data = sqlite_processor.read_sqlite_table(
                     file_path, u'urls', u'id, url, title, visit_count, typed_count, last_visit_time, hidden')
+                if urls_data is not None:
+                    urls_data.last_visit_time = time_processor.chrome_time(urls_data.last_visit_time)
 
             if u'visits' in tables:
                 visits_data = sqlite_processor.read_sqlite_table(
                     file_path, u'visits', u'id, url, visit_time, visit_duration')
+                if visits_data is not None:
+                    visits_data.visit_time = time_processor.chrome_time(visits_data.visit_time)
 
     return cookies_data, downloads_data, keywords_data, urls_data, visits_data

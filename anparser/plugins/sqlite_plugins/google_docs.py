@@ -22,8 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150109'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
+from processors import sqlite_processor, time_processor
 
 
 def google_docs(file_list):
@@ -47,6 +46,8 @@ def google_docs(file_list):
                 account_data = sqlite_processor.read_sqlite_table(
                     file_path, u'Account101',
                     u'Account_id, accountHolderName, lastSyncTime')
+                if account_data is not None:
+                    account_data.lastSyncTime = time_processor.unix_time(account_data.lastSyncTime)
 
             if u'CollectionView' in views:
                 collection_data = sqlite_processor.read_sqlite_table(
@@ -57,6 +58,12 @@ def google_docs(file_list):
                     u'shareableByOwner, shared, modifiedByMeTime, mimetype, kind, '
                     u'canEdit, starred, archived, trashed, pinned, accountId, '
                     u'Collection_id, entry_Id')
+                if collection_data is not None:
+                    collection_data.creationTime = time_processor.unix_time(collection_data.creationTime)
+                    collection_data.lastModifiedTime = time_processor.unix_time(collection_data.lastModifiedTime)
+                    collection_data.lastOpenedTime = time_processor.unix_time(collection_data.lastOpenedTime)
+                    collection_data.sharedWithMeTime = time_processor.unix_time(collection_data.sharedWithMeTime)
+                    collection_data.modifiedByMeTime = time_processor.unix_time(collection_data.modifiedByMeTime)
 
             if u'ContainsId101' in tables:
                 contains_data = sqlite_processor.read_sqlite_table(
@@ -72,5 +79,11 @@ def google_docs(file_list):
                     u'shareableByOwner, shared, modifiedByMeTime, mimeType, '
                     u'kind, canEdit, starred, archived, trashed, pinned, accountId, '
                     u'md5Checksum, size')
+                if entry_data is not None:
+                    entry_data.creationTime = time_processor.unix_time(entry_data.creationTime)
+                    entry_data.lastModifiedTime = time_processor.unix_time(entry_data.lastModifiedTime)
+                    entry_data.lastOpenedTime = time_processor.unix_time(entry_data.lastOpenedTime)
+                    entry_data.sharedWithMeTime = time_processor.unix_time(entry_data.sharedWithMeTime)
+                    entry_data.modifiedByMeTime = time_processor.unix_time(entry_data.modifiedByMeTime)
 
     return account_data, collection_data, contains_data, entry_data

@@ -22,9 +22,7 @@ __license__ = 'GPLv3'
 __date__ = '20150125'
 __version__ = '0.00'
 
-import logging
-import sqlite_processor
-
+from processors import sqlite_processor, time_processor
 
 
 def android_logsprovider(file_list):
@@ -46,5 +44,7 @@ def android_logsprovider(file_list):
                                          u'name, is_read, countryiso, geocoded_location, normalized_number, '
                                          u'messageid, contactid, m_subject, m_content, account_name, '
                                          u'account_id, fname, lname, country_code, cityid')
+                if logsprovider_data is not None:
+                    logsprovider_data.date = time_processor.unix_time(logsprovider_data.date)
 
     return logsprovider_data
