@@ -26,16 +26,23 @@ import datetime
 import time
 
 
-def unix_time(dataframe):
+def unix_time(dataframe, op=None):
     """
     Converts unix timestamps from a specific pandas DataFrame column.
 
     :param dataframe: a pandas DataFrame object with a column specification
     :return: A human readable timestamp
     """
-    return dataframe.apply(
-        lambda x: time.strftime(
-            '%Y-%m-%d %H:%M:%S', time.gmtime(x / 1000.)) if str(x) != 'nan' and x != None and x != 0 else None)
+    mul = 1000.
+    if op is not None:
+        mul = 1.
+        try:
+            return dataframe.apply(
+                lambda x: time.strftime(
+                    '%Y-%m-%d %H:%M:%S', time.gmtime(x / mul)) if str(x) != 'nan' and x != None and x != 0 else None)
+        except TypeError:
+            pass
+
 
 def chrome_time(dataframe):
     """

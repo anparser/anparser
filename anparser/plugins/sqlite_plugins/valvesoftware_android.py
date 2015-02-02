@@ -47,7 +47,7 @@ def valvesoftware_android(file_list):
                     u'_id, msgtime, key, value')
                 # TODO: Configure timestamp processor for this (don't divide by 1000)
                 if debug_data is not None:
-                    debug_data.msgtime = time_processor.unix_time(debug_data.msgtime)
+                    debug_data.msgtime = time_processor.unix_time(debug_data.msgtime, 1)
                     debug_data['Database Path'] = file_path
 
         if file_path.endswith(u'umqcomm.db'):

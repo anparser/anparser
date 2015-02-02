@@ -40,6 +40,7 @@ import google_docs
 import google_plus
 import kik_android
 import samsung_galaxyfinder
+import skype_raider
 import snapchat_android
 import teslacoilsw_launcher
 import valvesoftware_android

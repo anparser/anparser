@@ -232,6 +232,14 @@ if __name__ == "__main__":
     galaxyfinder_content, galaxyfinder_tagging, galaxyfinder_tags =\
         plugins.sqlite_plugins.samsung_galaxyfinder.samsung_galaxyfinder(files_to_process)
 
+    # Skype Raider Parser
+    msg = 'Processing Skype'
+    logging.info(msg)
+    print(msg)
+    skype_accounts, skype_call_members, skype_calls, skype_chat_members, skype_chat, skype_contacts,\
+        skype_conversations, skype_media, skype_messages, skype_participants, skype_transfers =\
+        plugins.sqlite_plugins.skype_raider.skype_raider(files_to_process)
+
     # Snapchat Parser
     msg = 'Processing Snapchat'
     logging.info(msg)
@@ -294,6 +302,7 @@ if __name__ == "__main__":
     google_dict = {}
     kik_dict = {}
     samsung_dict = {}
+    skype_dict = {}
     snapchat_dict = {}
     tesla_dict = {}
     valve_dict = {}
@@ -379,6 +388,20 @@ if __name__ == "__main__":
     samsung_dict['samsung_galaxyfinder_tagging'] = galaxyfinder_tagging
     samsung_dict['samsung_galaxyfinder_tags'] = galaxyfinder_tags
 
+    skype_path = args.destination + '//Skype'
+
+    skype_dict['skype_raider_accounts'] = skype_accounts
+    skype_dict['skype_raider_call_members'] = skype_call_members
+    skype_dict['skype_raider_calls'] = skype_calls
+    skype_dict['skype_raider_chat_members'] = skype_chat_members
+    skype_dict['skype_raider_chats'] = skype_chat
+    skype_dict['skype_raider_contacts'] = skype_contacts
+    skype_dict['skype_raider_conversations'] = skype_conversations
+    skype_dict['skype_raider_media'] = skype_media
+    skype_dict['skype_raider_messages'] = skype_messages
+    skype_dict['skype_raider_participants'] = skype_participants
+    skype_dict['skype_raider_media_transfers'] = skype_transfers
+
     snapchat_path = args.destination + '//Snapchat'
 
     snapchat_dict['snapchat_chat'] = snapchat_chat
@@ -419,6 +442,7 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(google_dict, google_path)
         writers.csv_writer.csv_writer(kik_dict, kik_path)
         writers.csv_writer.csv_writer(samsung_dict, samsung_path)
+        writers.csv_writer.csv_writer(skype_dict, skype_path)
         writers.csv_writer.csv_writer(snapchat_dict, snapchat_path)
         writers.csv_writer.csv_writer(tesla_dict, tesla_path)
         writers.csv_writer.csv_writer(valve_dict, valve_path)
@@ -431,6 +455,7 @@ if __name__ == "__main__":
         writers.xlsx_writer.xlsx_writer(google_dict, google_path, 'google.xlsx')
         writers.xlsx_writer.xlsx_writer(kik_dict, kik_path, 'kik.xlsx')
         writers.xlsx_writer.xlsx_writer(samsung_dict, samsung_path, 'samsung.xlsx')
+        writers.xlsx_writer.xlsx_writer(skype_dict, skype_path, 'skype.xlsx')
         writers.xlsx_writer.xlsx_writer(snapchat_dict, snapchat_path, 'snapchat.xlsx')
         writers.xlsx_writer.xlsx_writer(tesla_dict, tesla_path, 'teslacoilsw.xlsx')
         writers.xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
