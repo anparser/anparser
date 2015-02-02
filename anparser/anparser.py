@@ -32,6 +32,47 @@ import pandas as pd
 import plugins
 import writers
 
+global inode_list
+inode_list = []
+
+
+def add_inode(inode):
+    inode_list.append(inode)
+
+
+def list_directory(directory, stack=None):
+    stack.append(directory.info.fs_file.meta.addr)
+
+    for directory_entry in directory:
+        prefix = "+" * (len(stack) - 1)
+        if prefix:
+            prefix += " "
+
+        # Skip ".", ".." or directory entries without a name.
+        if (not hasattr(directory_entry, "info") or
+            not hasattr(directory_entry.info, "name") or
+            not hasattr(directory_entry.info.name, "name") or
+                directory_entry.info.name.name in [".", ".."]):
+            continue
+
+        # print str(directory_entry.info.name.name).ljust(30), str(directory_entry.info.meta.addr)
+        add_inode(directory_entry.info.meta.addr)
+
+        if True:
+            try:
+                sub_directory = directory_entry.as_directory()
+                inode = directory_entry.info.meta.addr
+
+                # This ensures that we don't recurse into a directory
+                # above the current level and thus avoid circular loops.
+                if inode not in stack:
+                  list_directory(sub_directory, stack)
+
+            except IOError:
+                pass
+
+    stack.pop(-1)
+
 
 def scan_for_files(input_dir):
     """
@@ -65,14 +106,14 @@ if __name__ == "__main__":
     # Handle Command-Line Input
     parser = argparse.ArgumentParser(description="Open Source Android Artifact Parser")
 
-    parser.add_argument('evidence', help='Directory of Android Acquisition')
+    parser.add_argument('evidence', help='Directory of Android Acquisition, Must be ')
     parser.add_argument('destination', help='Destination directory to write output files to')
     parser.add_argument('-o', help='Output Type: csv, xlsx', default='csv')
     parser.add_argument('-y', action='store_true', help='Run Yara Malware Signature Scanner', default=False)
     parser.add_argument('-r', help='Run custom command line Yara rule, must run with -y switch')
 
     args = parser.parse_args()
-    if not os.path.exists(args.evidence) or not os.path.isdir(args.evidence):
+    if not os.path.exists(args.evidence):
         print("Evidence not found...exiting")
         sys.exit(1)
 
@@ -87,7 +128,73 @@ if __name__ == "__main__":
     logging.info('Version ' + sys.version)
 
     # Pre-process files
-    files_to_process = scan_for_files(args.evidence)
+
+    if os.path.isdir(args.evidence):
+        files_to_process = scan_for_files(args.evidence)
+    elif args.evidence.lower().endswith('e01'):
+        try:
+            import pytsk3
+            import pyewf
+        except ImportError as e:
+            raise ImportError(e)
+        else:
+
+            class ewf_Img_Info(pytsk3.Img_Info):
+              def __init__(self, ewf_handle):
+                self._ewf_handle = ewf_handle
+                super(ewf_Img_Info, self).__init__(
+                    url="", type=pytsk3.TSK_IMG_TYPE_EXTERNAL)
+
+              def close(self):
+                self._ewf_handle.close()
+
+              def read(self, offset, size):
+                self._ewf_handle.seek(offset)
+                return self._ewf_handle.read(size)
+
+              def get_size(self):
+                return self._ewf_handle.get_media_size()
+
+            filenames = pyewf.glob("image.E01")
+
+            ewf_handle = pyewf.handle()
+
+            ewf_handle.open(filenames)
+
+            img_info = ewf_Img_Info(ewf_handle)
+
+            fs_info = pytsk3.FS_Info(img_info, offset=63 * 512)
+
+    elif os.path.isfile(args.evidence):
+        try:
+            import pytsk3
+        except ImportError as e:
+            raise ImportError(e)
+        else:
+            img = pytsk3.Img_Info(args.evidence)
+            vol = pytsk3.Volume_Info(img)
+            print '#|    Name       |     Offset    |     Size      '
+            print '-------------------------------------------------'
+            for part in vol:
+                print str(part.addr) + '|'+ str(part.desc).ljust(15)+'|'+ str(part.start).rjust(15)+'|'+\
+                      str(part.len).rjust(15)
+                if part.len > 2048:
+                    fs = pytsk3.FS_Info(img, offset=part.start*vol.info.block_size)
+                    pass
+                    directory = fs.open_dir(path='/')
+                    list_directory(directory, [])
+                    for entry in inode_list:
+                        f = fs.open_meta(inode=entry)
+                        if f:
+                            pass
+
+
+                    pass
+            pass
+
+    else:
+        logging.error('Invalid input type. Please ensure it is a directory, raw acquisition, or ewf file')
+        raise TypeError('Invalid input type. Please ensure it is a directory, raw acquisition, or ewf file')
 
     #
     # Start of Plugin Processing
