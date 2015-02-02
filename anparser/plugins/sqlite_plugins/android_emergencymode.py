@@ -42,5 +42,7 @@ def android_emergencymode(file_list):
             if u'prefsettings' in tables:
                 preference_data = sqlite_processor.read_sqlite_table(
                     file_path, u'prefsettings', u'pref, value')
+                if preference_data is not None:
+                    preference_data['Database Path'] = file_path
 
     return preference_data

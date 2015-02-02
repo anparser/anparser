@@ -55,6 +55,7 @@ def snapchat_android(file_list):
                     u'send_receive_status, timestamp, text, conversation_id')
                 if chat_data is not None:
                     chat_data.timestamp = time_processor.unix_time(chat_data.timestamp)
+                    chat_data['Database Path'] = file_path
 
             if u'Conversation' in tables:
                 conversation_data = sqlite_processor.read_sqlite_table(
@@ -63,6 +64,7 @@ def snapchat_android(file_list):
                     u'has_unviewed_chats')
                 if conversation_data is not None:
                     conversation_data.timestamp = time_processor.unix_time(conversation_data.timestamp)
+                    conversation_data['Database Path'] = file_path
 
             if u'Friends' in tables:
                 friends_data = sqlite_processor.read_sqlite_table(
@@ -72,11 +74,14 @@ def snapchat_android(file_list):
                 if friends_data is not None:
                     friends_data.AddedMeTimestamp = time_processor.unix_time(friends_data.AddedMeTimestamp)
                     friends_data.AddedThemTimestamp = time_processor.unix_time(friends_data.AddedThemTimestamp)
+                    friends_data['Database Path'] = file_path
 
             if u'MyStoriesFiles' in tables:
                 storyfiles_data = sqlite_processor.read_sqlite_table(
                     file_path, u'MyStoriesFiles',
                     u'_id, SnapId, FilePath')
+                if storyfiles_data is not None:
+                    storyfiles_data['Database Path'] = file_path
 
             if u'ReceivedSnaps' in tables:
                 recvsnaps_data = sqlite_processor.read_sqlite_table(
@@ -87,6 +92,7 @@ def snapchat_android(file_list):
                     recvsnaps_data.Timestamp = time_processor.unix_time(recvsnaps_data.Timestamp)
                     recvsnaps_data.ViewedTimestamp = time_processor.unix_time(recvsnaps_data.ViewedTimestamp)
                     recvsnaps_data.SentTimestamp = time_processor.unix_time(recvsnaps_data.SentTimestamp)
+                    recvsnaps_data['Database Path'] = file_path
 
             if u'SentSnaps' in tables:
                 sentsnaps_data = sqlite_processor.read_sqlite_table(
@@ -96,16 +102,21 @@ def snapchat_android(file_list):
                 if sentsnaps_data is not None:
                     sentsnaps_data.Timestamp = time_processor.unix_time(sentsnaps_data.Timestamp)
                     sentsnaps_data.SentTimestamp = time_processor.unix_time(sentsnaps_data.SentTimestamp)
+                    sentsnaps_data['Database Path'] = file_path
 
             if u'SnapImageFiles' in tables:
                 image_files_data = sqlite_processor.read_sqlite_table(
                     file_path, u'SnapImageFiles',
                     u'_id, SnapId, FilePath')
+                if image_files_data is not None:
+                    image_files_data['Database Path'] = file_path
 
             if u'SnapVideoFiles' in tables:
                 video_files_data = sqlite_processor.read_sqlite_table(
                     file_path, u'SnapVideoFiles',
                     u'_id, SnapId, FilePath')
+                if video_files_data is not None:
+                    video_files_data['Database Path'] = file_path
 
             if u'ViewingSessions' in tables:
                 viewing_sessions_data = sqlite_processor.read_sqlite_table(
@@ -114,6 +125,7 @@ def snapchat_android(file_list):
                 if viewing_sessions_data is not None:
                     viewing_sessions_data.StartTime = time_processor.unix_time(viewing_sessions_data.StartTime)
                     viewing_sessions_data.EndTime = time_processor.unix_time(viewing_sessions_data.EndTime)
+                    viewing_sessions_data['Database Path'] = file_path
 
     return chat_data, conversation_data, friends_data, storyfiles_data, recvsnaps_data, sentsnaps_data,\
            image_files_data, video_files_data, viewing_sessions_data

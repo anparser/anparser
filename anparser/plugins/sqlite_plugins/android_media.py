@@ -51,6 +51,7 @@ def android_media(file_list):
                     external_data.date_modified = time_processor.unix_time(external_data.date_modified)
                     external_data.datetaken = time_processor.unix_time(external_data.datetaken)
                     external_data.date_played = time_processor.unix_time(external_data.date_played)
+                    external_data['Database Path'] = file_path
 
         if file_path.endswith(u'internal.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -66,5 +67,6 @@ def android_media(file_list):
                     internal_data.date_modified = time_processor.unix_time(internal_data.date_modified)
                     internal_data.datetaken = time_processor.unix_time(internal_data.datetaken)
                     internal_data.date_played = time_processor.unix_time(internal_data.date_played)
+                    internal_data['Database Path'] = file_path
 
     return external_data, internal_data

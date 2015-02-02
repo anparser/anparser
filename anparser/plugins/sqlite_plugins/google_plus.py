@@ -47,11 +47,14 @@ def google_plus(file_list):
                     u'_id, photo_id, image_url, local_file_path, fingerprint, timestamp')
                 if photos_data is not None:
                     photos_data.timestamp = time_processor.unix_time(photos_data.timestamp)
+                    photos_data['Database Path'] = file_path
 
             if u'contact_search' in tables:
                 contact_search_data = sqlite_processor.read_sqlite_table(
                     file_path, u'contact_search',
                     u'search_person_id, search_key')
+                if contact_search_data is not None:
+                    contact_search_data['Database Path'] = file_path
 
             if u'contacts' in tables:
                 contacts_data = sqlite_processor.read_sqlite_table(
@@ -60,6 +63,7 @@ def google_plus(file_list):
                     u'profile_state, in_my_circles, blocked')
                 if contacts_data is not None:
                     contacts_data.last_updated_time = time_processor.unix_time(contacts_data.last_updated_time)
+                    contacts_data['Database Path'] = file_path
 
             if u'guns' in tables:
                 gun_data = sqlite_processor.read_sqlite_table(
@@ -70,5 +74,6 @@ def google_plus(file_list):
                 if gun_data is not None:
                     gun_data.creation_time = time_processor.prt_time(gun_data.creation_time)
                     gun_data.updated_version = time_processor.prt_time(gun_data.updated_version)
+                    gun_data['Database Path'] = file_path
 
     return photos_data, contact_search_data, contacts_data, gun_data

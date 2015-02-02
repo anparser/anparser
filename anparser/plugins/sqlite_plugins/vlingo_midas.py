@@ -44,5 +44,7 @@ def vlingo_midas(file_list):
                     file_path, u'data',
                     u'_id, raw_contact_id, contact_id, times_contacted, starred, display_name, '
                     u'lookup')
+                if data_data is not None:
+                    data_data['Database Path'] = file_path
 
     return data_data

@@ -48,6 +48,7 @@ def google_docs(file_list):
                     u'Account_id, accountHolderName, lastSyncTime')
                 if account_data is not None:
                     account_data.lastSyncTime = time_processor.unix_time(account_data.lastSyncTime)
+                    account_data['Database Path'] = file_path
 
             if u'CollectionView' in views:
                 collection_data = sqlite_processor.read_sqlite_table(
@@ -64,11 +65,14 @@ def google_docs(file_list):
                     collection_data.lastOpenedTime = time_processor.unix_time(collection_data.lastOpenedTime)
                     collection_data.sharedWithMeTime = time_processor.unix_time(collection_data.sharedWithMeTime)
                     collection_data.modifiedByMeTime = time_processor.unix_time(collection_data.modifiedByMeTime)
+                    collection_data['Database Path'] = file_path
 
             if u'ContainsId101' in tables:
                 contains_data = sqlite_processor.read_sqlite_table(
                     file_path, u'ContainsId101',
                     u'entryId, collectionId')
+                if contains_data is not None:
+                    contains_data['Database Path'] = file_path
 
             if u'EntryView' in views:
                 entry_data = sqlite_processor.read_sqlite_table(
@@ -85,5 +89,6 @@ def google_docs(file_list):
                     entry_data.lastOpenedTime = time_processor.unix_time(entry_data.lastOpenedTime)
                     entry_data.sharedWithMeTime = time_processor.unix_time(entry_data.sharedWithMeTime)
                     entry_data.modifiedByMeTime = time_processor.unix_time(entry_data.modifiedByMeTime)
+                    entry_data['Database Path'] = file_path
 
     return account_data, collection_data, contains_data, entry_data

@@ -44,9 +44,12 @@ def android_mms(file_list):
                     file_path, u'events', u'_id, address, deleted, eventDate')
                 if events_data is not None:
                     events_data.eventDate = time_processor.unix_time(events_data.eventDate)
+                    events_data['Database Path'] = file_path
 
             if u'logs' in tables:
                 logs_data = sqlite_processor.read_sqlite_table(
                     file_path, u'logs', u'_id, address, deleted, incoming, outgoing')
+                if logs_data is not None:
+                    logs_data['Database Path'] = file_path
 
     return events_data, logs_data

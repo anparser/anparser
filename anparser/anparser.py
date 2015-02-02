@@ -288,7 +288,6 @@ if __name__ == "__main__":
     print(msg)
 
     # Write Contact Data
-    # TODO: Add database path to pandas dataset.
 
     android_dict = {}
     facebook_dict = {}

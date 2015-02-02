@@ -46,11 +46,13 @@ def android_browser(file_list):
                 if bookmarks_data is not None:
                     bookmarks_data.created = time_processor.unix_time(bookmarks_data.created)
                     bookmarks_data.modified = time_processor.unix_time(bookmarks_data.modified)
+                    bookmarks_data['Database Path'] = file_path
 
             if u'history' in tables:
                 history_data = sqlite_processor.read_sqlite_table(
                     file_path, u'history', u'_id, title, url, date, visits')
                 if history_data is not None:
                     history_data.date = time_processor.unix_time(history_data.date)
+                    history_data['Database Path'] = file_path
 
     return bookmarks_data, history_data

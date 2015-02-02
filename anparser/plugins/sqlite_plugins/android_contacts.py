@@ -46,12 +46,18 @@ def android_contacts(file_list):
                     file_path, u'raw_contacts', u'contact_id, display_name, modified_time')
                 if raw_contacts is not None:
                     raw_contacts.modified_time = time_processor.unix_time(raw_contacts.modified_time)
+                    raw_contacts['Database Path'] = file_path
 
             if u'accounts' in tables:
                 accounts = sqlite_processor.read_sqlite_table(
                     file_path, u'accounts', '_id, account_name, account_type')
+                if accounts is not None:
+                    accounts['Database Path'] = file_path
+
             if u'phone_lookup' in tables:
                 phone_lookup = sqlite_processor.read_sqlite_table(
                     file_path, u'phone_lookup', u'raw_contact_id, normalized_number')
+                if phone_lookup is not None:
+                    phone_lookup['Database Path'] = file_path
 
     return raw_contacts, accounts, phone_lookup

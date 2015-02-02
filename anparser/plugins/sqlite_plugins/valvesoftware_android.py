@@ -48,6 +48,7 @@ def valvesoftware_android(file_list):
                 # TODO: Configure timestamp processor for this (don't divide by 1000)
                 if debug_data is not None:
                     debug_data.msgtime = time_processor.unix_time(debug_data.msgtime)
+                    debug_data['Database Path'] = file_path
 
         if file_path.endswith(u'umqcomm.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -56,11 +57,15 @@ def valvesoftware_android(file_list):
                 friends_data = sqlite_processor.read_sqlite_table(
                     file_path, u'UmqInfo',
                     u'id1, id2, name')
+                if friends_data is not None:
+                    friends_data['Database Path'] = file_path
 
             if u'UmqMsg' in tables:
                 message_data = sqlite_processor.read_sqlite_table(
                     file_path, u'UmqMsg',
                     u'_id, myuser1, myuser2, wuser1, wuser2, msgincoming, msgunread, '
                     u'msgtime, msgtype, bindata')
+                if message_data is not None:
+                    message_data['Database Path'] = file_path
 
     return debug_data, friends_data, message_data

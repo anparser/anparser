@@ -47,6 +47,7 @@ def android_downloads(file_list):
                                              u'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
                 try:
                     download_data.lastmod = time_processor.unix_time(download_data.lastmod)
+                    download_data['Database Path'] = file_path
                 except AttributeError as e:
                     logging.error(AttributeError(e))
 

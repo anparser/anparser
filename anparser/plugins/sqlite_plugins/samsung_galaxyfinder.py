@@ -47,15 +47,20 @@ def samsung_galaxyfinder(file_list):
                     u'_id, timestamp, contenturi, appname, filepath')
                 if contents_data is not None:
                     contents_data.timestamp = time_processor.unix_time(contents_data.timestamp)
+                    contents_data['Database Path'] = file_path
 
             if u'tagging' in tables:
                 tagging_data = sqlite_processor.read_sqlite_table(
                     file_path, u'tagging',
                     u'_id, content_id, tag_id')
+                if tagging_data is not None:
+                    tagging_data['Database Path'] = file_path
 
             if u'tags' in tables:
                 tags_data = sqlite_processor.read_sqlite_table(
                     file_path, u'tags',
                     u'_id, type, rawdata, data')
+                if tags_data is not None:
+                    tags_data['Database Path'] = file_path
 
     return contents_data, tagging_data, tags_data

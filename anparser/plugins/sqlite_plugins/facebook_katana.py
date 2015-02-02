@@ -34,9 +34,6 @@ def facebook_katana(file_list):
     """
     # TODO: Add support for group_conversations table in threads_db2.
     # Initialize table variables: contacts, folder_counts, folders, messages, thread_users, threads, gql_notifications
-    contacts_database = None
-    threads_database = None
-    notification_database = None
     contacts_data = None
     folder_counts_data = None
     folders_data = None
@@ -52,6 +49,8 @@ def facebook_katana(file_list):
                 contacts_data = sqlite_processor.read_sqlite_table(
                     file_path, u'contacts',
                     u'internal_id, contact_id, fbid, first_name, last_name, display_name')
+                if contacts_data is not None:
+                    contacts_data['Database Path'] = file_path
 
         if file_path.endswith(u'threads_db2') and file_path.count(u'com.facebook.katana') > 0:
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -61,6 +60,7 @@ def facebook_katana(file_list):
                     u'folder, unread_count, unseen_count, last_seen_time, last_action_id')
                 if folder_counts_data is not None:
                     folder_counts_data.last_seen_time = time_processor.unix_time(folder_counts_data.last_seen_time)
+                    folder_counts_data['Database Path'] = file_path
 
             if u'folders' in tables:
                 folders_data = sqlite_processor.read_sqlite_table(
@@ -68,6 +68,7 @@ def facebook_katana(file_list):
                     u'folder, thread_key, timestamp_ms')
                 if folders_data is not None:
                     folders_data.timestamp_ms = time_processor.unix_time(folders_data.timestamp_ms)
+                    folders_data['Database Path'] = file_path
 
             if u'messages' in tables:
                 messages_data = sqlite_processor.read_sqlite_table(
@@ -78,11 +79,14 @@ def facebook_katana(file_list):
                 if messages_data is not None:
                     messages_data.timestamp_ms = time_processor.unix_time(messages_data.timestamp_ms)
                     messages_data.timestamp_sent_ms = time_processor.unix_time(messages_data.timestamp_sent_ms)
+                    messages_data['Database Path'] = file_path
 
             if u'thread_users' in tables:
                 thread_users_data = sqlite_processor.read_sqlite_table(
                     file_path, u'thread_users',
                     u'user_key, first_name, last_name, name')
+                if thread_users_data is not None:
+                    thread_users_data['Database Path'] = file_path
 
             if u'threads' in tables:
                 threads_data = sqlite_processor.read_sqlite_table(
@@ -94,6 +98,7 @@ def facebook_katana(file_list):
                 if threads_data is not None:
                     threads_data.timestamp_ms = time_processor.unix_time(threads_data.timestamp_ms)
                     threads_data.last_fetch_time_ms = time_processor.unix_time(threads_data.last_fetch_time_ms)
+                    threads_data['Database Path'] = file_path
 
         if file_path.endswith(u'notifications_db') and file_path.count(u'com.facebook.katana') > 0:
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -104,6 +109,7 @@ def facebook_katana(file_list):
                     u'profile_picture_uri, photo_uri')
                 if notification_data is not None:
                     notification_data.updated = time_processor.unix_time(notification_data.updated)
+                    notification_data['Database Path'] = file_path
                 # TODO: Add back in gql_payload - getting hashing error for xlsx output
 
     return contacts_data, folder_counts_data, folders_data, messages_data, thread_users_data,\

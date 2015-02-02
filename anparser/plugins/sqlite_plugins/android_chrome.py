@@ -50,6 +50,7 @@ def android_chrome(file_list):
                     cookies_data.creation_utc = time_processor.chrome_time(cookies_data.creation_utc)
                     cookies_data.expires_utc = time_processor.chrome_time(cookies_data.expires_utc)
                     cookies_data.last_access_utc = time_processor.chrome_time(cookies_data.last_access_utc)
+                    cookies_data['Database Path'] = file_path
 
         if file_path.endswith(u'History') and file_path.count(u'app_chrome/Default/History') > 0:
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -62,21 +63,26 @@ def android_chrome(file_list):
                 if downloads_data is not None:
                     downloads_data.start_time = time_processor.chrome_time(downloads_data.start_time)
                     downloads_data.end_time = time_processor.chrome_time(downloads_data.end_time)
+                    downloads_data['Database Path'] = file_path
 
             if u'keyword_search_terms' in tables:
                 keywords_data = sqlite_processor.read_sqlite_table(
                     file_path, u'keyword_search_terms', u'keyword_id, url_id, lower_term, term')
+                if keywords_data is not None:
+                    keywords_data['Database Path'] = file_path
 
             if u'urls' in tables:
                 urls_data = sqlite_processor.read_sqlite_table(
                     file_path, u'urls', u'id, url, title, visit_count, typed_count, last_visit_time, hidden')
                 if urls_data is not None:
                     urls_data.last_visit_time = time_processor.chrome_time(urls_data.last_visit_time)
+                    urls_data['Database Path'] = file_path
 
             if u'visits' in tables:
                 visits_data = sqlite_processor.read_sqlite_table(
                     file_path, u'visits', u'id, url, visit_time, visit_duration')
                 if visits_data is not None:
                     visits_data.visit_time = time_processor.chrome_time(visits_data.visit_time)
+                    visits_data['Database Path'] = file_path
 
     return cookies_data, downloads_data, keywords_data, urls_data, visits_data

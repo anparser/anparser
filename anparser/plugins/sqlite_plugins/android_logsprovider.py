@@ -46,5 +46,6 @@ def android_logsprovider(file_list):
                                          u'account_id, fname, lname, country_code, cityid')
                 if logsprovider_data is not None:
                     logsprovider_data.date = time_processor.unix_time(logsprovider_data.date)
+                    logsprovider_data['Database Path'] = file_path
 
     return logsprovider_data

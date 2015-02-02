@@ -45,11 +45,13 @@ def android_telephony(file_listing):
                 if sms_data is not None:
                     sms_data.date = time_processor.unix_time(sms_data.date)
                     sms_data.date_sent = time_processor.unix_time(sms_data.date_sent)
+                    sms_data['Database Path'] = file_path
 
             if u'threads' in tables:
                 threads_data = sqlite_processor.read_sqlite_table(
                     file_path, u'threads', u'_id, date, message_count, snippet, read, has_attachment')
                 if threads_data is not None:
                     threads_data.date = time_processor.unix_time(threads_data.date)
+                    threads_data['Database Path'] = file_path
 
     return sms_data, threads_data

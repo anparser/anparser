@@ -43,6 +43,8 @@ def android_vending(file_list):
             if u'ownership' in tables:
                 library_data = sqlite_processor.read_sqlite_table(
                     file_path, u'ownership', u'account, library_id, doc_id, document_hash, app_certificate_hash')
+                if library_data is not None:
+                    library_data['Database Path'] = file_path
 
         if file_path.endswith(u'localappstate.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -55,6 +57,7 @@ def android_vending(file_list):
                     localapp_data.first_download_ms = time_processor.unix_time(localapp_data.first_download_ms)
                     localapp_data.last_update_timestamp_ms = time_processor.unix_time(
                         localapp_data.last_update_timestamp_ms)
+                    localapp_data['Database Path'] = file_path
 
         if file_path.endswith(u'suggestions.db'):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
@@ -63,5 +66,6 @@ def android_vending(file_list):
                     file_path, u'suggestions', u'_id, display1, query, date')
                 if suggestions_data is not None:
                     suggestions_data.date = time_processor.unix_time(suggestions_data.date)
+                    suggestions_data['Database Path'] = file_path
 
     return library_data, localapp_data, suggestions_data

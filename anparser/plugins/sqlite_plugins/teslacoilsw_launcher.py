@@ -47,10 +47,13 @@ def teslacoilsw_launcher(file_list):
                     u'componentName, title, lastUpdateTime')
                 if allapps_data is not None:
                     allapps_data.lastUpdateTime = time_processor.unix_time(allapps_data.lastUpdateTime)
+                    allapps_data['Database Path'] = file_path
 
             if u'favorites' in tables:
                 favorites_data = sqlite_processor.read_sqlite_table(
                     file_path, u'favorites',
                     u'_id, title, intent')
+                if favorites_data is not None:
+                    favorites_data['Database Path'] = file_path
 
     return allapps_data, favorites_data

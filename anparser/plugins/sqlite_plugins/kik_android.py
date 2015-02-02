@@ -40,17 +40,20 @@ def kik_android(file_list):
 
     for file_path in file_list:
         if file_path.endswith(u'kikDatabase.db'):
-            kik_database = file_path
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'KIKContentTable' in tables:
                 content_data = sqlite_processor.read_sqlite_table(
                     file_path, u'KIKContentTable',
                     u'_id, content_id, content_type, content_name, content_string')
+                if content_data is not None:
+                    content_data['Database Path'] = file_path
 
             if u'KIKcontactsTable' in tables:
                 contacts_data = sqlite_processor.read_sqlite_table(
                     file_path, u'KIKcontactsTable',
                     u'_id, jid, display_name, user_name, is_blocked, is_ignored')
+                if contacts_data is not None:
+                    contacts_data['Database Path'] = file_path
 
             if u'messagesTable' in tables:
                 messages_data = sqlite_processor.read_sqlite_table(
@@ -58,5 +61,6 @@ def kik_android(file_list):
                     u'_id, body, partner_jid, was_me, read_state, uid, length, timestamp, content_id, app_id')
                 if messages_data is not None:
                     messages_data.timestamp = time_processor.unix_time(messages_data.timestamp)
+                    messages_data['Database Path'] = file_path
 
     return content_data, contacts_data, messages_data
