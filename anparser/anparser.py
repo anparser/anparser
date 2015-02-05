@@ -68,8 +68,9 @@ if __name__ == "__main__":
     parser.add_argument('evidence', help='Directory of Android Acquisition')
     parser.add_argument('destination', help='Destination directory to write output files to')
     parser.add_argument('-o', help='Output Type: csv, xlsx', default='csv')
-    parser.add_argument('-y', action='store_true', help='Run Yara Malware Signature Scanner', default=False)
-    parser.add_argument('-r', help='Run custom command line Yara rule, must run with -y switch')
+    parser.add_argument('-y', help='Provide file path to custom Yara rules and run Yara')
+    parser.add_argument('-s', help='Regular expression searching - supply file path with new line separated '
+                                   'searches or type a single search')
 
     args = parser.parse_args()
     if not os.path.exists(args.evidence) or not os.path.isdir(args.evidence):
@@ -275,10 +276,17 @@ if __name__ == "__main__":
         msg = 'Running Yara Malware Scanner'
         logging.info(msg)
         print(msg)
-        if args.r:
-            yara_data = plugins.other_plugins.yara_parser.yara_parser(files_to_process, args.r)
-        else:
-            yara_data = plugins.other_plugins.yara_parser.yara_parser(files_to_process)
+        try:
+            yara_data = plugins.other_plugins.yara_parser.yara_parser(files_to_process, args.y)
+        except IOError:
+            pass
+
+    # RegEx Searches
+    if args.s:
+        msg = 'Running Search module'
+        logging.info(msg)
+        print(msg)
+        search_data = plugins.other_plugins.search_parser.search_parser(files_to_process, args.s)
 
     msg = 'Processors Complete'
     logging.info(msg)
@@ -308,6 +316,7 @@ if __name__ == "__main__":
     valve_dict = {}
     vlingo_dict = {}
     yara_dict = {}
+    search_dict = {}
 
     android_path = args.destination + '//Android'
     android_dict['android_browser_bookmarks'] = browser_bookmarks
@@ -434,7 +443,18 @@ if __name__ == "__main__":
     if args.y:
         yara_path = args.destination + '//Yara'
 
-        yara_dict['yara_matches'] = yara_data
+        try:
+            yara_dict['yara_matches'] = yara_data
+        except NameError:
+            pass
+
+    if args.s:
+        search_path = args.destination + '//Search'
+
+        try:
+            search_dict['search_matches'] = search_data
+        except NameError:
+            pass
 
     if args.o.lower() == 'csv':
         writers.csv_writer.csv_writer(android_dict, android_path)
@@ -447,8 +467,10 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(tesla_dict, tesla_path)
         writers.csv_writer.csv_writer(valve_dict, valve_path)
         writers.csv_writer.csv_writer(vlingo_dict, vlingo_path)
-        if yara_dict:
+        if yara_dict != {}:
             writers.csv_writer.csv_writer(yara_dict, yara_path)
+        if search_dict != {}:
+            writers.csv_writer.csv_writer(search_dict, search_path)
     else:
         writers.xlsx_writer.xlsx_writer(android_dict, android_path, 'android.xlsx')
         writers.xlsx_writer.xlsx_writer(facebook_dict, facebook_path, 'facebook.xlsx')
@@ -460,8 +482,10 @@ if __name__ == "__main__":
         writers.xlsx_writer.xlsx_writer(tesla_dict, tesla_path, 'teslacoilsw.xlsx')
         writers.xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
         writers.xlsx_writer.xlsx_writer(vlingo_dict, vlingo_path, 'vlingo.xlsx')
-        if yara_dict:
+        if yara_dict != {}:
             writers.xlsx_writer.xlsx_writer(yara_dict, yara_path, 'yara.xlsx')
+        if search_dict != {}:
+            writers.xlsx_writer.xlsx_writer(search_dict, search_path, 'search.xlsx')
 
     msg = 'Completed'
     logging.info(msg)

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import android_gmail_message_extractor
 import android_gmail_message_parser
+import search_parser
 import yara_parser
 
 __all__ = ['android_gmail_message_parser']

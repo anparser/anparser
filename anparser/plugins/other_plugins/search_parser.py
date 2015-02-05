@@ -19,11 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'prmiller91'
 __license__ = 'GPLv3'
-__date__ = '20150129'
+__date__ = '20150205'
 __version__ = '0.00'
 
 from collections import OrderedDict
 import logging
+import os
 import yara
 import pandas as pd
 
@@ -32,32 +33,39 @@ match = None
 yara_list = []
 
 
-def yara_parser(file_list, rules_path):
+def search_parser(file_list, search):
     """
-    Parses files for Malware signatures with Yara
+    Uses Yara for regular expression searches
 
     :param file_list: List of all files
-    :param rules_path: Path to custom Yara rules
+    :param search: Either a file or single search expression
     :return: Dictionary of matches
     """
-    try:
-        rules = yara.compile(rules_path)
-    except (yara.libyara_wrapper.YaraSyntaxError, IOError) as exception:
-        msg = 'Yara Rule Compilation Error: {0:s}'.format(rules_path + ' > ' + str(exception))
-        print(msg)
-        logging.error(msg)
-        raise IOError
 
-    for file_path in file_list:
-        try:
-            match = rules.match(file_path)
-        except yara.libyara_wrapper.YaraMatchError as exception:
-            msg = 'Yara Match Error: {0:s}'.format(file_path + ' > ' + str(exception))
-            logging.error(msg)
-            pass
+    if os.path.isfile(search):
+        yara_rules_dict = {}
+        i = 0
+        for line in open(search, 'r').readlines():
+            yara_rules_dict['Search_' + str(i)] = 'rule custom_search {strings: $search = \"' + line.strip() +\
+                                                  '\" condition: $search }'
+            i += 1
+        rules = yara.compile(sources=yara_rules_dict)
+    else:
+        yara_rule = 'rule custom_search { strings: $search = \"' + search + '\" condition: $search }'
+        rules = yara.compile(source=yara_rule)
 
-        if match:
-            yara_processor(match, file_path)
+    if rules:
+        for file_path in file_list:
+            try:
+                match = rules.match(file_path)
+
+            except yara.libyara_wrapper.YaraMatchError as exception:
+                msg = 'Yara Match Error: {0:s}'.format(file_path + ' > ' + str(exception))
+                logging.error(msg)
+                pass
+
+            if match:
+                yara_processor(match, file_path)
 
     return pd.DataFrame(yara_list)
 
