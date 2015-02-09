@@ -5,7 +5,7 @@ This project is designed to allow users to parse data from an Android Acquisitio
 If you are looking to create an Android Acquisition from a physical or virtual device see
 https://github.com/chapinb/foroboto for an automated script.
 
-Travis-CI Status: [![Build Status](https://travis-ci.org/anparser/anparser.svg?branch=0.01a)](https://travis-ci.org/chapinb/anparser)
+Travis-CI Status: [![Build Status](https://travis-ci.org/anparser/anparser.svg?branch=0.01a)](https://travis-ci.org/anparser/anparser)
 
 ## Authors
 
