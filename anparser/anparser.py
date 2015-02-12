@@ -219,6 +219,14 @@ if __name__ == "__main__":
         plugins.sqlite_plugins.google_plus.google_plus(files_to_process)
     google_plus_accounts = plugins.xml_plugins.google_plus.google_plus(files_to_process)
 
+    # Infraware Polaris Parser
+    msg = 'Processing Infraware Polaris'
+    logging.info(msg)
+    print(msg)
+    polaris_contacts, polaris_files, polaris_attendee, polaris_shared, polaris_messages = \
+        plugins.sqlite_plugins.infraware_office.infraware_office(files_to_process)
+    polaris_preferences = plugins.xml_plugins.infraware_office.infraware_office(files_to_process)
+
     # Kik Messenger Parser
     msg = 'Processing Kik Messenger'
     logging.info(msg)
@@ -315,6 +323,7 @@ if __name__ == "__main__":
     android_dict = {}
     facebook_dict = {}
     google_dict = {}
+    infraware_dict = {}
     kik_dict = {}
     samsung_dict = {}
     skype_dict = {}
@@ -391,6 +400,15 @@ if __name__ == "__main__":
     google_dict['google_plus_contact_search'] = google_plus_contacts_search
     google_dict['google_plus_contacts'] = google_plus_contacts
     google_dict['google_plus_guns'] = google_plus_guns
+
+    infraware_path = args.destination + '//Infraware'
+
+    infraware_dict['polaris_contacts'] = polaris_contacts
+    infraware_dict['polaris_files'] = polaris_files
+    infraware_dict['polaris_attendees'] = polaris_attendee
+    infraware_dict['polaris_shared_files'] = polaris_shared
+    infraware_dict['polaris_messages'] = polaris_messages
+    infraware_dict['polaris_preferences'] = polaris_preferences
 
     kik_path = args.destination + '//Kik'
 
@@ -476,6 +494,7 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(android_dict, android_path)
         writers.csv_writer.csv_writer(facebook_dict, facebook_path)
         writers.csv_writer.csv_writer(google_dict, google_path)
+        writers.csv_writer.csv_writer(infraware_dict, infraware_path)
         writers.csv_writer.csv_writer(kik_dict, kik_path)
         writers.csv_writer.csv_writer(samsung_dict, samsung_path)
         writers.csv_writer.csv_writer(skype_dict, skype_path)
@@ -492,6 +511,7 @@ if __name__ == "__main__":
         writers.xlsx_writer.xlsx_writer(android_dict, android_path, 'android.xlsx')
         writers.xlsx_writer.xlsx_writer(facebook_dict, facebook_path, 'facebook.xlsx')
         writers.xlsx_writer.xlsx_writer(google_dict, google_path, 'google.xlsx')
+        writers.xlsx_writer.xlsx_writer(infraware_dict, infraware_path, 'infraware.xlsx')
         writers.xlsx_writer.xlsx_writer(kik_dict, kik_path, 'kik.xlsx')
         writers.xlsx_writer.xlsx_writer(samsung_dict, samsung_path, 'samsung.xlsx')
         writers.xlsx_writer.xlsx_writer(skype_dict, skype_path, 'skype.xlsx')

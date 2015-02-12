@@ -27,6 +27,7 @@ import android_gmail
 import android_vending
 import google_plus
 import google_talk
+import infraware_office
 import kik_android
 import snapchat_android
 import valvesoftware_android

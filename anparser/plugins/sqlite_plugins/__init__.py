@@ -38,6 +38,7 @@ import facebook_katana
 import facebook_orca
 import google_docs
 import google_plus
+import infraware_office
 import kik_android
 import samsung_galaxyfinder
 import skype_raider

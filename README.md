@@ -65,6 +65,9 @@ Currently supported artifacts as of 2015-02-12:
 * Google Docs accounts
 * Google Docs collection
 * Google Talk Accounts (Hangouts)
+* Infraware Polaris contacts
+* Infraware Polaris files & shared files
+* Infraware Polaris messages
 * Kik contacts
 * Kik chat
 * Samsung GalaxyFinder contents
@@ -100,10 +103,33 @@ Please add requests in the issues pane of Github. As of 2015-01-12 the features 
 * [ ] XML
 
 ### Plugins
+* [x] Android Browser
 * [x] Android Calendar
+* [x] Android Chrome
+* [x] Android Contacts
 * [x] Android Downloads
-* [ ] Android Locations
+* [x] Android EmergencyMode
+* [x] Android Gallery3d
 * [x] Android Gmail
+* [ ] Android Locations
+* [x] Android Logsprovider
+* [x] Android Media
+* [x] Android MMS
+* [x] Android Telephony
+* [x] Android Vending
+* [x] Facebook Katana
+* [x] Facebook Orca
+* [x] Google Docs
+* [x] Google Plus
+* [x] Infraware Office (Polaris)
+* [x] Kik
+* [x] Samsung Galaxyfinder
+* [x] Skype
+* [x] Snapchat
+* [x] TeslacoilSW
+* [x] Valve Steam
+* [x] Venmo
+* [x] Vlingo
 
 ### Other
 * [ ] Documentation for adding custom plugins
