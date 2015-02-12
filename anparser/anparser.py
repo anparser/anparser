@@ -265,6 +265,13 @@ if __name__ == "__main__":
         plugins.sqlite_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
     valve_preferences = plugins.xml_plugins.valvesoftware_android.valvesoftware_android(files_to_process)
 
+    # Venmo Parser
+    msg = 'Processing Venmo'
+    logging.info(msg)
+    print(msg)
+    venmo_comments, venmo_stories, venmo_people, venmo_users = plugins.sqlite_plugins.venmo.venmo(files_to_process)
+    venmo_preferences = plugins.xml_plugins.venmo.venmo(files_to_process)
+
     # Vlingo Midas Parser
     msg = 'Processing Vlingo Midas'
     logging.info(msg)
@@ -314,6 +321,7 @@ if __name__ == "__main__":
     snapchat_dict = {}
     tesla_dict = {}
     valve_dict = {}
+    venmo_dict = {}
     vlingo_dict = {}
     yara_dict = {}
     search_dict = {}
@@ -426,15 +434,23 @@ if __name__ == "__main__":
 
     tesla_path = args.destination + '//Teslacoilsw'
 
-    tesla_dict['teslacoilsw_allapps.csv'] = tesla_allapps
-    tesla_dict['teslacoilsw_favorites.csv'] = tesla_favorites
+    tesla_dict['teslacoilsw_allapps'] = tesla_allapps
+    tesla_dict['teslacoilsw_favorites'] = tesla_favorites
 
     valve_path = args.destination + '//Valve'
 
-    valve_dict['valve_friends.csv'] = valve_friends
-    valve_dict['valve_chat.csv'] = valve_chat
-    valve_dict['valve_debug.csv'] = valve_debug
-    valve_dict['valve_preferences.csv'] = valve_preferences
+    valve_dict['valve_friends'] = valve_friends
+    valve_dict['valve_chat'] = valve_chat
+    valve_dict['valve_debug'] = valve_debug
+    valve_dict['valve_preferences'] = valve_preferences
+
+    venmo_path = args.destination + '//Venmo'
+
+    venmo_dict['venmo_comments'] = venmo_comments
+    venmo_dict['venmo_stories'] = venmo_stories
+    venmo_dict['venmo_people'] = venmo_people
+    venmo_dict['venmo_users'] = venmo_users
+    venmo_dict['venmo_preferences'] = venmo_preferences
 
     vlingo_path = args.destination + '//Vlingo'
 
@@ -466,6 +482,7 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(snapchat_dict, snapchat_path)
         writers.csv_writer.csv_writer(tesla_dict, tesla_path)
         writers.csv_writer.csv_writer(valve_dict, valve_path)
+        writers.csv_writer.csv_writer(venmo_dict, venmo_path)
         writers.csv_writer.csv_writer(vlingo_dict, vlingo_path)
         if yara_dict != {}:
             writers.csv_writer.csv_writer(yara_dict, yara_path)
@@ -481,6 +498,7 @@ if __name__ == "__main__":
         writers.xlsx_writer.xlsx_writer(snapchat_dict, snapchat_path, 'snapchat.xlsx')
         writers.xlsx_writer.xlsx_writer(tesla_dict, tesla_path, 'teslacoilsw.xlsx')
         writers.xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
+        writers.xlsx_writer.xlsx_writer(venmo_dict, venmo_path, 'venmo.xlsx')
         writers.xlsx_writer.xlsx_writer(vlingo_dict, vlingo_path, 'vlingo.xlsx')
         if yara_dict != {}:
             writers.xlsx_writer.xlsx_writer(yara_dict, yara_path, 'yara.xlsx')

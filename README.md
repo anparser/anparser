@@ -35,7 +35,7 @@ From the command line execute:
 
 Checkout the [Wiki](https://github.com/chapinb/anparser/wiki) for additional information
 
-Currently supported artifacts as of 2015-01-19:
+Currently supported artifacts as of 2015-02-12:
 
 * Android Browser bookmarks
 * Android Browser accounts
@@ -47,8 +47,10 @@ Currently supported artifacts as of 2015-01-19:
 * Android Chrome history
 * Android Contacts
 * Android Downloads
+* Android Emergencymode
 * Android Gallery3d files
 * Android Gallery3d picasa
+* Android Logsprovider SMS logs
 * Android Gmail accounts
 * Android Media file listing
 * Android SMS data
@@ -57,17 +59,31 @@ Currently supported artifacts as of 2015-01-19:
 * Android Play Store library
 * Android Play Store local apps
 * Android Play Store suggestions
-* Google Docs accounts
-* Google Docs collection
-* Google Talk Accounts (Hangouts)
 * Facebook Messenger contacts
 * Facebook Messenger messages
 * Facebook Messenger threads
+* Google Docs accounts
+* Google Docs collection
+* Google Talk Accounts (Hangouts)
 * Kik contacts
 * Kik chat
+* Samsung GalaxyFinder contents
+* Samsung GalaxyFinder geotags
+* Skype users
+* Skype documents
+* Skype conversations & calls
 * Snapchat friends
 * Snapchat chat
 * Snapchat files
+* TeslacoilSW all apps
+* TeslacoilSW favorites
+* Valve debug
+* Valve friends
+* Valve messages
+* Venmo comments
+* Venmo friends
+* Venmo stories (transactions)
+* Vlingo contacts
 
 Currently supported output formats:
 

@@ -44,4 +44,5 @@ import skype_raider
 import snapchat_android
 import teslacoilsw_launcher
 import valvesoftware_android
+import venmo
 import vlingo_midas

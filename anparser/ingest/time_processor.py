@@ -36,12 +36,12 @@ def unix_time(dataframe, op=None):
     mul = 1000.
     if op is not None:
         mul = 1.
-        try:
-            return dataframe.apply(
-                lambda x: time.strftime(
-                    '%Y-%m-%d %H:%M:%S', time.gmtime(x / mul)) if str(x) != 'nan' and x != None and x != 0 else None)
-        except TypeError:
-            pass
+    try:
+        return dataframe.apply(
+            lambda x: time.strftime(
+                '%Y-%m-%d %H:%M:%S', time.gmtime(x / mul)) if str(x) != 'nan' and x != None and x != 0 else None)
+    except TypeError:
+        pass
 
 
 def chrome_time(dataframe):
@@ -55,6 +55,7 @@ def chrome_time(dataframe):
         lambda x: datetime.datetime.utcfromtimestamp(
             ((x / 1000) - offset) * (1*10**-3)).strftime(
             '%Y-%m-%d %H:%M:%S') if str(x) != 'nan' and x != None and x != 0 else None)
+
 
 def prt_time(dataframe):
     """

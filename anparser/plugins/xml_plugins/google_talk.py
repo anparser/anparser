@@ -59,7 +59,7 @@ def google_talk(file_listing):
 
             for entry in data:
                 circle_name = u''
-                if entry[u'Name'].startswith(u'chat_acl_settings_circle'):
+                if entry[u'name'].startswith(u'chat_acl_settings_circle'):
                     try:
                         circle_name = entry[u'name'].split('==', 1)[1]
                     except:

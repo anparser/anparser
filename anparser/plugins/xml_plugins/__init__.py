@@ -30,3 +30,4 @@ import google_talk
 import kik_android
 import snapchat_android
 import valvesoftware_android
+import venmo
