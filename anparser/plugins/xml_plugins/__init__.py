@@ -29,6 +29,7 @@ import google_plus
 import google_talk
 import infraware_office
 import kik_android
+import sh_whisper
 import snapchat_android
 import valvesoftware_android
 import venmo

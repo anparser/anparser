@@ -286,6 +286,14 @@ if __name__ == "__main__":
     print(msg)
     vlingo_contacts = plugins.sqlite_plugins.vlingo_midas.vlingo_midas(files_to_process)
 
+    # Whisper Parser
+    msg = 'Processing Whisper'
+    logging.info(msg)
+    print(msg)
+    whisper_conversations, whisper_messages, whisper_whispers, whisper_groups, whisper_notifications = \
+        plugins.sqlite_plugins.sh_whisper.sh_whisper(files_to_process)
+    whisper_preferences = plugins.xml_plugins.sh_whisper.sh_whisper(files_to_process)
+
     # Yara Malware Parser
     if args.y:
         msg = 'Running Yara Malware Scanner'
@@ -332,6 +340,7 @@ if __name__ == "__main__":
     valve_dict = {}
     venmo_dict = {}
     vlingo_dict = {}
+    whisper_dict = {}
     yara_dict = {}
     search_dict = {}
 
@@ -472,7 +481,16 @@ if __name__ == "__main__":
 
     vlingo_path = args.destination + '//Vlingo'
 
-    vlingo_dict['vlingo_midas_contacts.csv'] = vlingo_contacts
+    vlingo_dict['vlingo_midas_contacts'] = vlingo_contacts
+
+    whisper_path = args.destination + '//Whisper'
+
+    whisper_dict['whisper_conversations'] = whisper_conversations
+    whisper_dict['whisper_messages'] = whisper_messages
+    whisper_dict['whisper_posts'] = whisper_whispers
+    whisper_dict['whisper_groups'] = whisper_groups
+    whisper_dict['whisper_notifications'] = whisper_notifications
+    whisper_dict['whisper_preferences'] = whisper_preferences
 
     if args.y:
         yara_path = args.destination + '//Yara'
@@ -503,6 +521,7 @@ if __name__ == "__main__":
         writers.csv_writer.csv_writer(valve_dict, valve_path)
         writers.csv_writer.csv_writer(venmo_dict, venmo_path)
         writers.csv_writer.csv_writer(vlingo_dict, vlingo_path)
+        writers.csv_writer.csv_writer(whisper_dict, whisper_path)
         if yara_dict != {}:
             writers.csv_writer.csv_writer(yara_dict, yara_path)
         if search_dict != {}:
@@ -520,6 +539,7 @@ if __name__ == "__main__":
         writers.xlsx_writer.xlsx_writer(valve_dict, valve_path, 'valve.xlsx')
         writers.xlsx_writer.xlsx_writer(venmo_dict, venmo_path, 'venmo.xlsx')
         writers.xlsx_writer.xlsx_writer(vlingo_dict, vlingo_path, 'vlingo.xlsx')
+        writers.xlsx_writer.xlsx_writer(whisper_dict, whisper_path, 'whisper.xlsx')
         if yara_dict != {}:
             writers.xlsx_writer.xlsx_writer(yara_dict, yara_path, 'yara.xlsx')
         if search_dict != {}:

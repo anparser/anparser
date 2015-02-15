@@ -41,6 +41,7 @@ import google_plus
 import infraware_office
 import kik_android
 import samsung_galaxyfinder
+import sh_whisper
 import skype_raider
 import snapchat_android
 import teslacoilsw_launcher

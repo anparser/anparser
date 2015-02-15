@@ -59,7 +59,7 @@ def kik_android(file_listing):
         for entry in kik_data:
             if entry[u'name'] == u'kik.version_number':
                 kik_dict_data[u'Kik Version'] = entry[u'text_entry']
-            if entry[u'name'] == u'CredentialData.jid':
+            elif entry[u'name'] == u'CredentialData.jid':
                 kik_dict_data[u'Jid'] = entry[u'text_entry']
             elif entry[u'name'] == u'user_profile_firstName':
                 kik_dict_data[u'First Name'] = entry[u'text_entry']
