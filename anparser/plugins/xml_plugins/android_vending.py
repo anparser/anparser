@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 """
 anparser - an Open Source Android Artifact Parser
-Copyright (C) 2015  Preston Miller
+Copyright (C) 2015  Chapin Bryce
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,27 +17,33 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-__author__ = 'prmiller91'
+__author__ = 'cbryce'
 __license__ = 'GPLv3'
-__date__ = '20150131'
+__date__ = '20140109'
 __version__ = '0.00'
 
 import pandas as pd
-import os
-import logging
 
-def csv_writer(data_dict, folder_name):
-    """
-    Write pandas DataFrame objects to CSV
+from ingest import xml_processor
 
-    :param data: pandas DataFrame
-    :param file_name: file name to write to
-    :return: Nothing
+
+def android_vending(file_listing):
     """
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name, 0777)
-    for df in data_dict.keys():
-        try:
-            data_dict[df].to_csv((folder_name + '//' + df + '.csv'), '|', encoding='utf-8')
-        except AttributeError as exception:
-            pass
+    Reads and processes xml data from android_vending
+
+    :param file_listing: list of files
+    :return: list of dictionaries containing XML values
+    """
+    vending_data = []
+    for file_entry in file_listing:
+        if file_entry.endswith(u'finsky.xml') and file_entry.count(u'com.android.vending') > 0:
+            vending_data = xml_processor.parse_xml_file_notree(file_entry)
+
+    # add all columns to first entry for CSV Writing
+    try:
+        vending_data[0][u'value'] = ''
+        vending_data[0] = vending_data[0]
+    except IndexError:
+        pass
+
+    return pd.DataFrame(vending_data)

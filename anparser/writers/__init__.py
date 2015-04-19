@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Chapin Bryce
@@ -21,4 +23,7 @@ __license__ = 'GPLv3'
 __date__ = '20150102'
 __version__ = '0.00'
 
-__all__ = ['csv_writer']
+import csv_writer
+import xlsx_writer
+
+__all__ = ['csv_writer', 'xlsx_writer']

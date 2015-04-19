@@ -27,9 +27,9 @@ import pandas as pd
 import os
 import logging
 
-def csv_writer(data_dict, folder_name):
+def xlsx_writer(data_dict, folder_name, xlsx_name):
     """
-    Write pandas DataFrame objects to CSV
+    Write pandas DataFrame objects to XLSX
 
     :param data: pandas DataFrame
     :param file_name: file name to write to
@@ -37,8 +37,9 @@ def csv_writer(data_dict, folder_name):
     """
     if not os.path.exists(folder_name):
         os.mkdir(folder_name, 0777)
-    for df in data_dict.keys():
-        try:
-            data_dict[df].to_csv((folder_name + '//' + df + '.csv'), '|', encoding='utf-8')
-        except AttributeError as exception:
-            pass
+    with pd.ExcelWriter((folder_name + '//' + xlsx_name)) as writer:
+        for df in data_dict.keys():
+            try:
+                data_dict[df].to_excel(writer, sheet_name=df, encoding='utf-8')
+            except AttributeError as exception:
+                pass

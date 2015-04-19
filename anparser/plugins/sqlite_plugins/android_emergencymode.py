@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """
 anparser - an Open Source Android Artifact Parser
 Copyright (C) 2015  Preston Miller
@@ -20,25 +19,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 __author__ = 'prmiller91'
 __license__ = 'GPLv3'
-__date__ = '20150131'
+__date__ = '20150125'
 __version__ = '0.00'
 
-import pandas as pd
-import os
-import logging
+from ingest import sqlite_processor
 
-def csv_writer(data_dict, folder_name):
-    """
-    Write pandas DataFrame objects to CSV
 
-    :param data: pandas DataFrame
-    :param file_name: file name to write to
-    :return: Nothing
+def android_emergencymode(file_list):
     """
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name, 0777)
-    for df in data_dict.keys():
-        try:
-            data_dict[df].to_csv((folder_name + '//' + df + '.csv'), '|', encoding='utf-8')
-        except AttributeError as exception:
-            pass
+    Parses emergency.db database from com.sec.android.provider.emergencymode
+
+    :param file_list: List of all files
+    :return: Dictionary of parsed data from database
+    """
+
+    # Initialize table variable: ecc
+    preference_data = None
+
+    for file_path in file_list:
+        if file_path.endswith(u'emergency.db'):
+            tables = sqlite_processor.get_sqlite_table_names(file_path)
+            if u'prefsettings' in tables:
+                preference_data = sqlite_processor.read_sqlite_table(
+                    file_path, u'prefsettings', u'pref, value')
+                if preference_data is not None:
+                    preference_data['Database Path'] = file_path
+
+    return preference_data

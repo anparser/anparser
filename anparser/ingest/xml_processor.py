@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-
 """
 anparser - an Open Source Android Artifact Parser
-Copyright (C) 2015  Preston Miller
+Copyright (C) 2015  Chapin Bryce
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,27 +17,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-__author__ = 'prmiller91'
+__author__ = 'cbryce'
 __license__ = 'GPLv3'
-__date__ = '20150131'
+__date__ = '20140109'
 __version__ = '0.00'
 
-import pandas as pd
-import os
-import logging
+import xml.etree.ElementTree as ET
+from collections import OrderedDict
 
-def csv_writer(data_dict, folder_name):
-    """
-    Write pandas DataFrame objects to CSV
 
-    :param data: pandas DataFrame
-    :param file_name: file name to write to
-    :return: Nothing
+def parse_xml_file_notree(FILE):
     """
-    if not os.path.exists(folder_name):
-        os.mkdir(folder_name, 0777)
-    for df in data_dict.keys():
-        try:
-            data_dict[df].to_csv((folder_name + '//' + df + '.csv'), '|', encoding='utf-8')
-        except AttributeError as exception:
-            pass
+    :param FILE: string path to file
+    :return: List of dictionaries
+    """
+
+    context = ET.iterparse(FILE, events=['start'])
+    context = iter(context)
+    event, root = context.next()
+
+    # Setup Variables
+    elem_array = []
+    ordered_array = OrderedDict()
+
+    for event, elem in context:
+        ordered_array = elem.attrib
+        ordered_array['text_entry'] = str(elem.text).strip()
+
+        elem_array.append(ordered_array)
+        ordered_array = OrderedDict()
+
+    return elem_array
