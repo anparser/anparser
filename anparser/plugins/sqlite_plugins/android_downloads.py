@@ -43,7 +43,7 @@ def android_downloads(file_list):
             tables = sqlite_processor.get_sqlite_table_names(file_path)
             if u'downloads' in tables:
                 download_data = sqlite_processor.read_sqlite_table(
-                    file_path, u'downloads', u'_id, title, description, mimetype, lastmod, uid, '
+                    file_path, u'downloads', u'_id, title, description, mimetype, deleted, lastmod, uid, '
                                              u'etag, uri, hint, _data, total_bytes, mediaprovider_uri')
                 try:
                     download_data.lastmod = time_processor.unix_time(download_data.lastmod)
